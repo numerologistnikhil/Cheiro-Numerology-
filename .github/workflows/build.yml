@@ -26,9 +26,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Accept Android licenses
-        run: yes | flutter doctor --android-licenses
-
       - name: Build APK
         run: flutter build apk --release
 
@@ -37,3 +34,4 @@ jobs:
         with:
           name: app-release
           path: build/app/outputs/flutter-apk/app-release.apk
+          
