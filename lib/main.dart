@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    // 5-Minute Professional Support Popup Trigger (Fixed from 30 seconds)
+    // 5-Minute Professional Support Popup Trigger
     _donationTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
       if (mounted) {
         _showProfessionalSupportPopup();
@@ -386,4 +386,442 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   const SizedBox(height: 15),
                   _buildPDFPageCard(chapter: 'Chapter 8', title: 'Executive Signature Numerology Blueprint', child: _pdfText(_signatureAnalysis)),
                   const SizedBox(height: 15),
-                  _buildPDFPageCard(chapter: 'Chapter 9', title: 'Gemston
+                  _buildPDFPageCard(chapter: 'Chapter 9', title: 'Gemstone Prescription & Wearing Guide', child: _pdfText(_gemstoneDetails)),
+                  const SizedBox(height: 15),
+                  _buildPDFPageCard(chapter: 'Chapter 10', title: 'Spiritual Remedies & Ritual Protocols', child: _pdfText(_remediesDetails)),
+                  const SizedBox(height: 15),
+                  _buildPDFPageCard(chapter: 'Chapter 11', title: 'Medical Numerology & Executive Diet', child: _pdfText(_healthDiet)),
+                  const SizedBox(height: 12),
+                  _buildPDFPageCard(chapter: 'Chapter 12', title: 'Karmic Debt & Business Lessons', child: _pdfText(_karmicDebts)),
+                  const SizedBox(height: 15),
+                  _buildPDFPageCard(chapter: 'Chapters 13-20', title: 'Month-by-Month Future Timeline (2026-2035)', child: _pdfText(_yearlyForecasts)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 15),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Corporate Structured PDF Downloaded Successfully!'), backgroundColor: Colors.green),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFD4AF37),
+                foregroundColor: const Color(0xFF0A1128),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+              child: const Text('DOWNLOAD & PRINT EXECUTIVE PDF', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _pdfText(String text) {
+    return Text(text, style: const TextStyle(color: Color(0xFFCBD5E1), fontSize: 13, height: 1.4));
+  }
+
+  Widget _buildPDFPageCard({required String chapter, required String title, required Widget child}) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E2A4A),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF334155)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0A1128),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFFD4AF37)),
+                ),
+                child: Text(chapter, style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 11, fontWeight: FontWeight.bold)),
+              ),
+              Text(title, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          child,
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: Drawer(
+        backgroundColor: const Color(0xFF131B2E),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: [Color(0xFF1E2A4A), Color(0xFF0A1128)]),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: const [
+                  Text('✨ CHEIRO EXECUTIVE', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 18, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 4),
+                  Text('Corporate Professional Suite', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home, color: Color(0xFFD4AF37)),
+              title: const Text('Executive Dashboard', style: TextStyle(color: Colors.white)),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf, color: Color(0xFFD4AF37)),
+              title: const Text('Corporate PDF Report Hub', style: TextStyle(color: Colors.white)),
+              onTap: () {
+                Navigator.pop(context);
+                if (_hasAnalyzed) {
+                  _verifyPaymentAndUnlockPDF();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Kripya pehle apna naam daalkar report generate karein!'), backgroundColor: Colors.orange),
+                  );
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.shopping_bag, color: Color(0xFFD4AF37)),
+              title: const Text('Buy App / Source Code', style: TextStyle(color: Colors.white)),
+              onTap: () {
+                Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: const Color(0xFF131B2E),
+                    title: const Text('Buy App (Nikhil Gulati)', style: TextStyle(color: Color(0xFFD4AF37))),
+                    content: const Text('WhatsApp: +91 9210896940 par sampark karein.', style: TextStyle(color: Color(0xFF94A3B8))),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK', style: TextStyle(color: Color(0xFFD4AF37)))),
+                    ],
+                  ),
+                );
+              },
+            ),
+            const Divider(color: Color(0xFF334155)),
+            ListTile(
+              leading: const Icon(Icons.language, color: Color(0xFFD4AF37)),
+              title: Text(_isHindi ? 'Switch to English' : 'हिंदी में बदलें', style: const TextStyle(color: Colors.white)),
+              onTap: () {
+                setState(() {
+                  _isHindi = !_isHindi;
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        title: Text(
+          _isHindi ? 'CHEIRO EXECUTIVE (हिंदी)' : 'CHEIRO EXECUTIVE PRO',
+          style: const TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, letterSpacing: 1.2, fontSize: 16),
+        ),
+        backgroundColor: const Color(0xFF131B2E),
+        elevation: 0,
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: TextButton.icon(
+              onPressed: () {
+                setState(() {
+                  _isHindi = !_isHindi;
+                });
+              },
+              icon: const Icon(Icons.language, color: Color(0xFFD4AF37), size: 18),
+              label: Text(
+                _isHindi ? 'EN' : 'हिंदी',
+                style: const TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Corporate Executive Banner Card (Cleaned: Partner field removed from start)
+            Container(
+              padding: const EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF1E2A4A), Color(0xFF131B2E), Color(0xFF0A1128)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: const Color(0xFFD4AF37), width: 1.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFD4AF37).withOpacity(0.15),
+                    blurRadius: 25,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  const Text('✨ Corporate Executive Suite', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                  const SizedBox(height: 10),
+                  const Text('Free Report Generator & Pro PDF Encyclopedia', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _nameController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color(0xFF1E2A4A),
+                      hintText: _isHindi ? 'Poora Naam darj karein (jaise Nikhil Gulati)' : 'Enter Full Name (e.g. Nikhil Gulati)',
+                      hintStyle: const TextStyle(color: Color(0xFF94A3B8)),
+                      prefixIcon: const Icon(Icons.person, color: Color(0xFFD4AF37)),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFF334155))),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFF334155))),
+                      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFFD4AF37))),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(colors: [Color(0xFFD4AF37), Color(0xFFF59E0B)]),
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(color: const Color(0xFFD4AF37).withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4)),
+                      ],
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _analyzeProfile();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                      child: Text(_isHindi ? 'EXECUTIVE REPORT TAYAR KAREIN' : 'GENERATE EXECUTIVE REPORT', style: const TextStyle(color: Color(0xFF0A1128), fontWeight: FontWeight.bold, fontSize: 15)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Animated Results Container with Professional Chaldean Table & Lo Shu Grid
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 600),
+              child: _hasAnalyzed
+                  ? Column(
+                      key: const ValueKey(1),
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(22),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF131B2E),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: const Color(0xFF334155)),
+                            boxShadow: [
+                              BoxShadow(color: Colors.black.withOpacity(0.4), blurRadius: 20, offset: const Offset(0, 8)),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.verified, color: Colors.greenAccent, size: 24),
+                                  const SizedBox(width: 8),
+                                  Text(_title, style: const TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, fontSize: 16)),
+                                ],
+                              ),
+                              const Divider(color: Color(0xFF334155), height: 28),
+                              const Text('Detailed Numerology Analysis (Free View):', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                              const SizedBox(height: 8),
+                              Text(_detailedReport, style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13, height: 1.5)),
+                              const SizedBox(height: 20),
+
+                              // Professional Chaldean Calculation Table
+                              const Text('📊 Chaldean Letter Calculation Table:', style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, fontSize: 14)),
+                              const SizedBox(height: 10),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF1E2A4A),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: const Color(0xFF334155)),
+                                ),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: DataTable(
+                                    columns: const [
+                                      DataColumn(label: Text('Letter', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+                                      DataColumn(label: Text('Chaldean Value', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+                                    ],
+                                    rows: _chaldeanTableData.map((item) {
+                                      return DataRow(cells: [
+                                        DataCell(Text(item['char'], style: const TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold))),
+                                        DataCell(Text(item['val'].toString(), style: const TextStyle(color: Color(0xFF94A3B8)))),
+                                      ]);
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+
+                              // Visual Lo Shu Grid Box representation
+                              const Text('🔮 Lo Shu Grid & Matrix Chart:', style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, fontSize: 14)),
+                              const SizedBox(height: 10),
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF1E2A4A),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: const Color(0xFFD4AF37)),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [_loShuCell('4'), _loShuCell('9'), _loShuCell('2')],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [_loShuCell('3'), _loShuCell('5'), _loShuCell('7')],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [_loShuCell('8'), _loShuCell('1'), _loShuCell('6')],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 18),
+                              const Text('Lo Shu Planes Analysis:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                              const SizedBox(height: 8),
+                              Text(_loShuPlanes, style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13, height: 1.5)),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        // PDF Download Hub Corporate Floating Card
+                        Container(
+                          padding: const EdgeInsets.all(22),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF1E2A4A), Color(0xFF131B2E)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: const Color(0xFFD4AF37), width: 1.5),
+                            boxShadow: [
+                              BoxShadow(color: Colors.amber.withOpacity(0.1), blurRadius: 15, offset: const Offset(0, 6)),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              const Icon(Icons.picture_as_pdf, color: Color(0xFFD4AF37), size: 44),
+                              const SizedBox(height: 10),
+                              const Text('Download Corporate Executive PDF', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 6),
+                              const Text('Report screen par bilkul free padhein. Print ya PDF file download karne ke liye keval ₹100 ka security charge dena hoga.', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12, height: 1.4)),
+                              const SizedBox(height: 18),
+                              ElevatedButton.icon(
+                                onPressed: _verifyPaymentAndUnlockPDF,
+                                icon: const Icon(Icons.download, color: Color(0xFF0A1128)),
+                                label: const Text('DOWNLOAD / PRINT PDF (₹100)', style: TextStyle(color: Color(0xFF0A1128), fontWeight: FontWeight.bold)),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFD4AF37),
+                                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(
+                      key: const ValueKey(2),
+                      padding: const EdgeInsets.all(35),
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: const [
+                          Icon(Icons.auto_awesome, color: Color(0xFFD4AF37), size: 52),
+                          SizedBox(height: 14),
+                          Text('Enter your name above to view your corporate executive report instantly!', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF64748B), fontSize: 14)),
+                        ],
+                      ),
+                    ),
+            ),
+            const SizedBox(height: 30),
+
+            // Buy App / Contact Corporate Card
+            Container(
+              padding: const EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                color: const Color(0xFF131B2E),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: const Color(0xFF334155)),
+              ),
+              child: Column(
+                children: [
+                  const Icon(Icons.shopping_bag, color: Color(0xFFD4AF37), size: 38),
+                  const SizedBox(height: 10),
+                  const Text('Want to Buy This App / Source Code?', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 6),
+                  const Text('Contact developer Nikhil Gulati directly via WhatsApp for app purchase or business tie-ups.', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.chat, color: Colors.greenAccent, size: 20),
+                      SizedBox(width: 8),
+                      Text('WhatsApp: +91 9210896940', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _loShuCell(String number) {
+    return Container(
+      width: 50,
+      height: 50,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: const Color(0xFF0A1128),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFD4AF37)),
+      ),
+      child: Text(number, style: const TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, fontSize: 18)),
+    );
+  }
+}
