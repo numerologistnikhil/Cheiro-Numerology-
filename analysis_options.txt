@@ -1,0 +1,1 @@
+Planned next modules: full verified 1–54 compound knowledge pack; name suggestion generator; compatibility matrix; prediction timeline; remedy/gemstone catalog; Q&A library; encrypted client records; localization; production-grade PDF fonts/layout; update manifest/signature verification; optional on-device AI layer.
