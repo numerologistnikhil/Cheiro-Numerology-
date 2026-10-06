@@ -1,5 +1,8 @@
 class KnowledgePack {
-  static const version = '1.0.0';
+  static const version = '1.1.0';
+  // Compound-number interpretation range locked to Cheiro 1–54.
+  static const int minCompound = 1;
+  static const int maxCompound = 54;
   // Interpretation layer intentionally modular. Expand only with verified/licensed/public-domain material.
   static const Map<int,String> roots = {
     1:'Initiative, independence, individuality and leadership themes.',
@@ -13,4 +16,5 @@ class KnowledgePack {
     9:'Completion, compassion, broad perspective and service themes.',
   };
   static String rootMeaning(int n)=>roots[n]??'Interpretation unavailable in current verified pack.';
+  static String compoundMeaning(int n)=>'Compound number $n: verified interpretation will be added to the knowledge pack.';
 }
