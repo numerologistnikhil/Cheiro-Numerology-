@@ -20,3 +20,6 @@ Page 1 premium cover/snapshot. Page 2 disclaimer + methodology. Subsequent pages
 
 ## Commercial model
 All numerology functionality, including AI Numerologist and premium features, is FREE. Only generating, downloading, or printing the detailed professional PDF costs ₹50.
+
+## WhatsApp PDF Delivery
+After successful ₹50 payment and generation of the professional PDF, the app must provide a direct "Send on WhatsApp" option. The generated PDF should be prepared as a local file and handed to the Android/iOS share system so WhatsApp can open with the PDF attached. The user must explicitly confirm/send the message. The app must not silently send WhatsApp messages or upload customer data to a cloud server.
