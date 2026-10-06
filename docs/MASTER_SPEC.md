@@ -16,7 +16,7 @@ Profile, Core Numbers, Compound Numbers, Lo Shu, Name Correction, Mobile, Vehicl
 Customer records local-only by default. No customer cloud database. Production encryption must use authenticated encryption with random nonce/IV per record and secure key storage. Raw PII should not be sent to a remote AI provider without explicit user consent.
 
 ## PDF
-Page 1 premium cover/snapshot. Page 2 disclaimer + methodology. Subsequent pages are modular. Watermark @NikhilVGulatii. App WhatsApp number must not appear in PDF.
+Page 1 premium cover/snapshot. Page 2 disclaimer + methodology. Subsequent pages are modular. YouTube page link for NikhilVGulatii. App WhatsApp number must not appear in PDF.
 
 ## Commercial model
-All numerology functionality free; ₹100 only for downloadable professional PDF.
+All numerology functionality, including AI Numerologist and premium features, is FREE. Only generating, downloading, or printing the detailed professional PDF costs ₹50.
