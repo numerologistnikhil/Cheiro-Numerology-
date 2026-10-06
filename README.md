@@ -6,7 +6,7 @@ Offline-first Flutter foundation for a professional self-service numerology appl
 - Cheiro compound framework: **1–54** (not 1–98).
 - Self-service app; no consultation/appointment/numerologist dashboard.
 - Customer data stays local by default; no customer cloud database.
-- Numerology features are free; professional downloadable PDF is the paid product (₹100).
+- Numerology features are free; professional downloadable PDF is the paid product (₹50).
 - WhatsApp contact: 9210896940 (app UI footer only; not PDF).
 - PDF watermark: @NikhilVGulatii.
 - Architecture supports English/Hindi localization and future knowledge-pack updates.
