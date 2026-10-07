@@ -1,8 +1,8 @@
 class KnowledgePack {
   static const version = '1.1.0';
-  // Compound-number interpretation range locked to Cheiro 1–54.
-  static const int minCompound = 1;
-  static const int maxCompound = 54;
+  // Compound-number interpretation range locked to Cheiro 10–52.
+  static const int minCompound = 10;
+  static const int maxCompound = 52;
   // Interpretation layer intentionally modular. Expand only with verified/licensed/public-domain material.
   static const Map<int,String> roots = {
     1:'Initiative, independence, individuality and leadership themes.',
