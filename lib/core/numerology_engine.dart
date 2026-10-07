@@ -66,9 +66,8 @@ class NumerologyEngine {
     return NumerologyResult(mapped, root(mapped));
   }
 
-  // Cheiro compound-number interpretation is intentionally limited
-  // to the project's locked 1–54 range.
+  // Cheiro compound-number interpretation is limited to the documented 10–52 range.
   static bool isCheiroCompound(int number) {
-    return number >= 1 && number <= 54;
+    return number >= 10 && number <= 52;
   }
 }
