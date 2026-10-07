@@ -1,26 +1,94 @@
 import 'package:flutter/material.dart';
-import '../core/knowledge_pack.dart';
-import '../core/numerology_engine.dart';
-import '../core/pdf_report.dart';
+import 'ai_numerologist_screen.dart';
+import 'baby_names_screen.dart';
+import 'business_screen.dart';
+import 'client_vault_screen.dart';
+import 'compatibility_screen.dart';
+import 'date_selection_screen.dart';
+import 'learn_screen.dart';
+import 'name_correction_screen.dart';
+import 'predictions_screen.dart';
+import 'profession_screen.dart';
+import 'remedies_screen.dart';
+import 'report_builder_screen.dart';
 
-class HomeScreen extends StatefulWidget { const HomeScreen({super.key}); @override State<HomeScreen> createState()=>_HomeScreenState(); }
-class _HomeScreenState extends State<HomeScreen>{
-  final name=TextEditingController(); DateTime? dob; final mobile=TextEditingController(); final vehicle=TextEditingController();
-  int tab=0;
-  @override void dispose(){name.dispose();mobile.dispose();vehicle.dispose();super.dispose();}
-  @override Widget build(BuildContext context){
-    final wide=MediaQuery.sizeOf(context).width>850;
-    return Scaffold(appBar:AppBar(title:const Text('Cheiro Numerology'),actions:[IconButton(onPressed:()=>setState((){}),icon:const Icon(Icons.lock_outline))]),
-      body:wide?_desktop():_mobile(),bottomNavigationBar:wide?null:NavigationBar(selectedIndex:tab,onDestinationSelected:(v)=>setState(()=>tab=v),destinations:const [NavigationDestination(icon:Icon(Icons.dashboard),label:'Home'),NavigationDestination(icon:Icon(Icons.auto_graph),label:'Predictions'),NavigationDestination(icon:Icon(Icons.favorite),label:'Compatibility'),NavigationDestination(icon:Icon(Icons.auto_awesome),label:'Remedies'),NavigationDestination(icon:Icon(Icons.smart_toy),label:'AI')]),
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final modules = <String, Widget>{
+      'Name Correction': const NameCorrectionScreen(),
+      'Compatibility': const CompatibilityScreen(),
+      'Predictions': const PredictionsScreen(),
+      'Business': const BusinessScreen(),
+      'Profession': const ProfessionScreen(),
+      'Remedies': const RemediesScreen(),
+      'Baby Names': const BabyNamesScreen(),
+      'AI Numerologist': const AiNumerologistScreen(),
+      'Report Builder': const ReportBuilderScreen(),
+      'Learn Numerology': const LearnScreen(),
+      'Client Vault': const ClientVaultScreen(),
+      'Date Selection': const DateSelectionScreen(),
+    };
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cheiro Numerology'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Your Numerology Dashboard',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Private, offline-first numerology analysis with a premium Cheiro-inspired engine.',
+            ),
+            const SizedBox(height: 24),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 260,
+                crossAxisSpacing: 14,
+                mainAxisSpacing: 14,
+                childAspectRatio: 1.45,
+              ),
+              itemCount: modules.length,
+              itemBuilder: (context, index) {
+                final entry = modules.entries.elementAt(index);
+                return Card(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => entry.value),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          entry.key,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
-  Widget _desktop()=>Row(children:[NavigationRail(selectedIndex:tab,onDestinationSelected:(v)=>setState(()=>tab=v),labelType:NavigationRailLabelType.all,destinations:const [NavigationRailDestination(icon:Icon(Icons.dashboard),label:Text('Home')),NavigationRailDestination(icon:Icon(Icons.auto_graph),label:Text('Predictions')),NavigationRailDestination(icon:Icon(Icons.favorite),label:Text('Compatibility')),NavigationRailDestination(icon:Icon(Icons.auto_awesome),label:Text('Remedies')),NavigationRailDestination(icon:Icon(Icons.smart_toy),label:Text('AI'))]),Expanded(child:_content())]);
-  Widget _mobile()=>_content();
-  Widget _content()=>SingleChildScrollView(padding:const EdgeInsets.all(20),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-    const Text('Your Numerology Dashboard',style:TextStyle(fontSize:30,fontWeight:FontWeight.w800,letterSpacing:-0.5)),const SizedBox(height:8),const Text('Private, offline-first numerology analysis with a premium Cheiro-inspired calculation engine.'),const SizedBox(height:22),
-    Card(child:Padding(padding:const EdgeInsets.all(18),child:Column(children:[TextField(controller:name,decoration:const InputDecoration(labelText:'Full Name',prefixIcon:Icon(Icons.person))),const SizedBox(height:12),ListTile(contentPadding:EdgeInsets.zero,title:Text(dob==null?'Date of Birth':'${dob!.day}/${dob!.month}/${dob!.year}'),leading:const Icon(Icons.calendar_month),trailing:const Icon(Icons.chevron_right),onTap:()async{final d=await showDatePicker(context:context,firstDate:DateTime(1900),lastDate:DateTime.now(),initialDate:DateTime(1990));if(d!=null)setState(()=>dob=d);}),TextField(controller:mobile,keyboardType:TextInputType.phone,decoration:const InputDecoration(labelText:'Mobile Number')),const SizedBox(height:12),TextField(controller:vehicle,decoration:const InputDecoration(labelText:'Vehicle Number')),const SizedBox(height:18),SizedBox(width:double.infinity,child:FilledButton.icon(onPressed:(){setState((){});},icon:const Icon(Icons.calculate),label:const Text('Generate Analysis')))]))),const SizedBox(height:20),
-    if(name.text.isNotEmpty)...[_numberCards()],const SizedBox(height:20),_featureGrid(),const SizedBox(height:18),Text('Knowledge Pack ${KnowledgePack.version}',style:const TextStyle(fontSize:12,color:Colors.black54)),const SizedBox(height:6),const Text('WhatsApp: 9210896940',style:TextStyle(fontSize:12,color:Colors.black54))]));
-  Widget _numberCards(){final n=NumerologyEngine.name(name.text);final d=dob==null?null:NumerologyEngine.date(dob!);final m=mobile.text.isEmpty?null:NumerologyEngine.mobile(mobile.text);final v=vehicle.text.isEmpty?null:NumerologyEngine.vehicle(vehicle.text);final list=[('Name',n),if(d!=null)('DOB',d),if(m!=null)('Mobile',m),if(v!=null)('Vehicle',v)];return GridView.builder(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),gridDelegate:const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent:240,childAspectRatio:2.1,crossAxisSpacing:12,mainAxisSpacing:12),itemCount:list.length,itemBuilder:(_,i){final x=list[i];return Card(child:Padding(padding:const EdgeInsets.all(14),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(x.$1,style:const TextStyle(color:Colors.black54)),Text('${x.$2.total}',style:const TextStyle(fontSize:28,fontWeight:FontWeight.bold)),Text('Root ${x.$2.root} • ${KnowledgePack.rootMeaning(x.$2.root)}',maxLines:2,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:11))])));});}
-  Widget _featureGrid()=>GridView.count(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),crossAxisCount:MediaQuery.sizeOf(context).width>700?4:2,crossAxisSpacing:12,mainAxisSpacing:12,children:[_tile('Name Correction',Icons.text_fields),_tile('Compatibility',Icons.favorite),_tile('Predictions',Icons.auto_graph),_tile('Business',Icons.business_center),_tile('Profession',Icons.work),_tile('Remedies',Icons.auto_awesome),_tile('Baby Names',Icons.child_care),_tile('AI Numerologist',Icons.smart_toy),_tile('Report Builder',Icons.picture_as_pdf),_tile('Learn Numerology',Icons.school),_tile('Client Vault',Icons.lock),_tile('Date Selection',Icons.event)]);
-  Widget _tile(String title,IconData icon)=>Card(child:InkWell(onTap:(){if(title=='Report Builder'&&name.text.isNotEmpty)ReportBuilder.preview(name:name.text,summary:'Core analysis, compatibility, predictions, remedies and detailed interpretations are generated from the selected report modules.');},child:Padding(padding:const EdgeInsets.all(16),child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[Icon(icon,size:30),const SizedBox(height:8),Text(title,textAlign:TextAlign.center)]))));
 }
