@@ -47,7 +47,33 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Private, offline-first numerology analysis with a premium Cheiro-inspired engine.',
+              'Personal Numerology Intelligence • Private • Offline-first',
+            ),
+            const SizedBox(height: 18),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFFFFF4D6),
+                      ),
+                      child: const Icon(Icons.auto_awesome),
+                    ),
+                    const SizedBox(width: 14),
+                    const Expanded(
+                      child: Text(
+                        'Explore your numbers, patterns, predictions and personalised guidance.',
+                        style: TextStyle(fontSize: 14, height: 1.4),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 24),
             GridView.builder(
