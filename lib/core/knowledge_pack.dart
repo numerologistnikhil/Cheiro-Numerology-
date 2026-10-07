@@ -1,75 +1,81 @@
 class KnowledgePack {
-  static const version = '1.1.0';
-  // Compound-number interpretation range locked to Cheiro 10–52.
+  static const version = '1.2.0';
+
+  // Verified Cheiro compound-number framework: 10–52.
   static const int minCompound = 10;
   static const int maxCompound = 52;
-  // Interpretation layer intentionally modular. Expand only with verified/licensed/public-domain material.
-  static const Map<int,String> roots = {
-    1:'Initiative, independence, individuality and leadership themes.',
-    2:'Cooperation, sensitivity, partnership and diplomacy themes.',
-    3:'Expression, creativity, communication and social themes.',
-    4:'Structure, discipline, systems and practical effort themes.',
-    5:'Movement, adaptability, communication and variety themes.',
-    6:'Responsibility, harmony, family, care and aesthetics themes.',
-    7:'Reflection, analysis, research and inward development themes.',
-    8:'Authority, material organisation, responsibility and long cycles.',
-    9:'Completion, compassion, broad perspective and service themes.',
+
+  static const Map<int, String> roots = {
+    1: 'Individuality, initiative and leadership.',
+    2: 'Cooperation, sensitivity and partnership.',
+    3: 'Expression, creativity and communication.',
+    4: 'Structure, discipline and practical effort.',
+    5: 'Movement, change and adaptability.',
+    6: 'Responsibility, harmony and relationships.',
+    7: 'Analysis, reflection and spiritual inquiry.',
+    8: 'Authority, organisation and material responsibility.',
+    9: 'Completion, compassion and broad perspective.',
   };
-  static String rootMeaning(int n)=>roots[n]??'Interpretation unavailable in current verified pack.';
+
+  static String rootMeaning(int n) =>
+      roots[n] ?? 'Interpretation unavailable in the verified pack.';
+
+  static bool isValidCompound(int n) =>
+      n >= minCompound && n <= maxCompound;
+
   static String compoundMeaning(int n) {
     if (!isValidCompound(n)) {
       return 'Compound number outside the verified Cheiro range.';
     }
-    return compoundNumbers[n] ?? 'Verified interpretation pending.';
+    return compoundNumbers[n] ??
+        'Verified interpretation pending.';
   }
 
-  static bool isValidCompound(int n) {
-    return n >= minCompound && n <= maxCompound;
-  }
-
+  // Paraphrased from Cheiro's Book of Numbers.
+  // These are interpretation summaries, not copied source text.
   static const Map<int, String> compoundNumbers = {
-    10: 'Wheel of Fortune',
-    11: 'Intuition and heightened sensitivity',
-    12: 'Learning through experience and responsibility',
-    13: 'Transformation through disciplined effort',
-    14: 'Movement, change and adaptability',
-    15: 'Influence, communication and attraction',
-    16: 'Reflection, change and rebuilding',
-    17: 'Progress through discipline and persistence',
-    18: 'Power, responsibility and service',
-    19: 'Independence, completion and renewal',
-    20: 'Awakening, cooperation and patience',
-    21: 'Growth through expression and opportunity',
-    22: 'Large-scale plans and practical organisation',
-    23: 'Communication, protection and opportunity',
-    24: 'Support, relationships and material comfort',
-    25: 'Analysis, intuition and experience',
-    26: 'Responsibility, partnership and material affairs',
-    27: 'Spiritual insight, compassion and achievement',
-    28: 'Independence, partnerships and changing fortunes',
-    29: 'Sensitivity, intuition and relationship lessons',
-    30: 'Expression, creativity and communication',
-    31: 'Individuality, structure and practical achievement',
-    32: 'Communication, influence and adaptability',
-    33: 'Service, responsibility and creative expression',
-    34: 'Practical growth through communication and effort',
-    35: 'Change, expression and learning',
-    36: 'Responsibility, creativity and relationships',
-    37: 'Intuition, analysis and independent achievement',
-    38: 'Ambition, organisation and material responsibility',
-    39: 'Completion, service and broad perspective',
-    40: 'Structure, patience and practical foundations',
-    41: 'Independent thinking with disciplined action',
-    42: 'Partnership, organisation and steady progress',
-    43: 'Transformation through structure and persistence',
-    44: 'Strong organisation, responsibility and long-term building',
-    45: 'Change, communication and practical opportunity',
-    46: 'Responsibility, relationships and material organisation',
-    47: 'Research, intuition and disciplined development',
-    48: 'Authority, organisation and long-term responsibility',
-    49: 'Completion, transformation and renewal',
-    50: 'Freedom, movement and adaptability',
-    51: 'Initiative, influence and decisive action',
-    52: 'Intuition, change and independent development',
+    10: 'Wheel of Fortune: honour, faith, confidence, changing fortunes and the possibility of plans succeeding.',
+    11: 'Warning number: hidden dangers, trials, opposition and possible treachery; calls for caution.',
+    12: 'Sacrifice and anxiety: difficulty, mental strain and the possibility of being used for others’ plans.',
+    13: 'Change and upheaval: transformation, destruction of old conditions and unexpected developments; not inherently unlucky.',
+    14: 'Movement and combinations: change, money or business opportunities with risk; caution against impulsive actions.',
+    15: 'Occult influence, communication and personal magnetism; can indicate eloquence, artistic ability and influence.',
+    16: 'Sudden disruption: warning of defeat, accidents or plans being overturned; encourages preparation and caution.',
+    17: 'Spiritual strength and lasting influence: associated with peace, love, achievement and a name that endures.',
+    18: 'Conflict and material struggle: warnings involving quarrels, deception, upheaval and elemental dangers.',
+    19: 'Favourable solar influence: happiness, success, esteem, honour and progress with future plans.',
+    20: 'Awakening and new purpose: new ambitions or duties, but possible delays and limited immediate material gain.',
+    21: 'Advancement and recognition: success after effort, elevation and victory following perseverance.',
+    22: 'Warning of illusion and poor judgment: vulnerability to misleading influences and mistakes caused by others.',
+    23: 'Royal Star: protection, assistance from influential people and strong prospects for successful plans.',
+    24: 'Support and favourable associations: help from influential connections and benefits through relationships.',
+    25: 'Strength through experience: learning from observation and trials, with favourable results after development.',
+    26: 'Serious warning: possible losses through partnerships, speculation, poor advice or unsuitable associations.',
+    27: 'Authority and productive intellect: creative effort, command and rewards from one’s own ideas.',
+    28: 'Contradictory fortunes: promise and ability mixed with risks of loss, opposition, legal difficulties and repeated rebuilding.',
+    29: 'Uncertainty and deception: trials, unreliable associations and unexpected difficulties; caution is advised.',
+    30: 'Mental power and reflection: thoughtful analysis and intellectual independence; outcome depends on the person’s use of it.',
+    31: 'Strong self-containment: independence and isolation; less favourable for worldly or material concerns.',
+    32: 'Influence through communication and combinations: favourable when personal judgment is maintained rather than following others blindly.',
+    33: 'Same essential interpretation as 24; the compound itself has no separate potency in Cheiro’s description.',
+    34: 'Same essential interpretation as 25.',
+    35: 'Same essential interpretation as 26.',
+    36: 'Same essential interpretation as 27.',
+    37: 'Favourable friendships and partnerships: especially positive for love, cooperation and joint ventures.',
+    38: 'Same essential interpretation as 29.',
+    39: 'Same essential interpretation as 30.',
+    40: 'Same essential interpretation as 31.',
+    41: 'Same essential interpretation as 32.',
+    42: 'Same essential interpretation as 24.',
+    43: 'Unfavourable warning: upheaval, conflict, failure, obstruction and difficult future indications.',
+    44: 'Same essential interpretation as 26.',
+    45: 'Same essential interpretation as 27.',
+    46: 'Same essential interpretation as 37.',
+    47: 'Same essential interpretation as 29.',
+    48: 'Same essential interpretation as 30.',
+    49: 'Same essential interpretation as 31.',
+    50: 'Same essential interpretation as 32.',
+    51: 'Powerful warrior symbolism: sudden advancement and leadership potential, alongside serious warnings concerning enemies and danger.',
+    52: 'Same essential interpretation as 43.',
   };
 }
