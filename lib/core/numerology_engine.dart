@@ -1,12 +1,21 @@
+import 'knowledge_pack.dart';
+
 class NumerologyResult {
   final int total;
   final int root;
+
   const NumerologyResult(this.total, this.root);
+
+  bool get hasCheiroCompound =>
+      KnowledgePack.isValidCompound(total);
+
+  String get compoundMeaning =>
+      KnowledgePack.compoundMeaning(total);
 }
 
 class NumerologyEngine {
   // Chaldean-style letter values.
-  // Calculation remains separate from the Cheiro 1–54 interpretation layer.
+  // Calculation is separate from the Cheiro interpretation layer.
   static const Map<String, int> letters = {
     'A': 1, 'I': 1, 'J': 1, 'Q': 1, 'Y': 1,
     'B': 2, 'K': 2, 'R': 2,
@@ -66,8 +75,7 @@ class NumerologyEngine {
     return NumerologyResult(mapped, root(mapped));
   }
 
-  // Cheiro compound-number interpretation is limited to the documented 10–52 range.
   static bool isCheiroCompound(int number) {
-    return number >= 10 && number <= 52;
+    return KnowledgePack.isValidCompound(number);
   }
 }
