@@ -1,9 +1,65 @@
-class KnowledgePack {
-  static const version = '1.2.0';
+/// How an interpretation entry was produced.
+///
+/// No entry in this pack is marked as verified against a specific Cheiro
+/// edition. Verification against the chosen source edition is still pending.
+enum EditorialStatus {
+  /// Short paraphrase of the traditional symbolism usually associated with
+  /// the number in Cheiro-style numerology. Not copied text. Still to be
+  /// checked against the selected source edition.
+  traditionalParaphrase,
 
-  // Verified Cheiro compound-number framework: 10–52.
+  /// Modern explanatory guidance written for this app, built from the
+  /// number's component digits and root. It is not claimed to be Cheiro's
+  /// own wording or a verified traditional reading.
+  editorialGuidance,
+}
+
+class CompoundEntry {
+  final int number;
+  final String title;
+  final EditorialStatus status;
+  final String summary;
+  final String strengths;
+  final String cautions;
+  final String relationships;
+  final String work;
+  final String money;
+  final String advice;
+
+  const CompoundEntry(
+    this.number,
+    this.title,
+    this.status,
+    this.summary,
+    this.strengths,
+    this.cautions,
+    this.relationships,
+    this.work,
+    this.money,
+    this.advice,
+  );
+
+  String get statusLabel {
+    switch (status) {
+      case EditorialStatus.traditionalParaphrase:
+        return 'Traditional symbolism (paraphrased, edition check pending)';
+      case EditorialStatus.editorialGuidance:
+        return 'Modern guidance (not verified Cheiro text)';
+    }
+  }
+}
+
+const EditorialStatus _t = EditorialStatus.traditionalParaphrase;
+const EditorialStatus _e = EditorialStatus.editorialGuidance;
+
+class KnowledgePack {
+  static const version = '2.0.0';
+
+  /// Root numbers cover 1-9. Compound numbers cover 10-54, which together
+  /// make up the locked 1-54 framework. Raw totals above 54 are never
+  /// clamped; they simply have no compound interpretation.
   static const int minCompound = 10;
-  static const int maxCompound = 52;
+  static const int maxCompound = 54;
 
   static const Map<int, String> roots = {
     1: 'Individuality, initiative and leadership.',
@@ -18,64 +74,567 @@ class KnowledgePack {
   };
 
   static String rootMeaning(int n) =>
-      roots[n] ?? 'Interpretation unavailable in the verified pack.';
+      roots[n] ?? 'No root interpretation is available for this value.';
 
   static bool isValidCompound(int n) =>
       n >= minCompound && n <= maxCompound;
 
+  static CompoundEntry? compoundEntry(int n) =>
+      isValidCompound(n) ? compoundNumbers[n] : null;
+
   static String compoundMeaning(int n) {
     if (!isValidCompound(n)) {
-      return 'Compound number outside the verified Cheiro range.';
+      return 'This total is outside the 10-54 compound range supported by '
+          'the knowledge pack, so no compound interpretation is shown. '
+          'The raw total is still preserved.';
     }
-    return compoundNumbers[n] ??
-        'Verified interpretation pending.';
+    final entry = compoundNumbers[n];
+    if (entry == null) {
+      return 'No interpretation is stored for this number yet.';
+    }
+    return entry.summary;
   }
 
-  // Paraphrased from Cheiro's Book of Numbers.
-  // These are interpretation summaries, not copied source text.
-  static const Map<int, String> compoundNumbers = {
-    10: 'Wheel of Fortune: honour, faith, confidence, changing fortunes and the possibility of plans succeeding.',
-    11: 'Warning number: hidden dangers, trials, opposition and possible treachery; calls for caution.',
-    12: 'Sacrifice and anxiety: difficulty, mental strain and the possibility of being used for others’ plans.',
-    13: 'Change and upheaval: transformation, destruction of old conditions and unexpected developments; not inherently unlucky.',
-    14: 'Movement and combinations: change, money or business opportunities with risk; caution against impulsive actions.',
-    15: 'Occult influence, communication and personal magnetism; can indicate eloquence, artistic ability and influence.',
-    16: 'Sudden disruption: warning of defeat, accidents or plans being overturned; encourages preparation and caution.',
-    17: 'Spiritual strength and lasting influence: associated with peace, love, achievement and a name that endures.',
-    18: 'Conflict and material struggle: warnings involving quarrels, deception, upheaval and elemental dangers.',
-    19: 'Favourable solar influence: happiness, success, esteem, honour and progress with future plans.',
-    20: 'Awakening and new purpose: new ambitions or duties, but possible delays and limited immediate material gain.',
-    21: 'Advancement and recognition: success after effort, elevation and victory following perseverance.',
-    22: 'Warning of illusion and poor judgment: vulnerability to misleading influences and mistakes caused by others.',
-    23: 'Royal Star: protection, assistance from influential people and strong prospects for successful plans.',
-    24: 'Support and favourable associations: help from influential connections and benefits through relationships.',
-    25: 'Strength through experience: learning from observation and trials, with favourable results after development.',
-    26: 'Serious warning: possible losses through partnerships, speculation, poor advice or unsuitable associations.',
-    27: 'Authority and productive intellect: creative effort, command and rewards from one’s own ideas.',
-    28: 'Contradictory fortunes: promise and ability mixed with risks of loss, opposition, legal difficulties and repeated rebuilding.',
-    29: 'Uncertainty and deception: trials, unreliable associations and unexpected difficulties; caution is advised.',
-    30: 'Mental power and reflection: thoughtful analysis and intellectual independence; outcome depends on the person’s use of it.',
-    31: 'Strong self-containment: independence and isolation; less favourable for worldly or material concerns.',
-    32: 'Influence through communication and combinations: favourable when personal judgment is maintained rather than following others blindly.',
-    33: 'Same essential interpretation as 24; the compound itself has no separate potency in Cheiro’s description.',
-    34: 'Same essential interpretation as 25.',
-    35: 'Same essential interpretation as 26.',
-    36: 'Same essential interpretation as 27.',
-    37: 'Favourable friendships and partnerships: especially positive for love, cooperation and joint ventures.',
-    38: 'Same essential interpretation as 29.',
-    39: 'Same essential interpretation as 30.',
-    40: 'Same essential interpretation as 31.',
-    41: 'Same essential interpretation as 32.',
-    42: 'Same essential interpretation as 24.',
-    43: 'Unfavourable warning: upheaval, conflict, failure, obstruction and difficult future indications.',
-    44: 'Same essential interpretation as 26.',
-    45: 'Same essential interpretation as 27.',
-    46: 'Same essential interpretation as 37.',
-    47: 'Same essential interpretation as 29.',
-    48: 'Same essential interpretation as 30.',
-    49: 'Same essential interpretation as 31.',
-    50: 'Same essential interpretation as 32.',
-    51: 'Powerful warrior symbolism: sudden advancement and leadership potential, alongside serious warnings concerning enemies and danger.',
-    52: 'Same essential interpretation as 43.',
+  static const Map<int, CompoundEntry> compoundNumbers = {
+    10: CompoundEntry(
+      10,
+      'The Wheel of Fortune',
+      _t,
+      'Traditionally linked with rising and falling fortunes, confidence and faith that plans can succeed.',
+      'Self-reliance, optimism and the ability to recover and try again.',
+      'Overconfidence, or assuming good luck will continue without effort.',
+      'Warm and trusting, though it helps to notice when others are less committed.',
+      'Suits roles where adaptability and resilience matter more than routine.',
+      'Income may vary over time, so a reserve and a steady plan are helpful.',
+      'Treat changes of fortune as normal cycles and keep your plans flexible.',
+    ),
+    11: CompoundEntry(
+      11,
+      'The Caution Number',
+      _t,
+      'Traditionally read as a reminder of hidden trials, opposition and the need to look carefully before trusting.',
+      'Sensitivity, intuition and an eye for what others overlook.',
+      'Worry, suspicion, or reading every difficulty as a plot.',
+      'Choose confidants slowly and check promises against actions.',
+      'Careful research and due diligence play to your strengths.',
+      'Read terms before committing and avoid deals that depend on secrecy.',
+      'Use the caution as a prompt to prepare, not as a reason for fear.',
+    ),
+    12: CompoundEntry(
+      12,
+      'The Sacrifice',
+      _t,
+      'Traditionally associated with anxiety, strain and the risk of carrying burdens that belong to others.',
+      'Dedication, service and willingness to help.',
+      'Self-neglect, being taken for granted, and chronic worry.',
+      'Set kind but clear limits so giving stays a choice.',
+      'Supportive and behind-the-scenes roles suit you; ask for recognition too.',
+      'Avoid guaranteeing other people debts or plans you do not control.',
+      'Put your own needs on the list and share responsibility.',
+    ),
+    13: CompoundEntry(
+      13,
+      'Change and Renewal',
+      _t,
+      'Traditionally a number of upheaval and transformation, where old conditions give way to new ones. It is not inherently unlucky.',
+      'Courage in the face of change and the ability to rebuild.',
+      'Resisting necessary change, or acting rashly during disruption.',
+      'Relationships may go through rethinks; honest talks help them evolve.',
+      'Good for turnaround, restructuring and pioneering work.',
+      'Expect some reorganising of finances; keep records tidy.',
+      'Let go of what no longer works and plan the next step calmly.',
+    ),
+    14: CompoundEntry(
+      14,
+      'Movement and Combinations',
+      _t,
+      'Traditionally tied to movement, travel, trade and combinations of people or ideas, with both opportunity and risk.',
+      'Versatility, quick thinking and a talent for deals and networks.',
+      'Impulsiveness, restlessness and taking risks without a fallback.',
+      'Enjoys variety; commitment grows when you slow down to listen.',
+      'Sales, communication, trade and media are natural fits.',
+      'Opportunities can appear quickly; test them before committing large sums.',
+      'Pause before big moves and keep a clear checklist.',
+    ),
+    15: CompoundEntry(
+      15,
+      'Magnetism and Persuasion',
+      _t,
+      'Traditionally linked with charm, eloquence, artistic gifts and an attractive personal influence.',
+      'Persuasion, creativity and ease with people.',
+      'Using charm to avoid responsibility, or being drawn to flattery.',
+      'Attracts attention; depth comes from honesty rather than image.',
+      'Performing, teaching, marketing and creative fields suit you.',
+      'Skills can earn well, but avoid spending to maintain appearances.',
+      'Use your influence with integrity and stay grounded.',
+    ),
+    16: CompoundEntry(
+      16,
+      'The Shattered Plan',
+      _t,
+      'Traditionally a warning that plans resting on pride or weak foundations can be overturned suddenly.',
+      'Insight into what is fragile, and resilience after setbacks.',
+      'Ego, rigid plans and ignoring early warning signs.',
+      'Humility and open communication protect closeness.',
+      'Build contingency plans and double-check critical details.',
+      'Do not stake everything on one venture; diversify and insure sensibly.',
+      'Prepare, stay modest and treat surprises as information.',
+    ),
+    17: CompoundEntry(
+      17,
+      'The Star of Hope',
+      _t,
+      'Traditionally associated with peace, spiritual strength, lasting achievement and a name that endures.',
+      'Calm purpose, vision and the ability to inspire trust.',
+      'Detachment from practical details, or waiting for perfect conditions.',
+      'Loyal and idealistic; share your inner world, not only your plans.',
+      'Leadership, counselling, research and long-term projects suit you.',
+      'Steady, patient building tends to serve better than quick bets.',
+      'Pair your vision with small, consistent actions.',
+    ),
+    18: CompoundEntry(
+      18,
+      'Struggle and Conflict',
+      _t,
+      'Traditionally associated with quarrels, material struggle and tension between ideals and gain.',
+      'Tenacity, practical drive and the ability to defend what matters.',
+      'Disputes, mistrust and mixing business with personal conflict.',
+      'Cool down before discussions; seek resolution over winning.',
+      'Mediation, law, negotiation and crisis roles can use your toughness.',
+      'Put agreements in writing and avoid risky shortcuts.',
+      'Choose battles carefully and keep communication open.',
+    ),
+    19: CompoundEntry(
+      19,
+      'The Radiant Sun',
+      _t,
+      'Traditionally one of the favourable compounds, linked with happiness, esteem, honour and progress.',
+      'Confidence, warmth, leadership and the ability to shine in public.',
+      'Pride, wanting credit, or underestimating details.',
+      'Generous and loyal; make space for other voices.',
+      'Leadership and visible roles suit you.',
+      'Good prospects follow steady effort; avoid overspending on status.',
+      'Use your visibility to lift others as well.',
+    ),
+    20: CompoundEntry(
+      20,
+      'The Awakening',
+      _t,
+      'Traditionally a number of new purpose and calling, where results may come slowly after delays.',
+      'Insight, vision and readiness to start afresh with a clear aim.',
+      'Impatience when early rewards are small, or doubting the path.',
+      'Supportive and wise; avoid assuming others share your timeline.',
+      'Teaching, planning, mentoring and mission-led work fit well.',
+      'Expect gradual gains; build income steps rather than waiting for a jump.',
+      'Define your purpose in one sentence and take the first practical step.',
+    ),
+    21: CompoundEntry(
+      21,
+      'The Crown',
+      _t,
+      'Traditionally one of the most favourable compounds, linked with advancement, recognition and success after perseverance.',
+      'Determination, dignity and the ability to finish what you start.',
+      'Complacency after a win, or expecting recognition without continued effort.',
+      'Steady and dependable; celebrate partners as well as achievements.',
+      'Management, public roles and long-career paths are well supported.',
+      'Reward tends to follow consistent work; reinvest wisely.',
+      'Stay humble at the top and keep learning.',
+    ),
+    22: CompoundEntry(
+      22,
+      'Illusion and Judgement',
+      _t,
+      'Traditionally a caution about illusion, misleading advice and the need for independent judgement.',
+      'Imagination, kindness and trust in people.',
+      'Naivety, being talked into poor decisions, or avoiding hard facts.',
+      'Trust, then verify; healthy boundaries keep generosity safe.',
+      'Seek second opinions on major commitments.',
+      'Be cautious with offers that sound too good to be true.',
+      'Check facts, take your time and decide for yourself.',
+    ),
+    23: CompoundEntry(
+      23,
+      'The Royal Star',
+      _t,
+      'Traditionally a favourable compound linked with protection, help from influential people and success in plans.',
+      'Charm, resourcefulness and the ability to gain support.',
+      'Taking help for granted or drifting without a plan.',
+      'Appreciated by friends; reciprocity keeps bonds strong.',
+      'Good for roles that rely on networks, partnerships and advocacy.',
+      'Support and opportunities may come; manage them with care.',
+      'Say thank you often and keep building your own skills.',
+    ),
+    24: CompoundEntry(
+      24,
+      'Favourable Associations',
+      _t,
+      'Traditionally linked with benefits through relationships and support from influential or well-disposed people.',
+      'Likeability, diplomacy and good fortune in partnerships.',
+      'Relying too much on others or becoming complacent in comfort.',
+      'Affectionate and sociable; deepen trust through consistency.',
+      'Teamwork, client-facing and relationship-driven work suit you.',
+      'Partnerships can help financially if roles and terms are clear.',
+      'Nurture good associations and contribute your fair share.',
+    ),
+    25: CompoundEntry(
+      25,
+      'Strength Through Experience',
+      _t,
+      'Traditionally associated with learning through observation and trials, with better results as experience grows.',
+      'Analysis, discernment and wisdom from experience.',
+      'Over-analysis, scepticism or slow starts.',
+      'Reserved at first; trust grows with time and shared experience.',
+      'Research, craft, troubleshooting and specialist roles fit well.',
+      'Gains come through knowledge and patience rather than haste.',
+      'Learn from setbacks and act once you have enough information.',
+    ),
+    26: CompoundEntry(
+      26,
+      'Caution in Partnerships',
+      _t,
+      'Traditionally a warning about losses through partnerships, speculation or unsuitable advice.',
+      'Insight into group dynamics and care for shared goals.',
+      'Entering ventures on trust alone, or following the crowd.',
+      'Define expectations early and keep finances separate where wise.',
+      'Do due diligence on partners and contracts.',
+      'Be wary of speculation and lending; document every agreement.',
+      'Choose partners carefully and keep a record of decisions.',
+    ),
+    27: CompoundEntry(
+      27,
+      'The Sceptre',
+      _t,
+      'Traditionally linked with authority, productive intellect and rewards from your own ideas.',
+      'Command, creativity and the ability to turn ideas into results.',
+      'Bossiness, impatience with slower colleagues and pride in ideas.',
+      'Offer guidance without taking control; ask for opinions.',
+      'Leadership, design, writing and enterprise suit you.',
+      'Original work can pay well; protect your ideas and contracts.',
+      'Lead by example and keep listening.',
+    ),
+    28: CompoundEntry(
+      28,
+      'Contradictory Fortunes',
+      _t,
+      'Traditionally describes promise and ability mixed with risks of loss, opposition and repeated rebuilding.',
+      'Ability, persistence and the capacity to start again.',
+      'Overextending, legal or contractual trouble, and relying on others to rescue plans.',
+      'Strong when supported; avoid taking on others burdens.',
+      'Work best with clear agreements and written terms.',
+      'Be conservative with guarantees and borrowing; build reserves.',
+      'Build slowly, secure your base and keep legal matters clean.',
+    ),
+    29: CompoundEntry(
+      29,
+      'Uncertainty and Trust',
+      _t,
+      'Traditionally a caution about uncertainty, unreliable associations and unexpected difficulties.',
+      'Imagination, empathy and adaptability.',
+      'Misplaced trust, mixed signals and changing plans.',
+      'Be open but verify; clear communication prevents misunderstandings.',
+      'Use checklists and written confirmations in team work.',
+      'Avoid decisions made in haste or on rumours.',
+      'Slow down, confirm details and rely on proven people.',
+    ),
+    30: CompoundEntry(
+      30,
+      'The Thinker',
+      _t,
+      'Traditionally linked with mental power, reflection and intellectual independence.',
+      'Depth of thought, independence and analytical skill.',
+      'Isolation, aloofness or over-thinking instead of acting.',
+      'Share thoughts out loud; partners cannot read your mind.',
+      'Research, writing, strategy and technical work suit you.',
+      'Steady, planned finances serve you better than impulsive gains.',
+      'Balance reflection with action and stay in touch with people.',
+    ),
+    31: CompoundEntry(
+      31,
+      'The Self-Contained',
+      _t,
+      'Traditionally linked with independence and a tendency to stand apart from the crowd.',
+      'Self-sufficiency, focus and original thinking.',
+      'Withdrawal, loneliness and reluctance to ask for help.',
+      'Make small, regular gestures of connection.',
+      'Independent, specialist and solo-creative work suits you.',
+      'Plan carefully and seek advice before major commitments.',
+      'Value your independence while allowing trusted people in.',
+    ),
+    32: CompoundEntry(
+      32,
+      'The Communicator',
+      _e,
+      'Modern guidance: a lively, adaptable number (3 and 2 reducing to 5) that favours communication, networking and flexible thinking.',
+      'Articulate, adaptable and good at connecting people and ideas.',
+      'Scattered focus, or saying what people want to hear.',
+      'Easy conversation; follow words with reliable action.',
+      'Media, teaching, sales and coordination roles suit you.',
+      'Multiple income streams can work if each is tracked clearly.',
+      'Choose a few priorities and communicate them honestly.',
+    ),
+    33: CompoundEntry(
+      33,
+      'The Caring Voice',
+      _e,
+      'Modern guidance: a doubled 3 (reducing to 6) that blends expression with care for others and a wish for harmony.',
+      'Warmth, generosity and a talent for encouraging people.',
+      'Over-giving, perfectionism and taking on family or group responsibilities alone.',
+      'Devoted and nurturing; share the load and say what you need.',
+      'Counselling, teaching, arts and community work suit you.',
+      'Money may go to loved ones first; keep a personal savings habit.',
+      'Express care through boundaries as well as support.',
+    ),
+    34: CompoundEntry(
+      34,
+      'Creative Structure',
+      _e,
+      'Modern guidance: creativity (3) joined with discipline (4), reducing to 7, favouring crafted, thoughtful work.',
+      'Methodical creativity, patience and quality focus.',
+      'Overthinking, perfectionism and slow decisions.',
+      'Reflective and loyal; let others see work in progress.',
+      'Design, writing, engineering and research suit you.',
+      'Steady, well-planned progress beats speculative leaps.',
+      'Set deadlines so good ideas reach completion.',
+    ),
+    35: CompoundEntry(
+      35,
+      'Expressive Ambition',
+      _e,
+      'Modern guidance: expression (3) with change (5), reducing to 8, pointing to ambition and a talent for managing resources and people.',
+      'Energy, persuasion and organising ability.',
+      'Overcommitment, impatience and chasing quick wins.',
+      'Charismatic; give partners your full attention, not only your schedule.',
+      'Entrepreneurship, management and business development suit you.',
+      'Opportunities may come in bursts; budget for slow periods.',
+      'Channel drive into a clear plan with measurable steps.',
+    ),
+    36: CompoundEntry(
+      36,
+      'The Generous Creator',
+      _e,
+      'Modern guidance: creativity (3) with responsibility (6), reducing to 9, favouring service through art, teaching or community projects.',
+      'Compassion, creativity and a sense of social purpose.',
+      'Taking on too many causes, or idealism overriding practicality.',
+      'Big-hearted; look after your own limits too.',
+      'Education, healing arts, design and non-profit work suit you.',
+      'Generosity is a strength; give within a budget you set.',
+      'Aim creativity at something that helps others, then finish it.',
+    ),
+    37: CompoundEntry(
+      37,
+      'The Thoughtful Original',
+      _e,
+      'Modern guidance: expression (3) with reflection (7), reducing to 1, favouring original ideas and warm, cooperative bonds.',
+      'Independent thought with a friendly, cooperative manner.',
+      'Keeping ideas private, or doubting your own originality.',
+      'Good at friendships and partnerships built on shared ideas.',
+      'Joint ventures, creative collaborations and advisory work suit you.',
+      'Collaborative income can work if shares and duties are agreed in writing.',
+      'Share your ideas early and invite honest feedback.',
+    ),
+    38: CompoundEntry(
+      38,
+      'Authority with Tact',
+      _e,
+      'Modern guidance: expression (3) with organisation (8), reducing to 2, pointing to leadership delivered through diplomacy.',
+      'Persuasive, organised and good at bringing people along.',
+      'Being overly agreeable, or hiding frustration until it spills over.',
+      'Supportive partner; state needs plainly.',
+      'Coordination, HR, client management and diplomacy suit you.',
+      'Negotiation skills help; avoid undervaluing your work.',
+      'Be firm and kind in the same sentence.',
+    ),
+    39: CompoundEntry(
+      39,
+      'The Wide-Angle Creator',
+      _e,
+      'Modern guidance: expression (3) with completion (9), reducing to 3, favouring big-picture creativity and a gift for storytelling.',
+      'Imagination, perspective and inspiring communication.',
+      'Starting more projects than you can finish.',
+      'Sociable and encouraging; follow through on promises.',
+      'Writing, speaking, film, teaching and publishing suit you.',
+      'Income can be irregular; set aside a monthly buffer.',
+      'Finish one meaningful piece before beginning another.',
+    ),
+    40: CompoundEntry(
+      40,
+      'The Foundation Builder',
+      _e,
+      'Modern guidance: a pure 4 energy (reducing to 4) centred on discipline, routine and building something solid.',
+      'Reliability, practicality and perseverance.',
+      'Rigidity, overwork and resisting change.',
+      'Steady and loyal; schedule time for play and affection.',
+      'Construction, operations, accounting and systems work suit you.',
+      'Savings plans and steady investment habits fit well.',
+      'Keep the structure, but leave room to adapt.',
+    ),
+    41: CompoundEntry(
+      41,
+      'The Systematic Starter',
+      _e,
+      'Modern guidance: discipline (4) with initiative (1), reducing to 5, favouring organised action and bold but planned steps.',
+      'Decisive, organised and good at launching projects.',
+      'Stubbornness, or pushing ahead without listening.',
+      'Direct and dependable; soften delivery under stress.',
+      'Project management, start-ups and operations suit you.',
+      'Plan budgets before expansion and track returns.',
+      'Plan the first step carefully, then move without delay.',
+    ),
+    42: CompoundEntry(
+      42,
+      'Steady Cooperation',
+      _e,
+      'Modern guidance: discipline (4) with partnership (2), reducing to 6, favouring dependable teamwork and responsibility to others.',
+      'Patient, loyal and good at long-term collaboration.',
+      'Overly cautious, or sacrificing your goals for the group.',
+      'Committed partner; express appreciation openly.',
+      'Administration, healthcare, education and service roles suit you.',
+      'Shared budgets and long-term savings are comfortable for you.',
+      'Support others without letting your own plans slip.',
+    ),
+    43: CompoundEntry(
+      43,
+      'Effort Against Obstacles',
+      _e,
+      'Modern guidance: discipline (4) with creativity (3), reducing to 7, suggesting hard work that meets resistance and calls for patience. Earlier notes treated it as a caution number; this pack frames it as a call for resilience.',
+      'Perseverance, resourcefulness and independent thinking.',
+      'Frustration with delays, and taking setbacks personally.',
+      'Open up about stress rather than withdrawing.',
+      'Technical, research and problem-solving roles suit you.',
+      'Avoid risky shortcuts; steady saving protects against bumpy periods.',
+      'Break big obstacles into small steps and ask for help early.',
+    ),
+    44: CompoundEntry(
+      44,
+      'Double Foundation',
+      _e,
+      'Modern guidance: a doubled 4 (reducing to 8) that emphasises endurance, structure and material responsibility.',
+      'Stamina, discipline and ability to hold complex systems together.',
+      'Workaholism, inflexibility and carrying too much alone.',
+      'Dependable provider; make time for emotional connection.',
+      'Management, engineering, finance and large-scale operations suit you.',
+      'Strong at saving and planning; review plans for rigidity.',
+      'Delegate, rest and keep a human touch in your systems.',
+    ),
+    45: CompoundEntry(
+      45,
+      'Practical Adaptation',
+      _e,
+      'Modern guidance: discipline (4) with change (5), reducing to 9, favouring practical flexibility and a broader, service-minded outlook.',
+      'Adaptable, grounded and good at making change workable.',
+      'Restlessness inside routine, or scattered energy.',
+      'Supportive and fair; keep commitments even when bored.',
+      'Logistics, consulting, travel and service industries suit you.',
+      'Balance steady income with room for experiments.',
+      'Use change to improve your system rather than to escape it.',
+    ),
+    46: CompoundEntry(
+      46,
+      'Responsible Leadership',
+      _e,
+      'Modern guidance: discipline (4) with harmony (6), reducing to 1, favouring leadership grounded in duty and care.',
+      'Trustworthy, protective and willing to lead by example.',
+      'Controlling tendencies, or taking on everyone else problems.',
+      'Caring head of family or team; invite others to share decisions.',
+      'Management, community leadership and healthcare administration suit you.',
+      'Responsible budgeting is a strength; plan for dependents.',
+      'Lead with fairness and let others take responsibility too.',
+    ),
+    47: CompoundEntry(
+      47,
+      'Quiet Collaboration',
+      _e,
+      'Modern guidance: discipline (4) with reflection (7), reducing to 2, favouring thoughtful, behind-the-scenes cooperation.',
+      'Careful, perceptive and reliable in small teams.',
+      'Reserve, over-caution and avoiding the spotlight when it is needed.',
+      'Deeply loyal; say what you feel as well as what you think.',
+      'Analysis, editing, research support and technical advisory suit you.',
+      'Cautious planning works; do not undersell your expertise.',
+      'Speak up with your findings and ask for credit.',
+    ),
+    48: CompoundEntry(
+      48,
+      'The Organised Voice',
+      _e,
+      'Modern guidance: discipline (4) with authority (8), reducing to 3, favouring clear, organised communication from a position of responsibility.',
+      'Structured, articulate and persuasive about plans.',
+      'Being overly formal, or underplaying creativity.',
+      'Dependable communicator; add warmth and humour.',
+      'Management communication, training, law and administration suit you.',
+      'Good at presenting budgets and plans; keep reserves.',
+      'Explain the plan simply and invite questions.',
+    ),
+    49: CompoundEntry(
+      49,
+      'Practical Completion',
+      _e,
+      'Modern guidance: discipline (4) with completion (9), reducing to 4, favouring finishing work and closing chapters in an orderly way.',
+      'Thorough, conscientious and good at wrapping things up.',
+      'Clinging to old structures or perfectionism at the end.',
+      'Patient and fair; let go of old grievances.',
+      'Auditing, project closure, archives and service work suit you.',
+      'Tidy up accounts and commitments regularly.',
+      'Close what is finished so energy is free for what is next.',
+    ),
+    50: CompoundEntry(
+      50,
+      'Freedom and Flow',
+      _e,
+      'Modern guidance: a pure 5 energy (reducing to 5) centred on freedom, change and curiosity.',
+      'Curious, flexible and quick to learn.',
+      'Restlessness, impulsiveness and difficulty with routine.',
+      'Lively companion; reassure partners that you are committed.',
+      'Travel, media, sales and innovation-driven work suit you.',
+      'Variable income is possible; build a safety buffer.',
+      'Use freedom to learn and explore, with a few fixed anchors.',
+    ),
+    51: CompoundEntry(
+      51,
+      'The Bold Initiative',
+      _e,
+      'Modern guidance: change (5) with initiative (1), reducing to 6. Earlier notes mention warrior symbolism for this number; that association still needs to be checked against the chosen source edition. Here it is framed as courage balanced by responsibility.',
+      'Boldness, leadership and the drive to act.',
+      'Aggression, haste and conflicts with rivals.',
+      'Passionate and protective; temper intensity with listening.',
+      'Entrepreneurship, leadership, sports and field roles suit you.',
+      'Fast opportunities may appear; set limits before you commit funds.',
+      'Pair courage with patience and avoid unnecessary fights.',
+    ),
+    52: CompoundEntry(
+      52,
+      'Change with Care',
+      _e,
+      'Modern guidance: change (5) with cooperation (2), reducing to 7, favouring thoughtful adaptation and learning through partnerships.',
+      'Sociable, observant and flexible in groups.',
+      'Indecision, or changing course because of others opinions.',
+      'Gentle and curious; speak your own preference.',
+      'Consulting, research partnerships and creative teamwork suit you.',
+      'Shared ventures work when roles are clearly defined.',
+      'Reflect before major changes and involve people you trust.',
+    ),
+    53: CompoundEntry(
+      53,
+      'Lively Ambition',
+      _e,
+      'Modern guidance: change (5) with expression (3), reducing to 8, favouring energetic ambition and gifts for promotion and business.',
+      'Charismatic, resourceful and energetic.',
+      'Overspending, scattered effort and burning out.',
+      'Fun-loving and generous; plan quiet time together.',
+      'Marketing, entrepreneurship, entertainment and sales suit you.',
+      'Income can rise with initiative; track expenses closely.',
+      'Pick a direction and build a routine around it.',
+    ),
+    54: CompoundEntry(
+      54,
+      'Disciplined Adaptability',
+      _e,
+      'Modern guidance: change (5) with discipline (4), reducing to 9, favouring flexible work done with care and a service-minded outlook.',
+      'Practical, adaptable and generous with skills.',
+      'Overwork, or scattering energy across too many requests.',
+      'Helpful and fair; share your own needs.',
+      'Consulting, teaching, healthcare support and humanitarian work suit you.',
+      'Balanced budgeting and giving within limits work well.',
+      'Use flexibility to serve well, and rest before you burn out.',
+    ),
   };
 }

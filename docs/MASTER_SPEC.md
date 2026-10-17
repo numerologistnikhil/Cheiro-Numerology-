@@ -18,8 +18,10 @@ Customer records local-only by default. No customer cloud database. Production e
 ## PDF
 Page 1 premium cover/snapshot. Page 2 disclaimer + methodology. Subsequent pages are modular. YouTube page link for NikhilVGulatii. App WhatsApp number must not appear in PDF.
 
-## Commercial model
-All numerology functionality, including AI Numerologist and premium features, is FREE. Only generating, downloading, or printing the detailed professional PDF costs ₹50.
+## Commercial model (updated 17 Oct 2026 to the latest owner-approved prices)
+- Standard report: Rs 100 per PDF report.
+- Annual subscription: Rs 250 per year, covering all app features plus unlimited PDF creation, download and printing during the active year.
+- This replaces the earlier model (everything free, PDF Rs 50). Real payments are not implemented yet. When they are, they must use Google Play Billing with purchase verification, acknowledgement, restore and expiry handling; a client-side flag is never proof of payment.
 
 ## WhatsApp PDF Delivery
-After successful ₹50 payment and generation of the professional PDF, the app must provide a direct "Send on WhatsApp" option. The generated PDF should be prepared as a local file and handed to the Android/iOS share system so WhatsApp can open with the PDF attached. The user must explicitly confirm/send the message. The app must not silently send WhatsApp messages or upload customer data to a cloud server.
+After a valid purchase (or active subscription) and generation of the professional PDF, the app must provide a direct "Send on WhatsApp" option. The generated PDF should be prepared as a local file and handed to the Android/iOS share system so WhatsApp can open with the PDF attached. The user must explicitly confirm/send the message. The app must not silently send WhatsApp messages or upload customer data to a cloud server.
