@@ -16,9 +16,11 @@ Status: written, NOT yet run. Flutter was not available where this batch was wri
 - `CHANGELOG.md`.
 
 ### Known open items (not changed in this batch)
-- `app.dart` in the repository root is an unused duplicate of `lib/core/app.dart` with a dark theme. Left in place; it should be removed or reconciled.
 - `lib/core/local_vault.dart` builds its key from the clock and is NOT secure. It must be replaced with real authenticated encryption before any sensitive data is stored.
 - `lib/core/pdf_report.dart` is a one-page stub.
 - 11 screens are still 7-line placeholders showing "Module foundation ready".
 - Android package name in `MainActivity.kt` (`com.numerologistnikhil.cheironumerology`) may not match what `flutter create` generates in CI. Needs a check on a real build.
 - Home screen UI does not yet show breakdowns or the new entry fields.
+
+## Batch 1b
+- Removed unused root app.dart (dark duplicate of lib/core/app.dart; its broken import failed flutter analyze).
