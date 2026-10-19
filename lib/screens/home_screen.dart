@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/app.dart';
 import '../core/numerology_engine.dart';
+import 'analysis_card.dart';
 import 'ai_numerologist_screen.dart';
 import 'baby_names_screen.dart';
 import 'business_screen.dart';
@@ -281,10 +282,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 22),
-            resultCard('Name Analysis', nameResult),
-            resultCard('Date of Birth Analysis', dateResult),
-            resultCard('Mobile Analysis', mobileResult),
-            resultCard('Vehicle Analysis', vehicleResult),
+            AnalysisCard(title: 'Name Analysis', result: nameResult),
+            AnalysisCard(title: 'Date of Birth Analysis', result: dateResult),
+            AnalysisCard(title: 'Mobile Analysis', result: mobileResult),
+            AnalysisCard(title: 'Vehicle Analysis', result: vehicleResult),
             const SizedBox(height: 8),
             sectionTitle('Explore Modules'),
             GridView.builder(
