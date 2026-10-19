@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/app.dart';
 import '../core/numerology_engine.dart';
 import 'ai_numerologist_screen.dart';
 import 'baby_names_screen.dart';
@@ -12,6 +13,13 @@ import 'predictions_screen.dart';
 import 'profession_screen.dart';
 import 'remedies_screen.dart';
 import 'report_builder_screen.dart';
+
+class _Module {
+  final String title;
+  final IconData icon;
+  final Widget screen;
+  const _Module(this.title, this.icon, this.screen);
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -53,108 +61,164 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget resultCard(String title, NumerologyResult? result) {
     if (result == null) return const SizedBox.shrink();
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title,
-                style: const TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.w800)),
-            const SizedBox(height: 8),
-            Text(
-              'Compound: ${result.total}  •  Root: ${result.root}',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-            ),
-            if (result.hasCheiroCompound) ...[
-              const SizedBox(height: 10),
-              Text(result.compoundMeaning,
-                  style: const TextStyle(fontSize: 14, height: 1.45)),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 58,
+                height: 58,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [AnkdharaColors.gold, AnkdharaColors.goldLight],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Text(
+                  '${result.root}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title,
+                        style: Theme.of(context).textTheme.titleLarge),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Compound: ${result.total}  •  Root: ${result.root}',
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: AnkdharaColors.gold,
+                      ),
+                    ),
+                    if (result.hasCheiroCompound) ...[
+                      const SizedBox(height: 10),
+                      Text(result.compoundMeaning,
+                          style:
+                              const TextStyle(fontSize: 14, height: 1.5)),
+                    ],
+                  ],
+                ),
+              ),
             ],
-          ],
+          ),
         ),
       ),
     );
   }
 
+  Widget heroCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF9C6F08), AnkdharaColors.gold, AnkdharaColors.goldLight],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x33B8860B),
+            blurRadius: 22,
+            offset: Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text(
+            'ANKDHARA',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+              letterSpacing: 4,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'अंकधारा',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 34,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Your numbers, patterns and personal guidance in one private place.',
+            style: TextStyle(color: Colors.white, fontSize: 14, height: 1.5),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget sectionTitle(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Text(text, style: Theme.of(context).textTheme.titleLarge),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final modules = <String, Widget>{
-      'Name Correction': const NameCorrectionScreen(),
-      'Compatibility': const CompatibilityScreen(),
-      'Predictions': const PredictionsScreen(),
-      'Business': const BusinessScreen(),
-      'Profession': const ProfessionScreen(),
-      'Remedies': const RemediesScreen(),
-      'Baby Names': const BabyNamesScreen(),
-      'AI Numerologist': const AiNumerologistScreen(),
-      'Report Builder': const ReportBuilderScreen(),
-      'Learn Numerology': const LearnScreen(),
-      'Client Vault': const ClientVaultScreen(),
-      'Date Selection': const DateSelectionScreen(),
-    };
+    final modules = <_Module>[
+      const _Module('Name Correction', Icons.spellcheck, NameCorrectionScreen()),
+      const _Module('Compatibility', Icons.favorite_border, CompatibilityScreen()),
+      const _Module('Predictions', Icons.timeline, PredictionsScreen()),
+      const _Module('Business', Icons.storefront, BusinessScreen()),
+      const _Module('Profession', Icons.work_outline, ProfessionScreen()),
+      const _Module('Remedies', Icons.diamond_outlined, RemediesScreen()),
+      const _Module('Baby Names', Icons.child_care, BabyNamesScreen()),
+      const _Module('AI Numerologist', Icons.auto_awesome, AiNumerologistScreen()),
+      const _Module('Report Builder', Icons.picture_as_pdf_outlined, ReportBuilderScreen()),
+      const _Module('Learn Numerology', Icons.menu_book_outlined, LearnScreen()),
+      const _Module('Client Vault', Icons.lock_outline, ClientVaultScreen()),
+      const _Module('Date Selection', Icons.event_available, DateSelectionScreen()),
+    ];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cheiro Numerology'),
+        title: const Text('Ankdhara'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Your Numerology Dashboard',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Personal Numerology Intelligence • Private • Offline-first',
-            ),
-            const SizedBox(height: 18),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(18),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFFFFF4D6),
-                      ),
-                      child: const Icon(Icons.auto_awesome),
-                    ),
-                    const SizedBox(width: 14),
-                    const Expanded(
-                      child: Text(
-                        'Explore your numbers, patterns, predictions and personalised guidance.',
-                        style: TextStyle(fontSize: 14, height: 1.4),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
+            heroCard(),
+            const SizedBox(height: 26),
+            sectionTitle('Your Details'),
             TextField(
               controller: nameController,
+              textCapitalization: TextCapitalization.words,
               decoration: const InputDecoration(
                 labelText: 'Full Name',
-                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.person_outline),
               ),
             ),
             const SizedBox(height: 12),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                dob == null
-                    ? 'Date of Birth'
-                    : '${dob!.day}/${dob!.month}/${dob!.year}',
-              ),
-              trailing: const Icon(Icons.calendar_month),
+            InkWell(
+              borderRadius: BorderRadius.circular(16),
               onTap: () async {
                 final picked = await showDatePicker(
                   context: context,
@@ -166,6 +230,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   setState(() => dob = picked);
                 }
               },
+              child: Container(
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AnkdharaColors.goldLine),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.calendar_month,
+                        color: AnkdharaColors.gold),
+                    const SizedBox(width: 12),
+                    Text(
+                      dob == null
+                          ? 'Date of Birth'
+                          : '${dob!.day}/${dob!.month}/${dob!.year}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -173,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
               keyboardType: TextInputType.phone,
               decoration: const InputDecoration(
                 labelText: 'Mobile Number',
-                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.phone_android),
               ),
             ),
             const SizedBox(height: 12),
@@ -181,10 +268,10 @@ class _HomeScreenState extends State<HomeScreen> {
               controller: vehicleController,
               decoration: const InputDecoration(
                 labelText: 'Vehicle Number',
-                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.directions_car_outlined),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
@@ -193,12 +280,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 label: const Text('Calculate Numerology'),
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 22),
             resultCard('Name Analysis', nameResult),
             resultCard('Date of Birth Analysis', dateResult),
             resultCard('Mobile Analysis', mobileResult),
             resultCard('Vehicle Analysis', vehicleResult),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
+            sectionTitle('Explore Modules'),
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -206,29 +294,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 maxCrossAxisExtent: 260,
                 crossAxisSpacing: 14,
                 mainAxisSpacing: 14,
-                childAspectRatio: 1.45,
+                childAspectRatio: 1.15,
               ),
               itemCount: modules.length,
               itemBuilder: (context, index) {
-                final entry = modules.entries.elementAt(index);
+                final m = modules[index];
                 return Card(
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(22),
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => entry.value),
+                      MaterialPageRoute(builder: (_) => m.screen),
                     ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          entry.key,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AnkdharaColors.cream,
+                            ),
+                            child: Icon(m.icon, color: AnkdharaColors.gold),
                           ),
-                        ),
+                          const SizedBox(height: 10),
+                          Text(
+                            m.title,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
