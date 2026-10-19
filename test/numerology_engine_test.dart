@@ -55,7 +55,7 @@ void main() {
       expect(r.ignored, ['.', '-', '1']);
     });
 
-    test('raw total above 54 is preserved and never clamped', () {
+    test('raw total above 52 is preserved and never clamped', () {
       final r = NumerologyEngine.name('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
       expect(r.total, 103);
       expect(r.root, 4);

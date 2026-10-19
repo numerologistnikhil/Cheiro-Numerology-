@@ -55,11 +55,11 @@ const EditorialStatus _e = EditorialStatus.editorialGuidance;
 class KnowledgePack {
   static const version = '2.0.0';
 
-  /// Root numbers cover 1-9. Compound numbers cover 10-54, which together
-  /// make up the locked 1-54 framework. Raw totals above 54 are never
+  /// Root numbers cover 1-9. Compound numbers cover 10-52, which together
+  /// make up the Cheiro original 1-52 series. Raw totals above 52 are never
   /// clamped; they simply have no compound interpretation.
   static const int minCompound = 10;
-  static const int maxCompound = 54;
+  static const int maxCompound = 52;
 
   static const Map<int, String> roots = {
     1: 'Individuality, initiative and leadership.',
@@ -84,7 +84,7 @@ class KnowledgePack {
 
   static String compoundMeaning(int n) {
     if (!isValidCompound(n)) {
-      return 'This total is outside the 10-54 compound range supported by '
+      return 'This total is outside the 10-52 compound range supported by '
           'the knowledge pack, so no compound interpretation is shown. '
           'The raw total is still preserved.';
     }
@@ -611,30 +611,6 @@ class KnowledgePack {
       'Consulting, research partnerships and creative teamwork suit you.',
       'Shared ventures work when roles are clearly defined.',
       'Reflect before major changes and involve people you trust.',
-    ),
-    53: CompoundEntry(
-      53,
-      'Lively Ambition',
-      _e,
-      'Modern guidance: change (5) with expression (3), reducing to 8, favouring energetic ambition and gifts for promotion and business.',
-      'Charismatic, resourceful and energetic.',
-      'Overspending, scattered effort and burning out.',
-      'Fun-loving and generous; plan quiet time together.',
-      'Marketing, entrepreneurship, entertainment and sales suit you.',
-      'Income can rise with initiative; track expenses closely.',
-      'Pick a direction and build a routine around it.',
-    ),
-    54: CompoundEntry(
-      54,
-      'Disciplined Adaptability',
-      _e,
-      'Modern guidance: change (5) with discipline (4), reducing to 9, favouring flexible work done with care and a service-minded outlook.',
-      'Practical, adaptable and generous with skills.',
-      'Overwork, or scattering energy across too many requests.',
-      'Helpful and fair; share your own needs.',
-      'Consulting, teaching, healthcare support and humanitarian work suit you.',
-      'Balanced budgeting and giving within limits work well.',
-      'Use flexibility to serve well, and rest before you burn out.',
     ),
   };
 }

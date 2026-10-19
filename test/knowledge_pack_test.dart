@@ -2,12 +2,12 @@ import 'package:cheiro_numerology/core/knowledge_pack.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('framework range is 10-54 for compounds', () {
+  test('framework range is 10-52 for compounds', () {
     expect(KnowledgePack.minCompound, 10);
-    expect(KnowledgePack.maxCompound, 54);
+    expect(KnowledgePack.maxCompound, 52);
     expect(KnowledgePack.isValidCompound(9), isFalse);
     expect(KnowledgePack.isValidCompound(10), isTrue);
-    expect(KnowledgePack.isValidCompound(54), isTrue);
+    expect(KnowledgePack.isValidCompound(52), isTrue);
     expect(KnowledgePack.isValidCompound(55), isFalse);
   });
 
@@ -17,8 +17,8 @@ void main() {
     }
   });
 
-  test('every compound 10-54 has its own entry', () {
-    for (var n = 10; n <= 54; n++) {
+  test('every compound 10-52 has its own entry', () {
+    for (var n = 10; n <= 52; n++) {
       final entry = KnowledgePack.compoundNumbers[n];
       expect(entry, isNotNull, reason: 'missing $n');
       expect(entry!.number, n);
@@ -78,8 +78,8 @@ void main() {
     expect(titles.toSet().length, titles.length);
   });
 
-  test('entries 10-31 are traditional, 32-54 are editorial guidance', () {
-    for (var n = 10; n <= 54; n++) {
+  test('entries 10-31 are traditional, 32-52 are editorial guidance', () {
+    for (var n = 10; n <= 52; n++) {
       final status = KnowledgePack.compoundNumbers[n]!.status;
       expect(
         status,
