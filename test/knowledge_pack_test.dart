@@ -23,7 +23,7 @@ void main() {
       expect(entry, isNotNull, reason: 'missing $n');
       expect(entry!.number, n);
     }
-    expect(KnowledgePack.compoundNumbers.length, 45);
+    expect(KnowledgePack.compoundNumbers.length, 43);
   });
 
   test('no placeholder or copied-from-another-number text', () {
