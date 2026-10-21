@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -85,6 +87,7 @@ class ReportBuilder {
     required String name,
     required DateTime dob,
     String mobile = '',
+    Uint8List? logo,
   }) {
     final birth = NumerologyEngine.birth(dob);
     final nameResult = NumerologyEngine.name(name);
@@ -93,6 +96,10 @@ class ReportBuilder {
     final destiny = birth.destiny.root;
 
     final widgets = <pw.Widget>[
+      if (logo != null) ...[
+        pw.Center(child: pw.Image(pw.MemoryImage(logo), height: 150)),
+        pw.SizedBox(height: 10),
+      ],
       pw.Center(
         child: pw.Text(
           'Ankdhara Numerology Report',

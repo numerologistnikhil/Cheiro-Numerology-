@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../core/entitlements.dart';
 import '../core/numerology_engine.dart';
 import '../core/pdf_report.dart';
@@ -104,10 +105,18 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
 
     setState(() => _busy = true);
     try {
+      Uint8List? logo;
+      try {
+        final data = await rootBundle.load('assets/images/ankdhara_logo.png');
+        logo = data.buffer.asUint8List();
+      } catch (_) {
+        logo = null;
+      }
       final doc = ReportBuilder.build(
         name: name,
         dob: dob,
         mobile: _mobile.text,
+        logo: logo,
       );
       final bytes = await doc.save();
       await Entitlements.consume(access);

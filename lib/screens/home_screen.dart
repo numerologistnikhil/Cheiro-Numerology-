@@ -7,6 +7,7 @@ import 'baby_names_screen.dart';
 import 'business_screen.dart';
 import 'client_vault_screen.dart';
 import 'compatibility_screen.dart';
+import 'daily_lucky_screen.dart';
 import 'date_selection_screen.dart';
 import 'learn_screen.dart';
 import 'name_correction_screen.dart';
@@ -186,6 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
       const _Module('Name Correction', Icons.spellcheck, NameCorrectionScreen()),
       const _Module('Compatibility', Icons.favorite_border, CompatibilityScreen()),
       const _Module('Predictions', Icons.timeline, PredictionsScreen()),
+      const _Module('Daily Lucky', Icons.wb_sunny_outlined, DailyLuckyScreen()),
       const _Module('Business', Icons.storefront, BusinessScreen()),
       const _Module('Profession', Icons.work_outline, ProfessionScreen()),
       const _Module('Remedies', Icons.diamond_outlined, RemediesScreen()),
@@ -206,6 +208,15 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Center(
+              child: Image.asset(
+                'assets/images/ankdhara_logo.png',
+                height: 150,
+                errorBuilder: (context, error, stackTrace) =>
+                    const SizedBox.shrink(),
+              ),
+            ),
+            const SizedBox(height: 14),
             heroCard(),
             const SizedBox(height: 26),
             sectionTitle('Your Details'),
