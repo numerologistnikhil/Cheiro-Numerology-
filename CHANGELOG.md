@@ -24,3 +24,4 @@ Status: written, NOT yet run. Flutter was not available where this batch was wri
 
 ## Batch 1b
 - Removed unused root app.dart (dark duplicate of lib/core/app.dart; its broken import failed flutter analyze).
+Batch 3: real screens for all modules, encrypted Client Vault (AES-256-GCM), multi-page PDF report, tests.
