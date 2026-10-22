@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/app.dart';
-import 'home_screen.dart';
+import 'premium_home.dart';
 
 /// Shows the big animated logo only once, when the app starts.
 /// After that the app uses a small logo in the top bar.
@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 600),
-        pageBuilder: (context, animation, secondary) => const HomeScreen(),
+        pageBuilder: (context, animation, secondary) => const PremiumHome(),
         transitionsBuilder: (context, animation, secondary, child) =>
             FadeTransition(opacity: animation, child: child),
       ),
