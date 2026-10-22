@@ -1,11 +1,20 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'ai_numerologist_screen.dart';
+import 'business_screen.dart';
+import 'client_vault_screen.dart';
+import 'compatibility_screen.dart';
+import 'home_screen.dart';
+import 'learn_screen.dart';
+import 'name_correction_screen.dart';
+import 'number_check_screens.dart';
+import 'predictions_screen.dart';
+import 'remedies_screen.dart';
+import 'report_builder_screen.dart';
 
 /// Ankdhara premium home (Myntra-style layout, golden / cream theme).
-/// Koi extra package nahi chahiye. Navigation ke liye onOpen callback use hota hai.
+/// Koi extra package nahi chahiye. Taps seedha asli screens kholte hain.
 class PremiumHome extends StatefulWidget {
-  /// key examples: profile, compound, name, mobile, vehicle, business,
-  /// compatibility, predictions, remedies, learn, reports
   final void Function(String key)? onOpen;
   const PremiumHome({super.key, this.onOpen});
 
@@ -81,7 +90,56 @@ class _PremiumHomeState extends State<PremiumHome> {
     super.dispose();
   }
 
-  void _open(String key) => widget.onOpen?.call(key);
+  void _open(String key) {
+    widget.onOpen?.call(key);
+    Widget? page;
+    switch (key) {
+      case 'profile':
+      case 'compound':
+        page = const HomeScreen(); // purana screen: profile + analysis
+        break;
+      case 'name':
+        page = const NameCorrectionScreen();
+        break;
+      case 'mobile':
+        page = const MobileNumberScreen();
+        break;
+      case 'vehicle':
+        page = const VehicleNumberScreen();
+        break;
+      case 'business':
+        page = const BusinessScreen();
+        break;
+      case 'compatibility':
+        page = const CompatibilityScreen();
+        break;
+      case 'predictions':
+        page = const PredictionsScreen();
+        break;
+      case 'remedies':
+        page = const RemediesScreen();
+        break;
+      case 'learn':
+        page = const LearnScreen();
+        break;
+      case 'reports':
+        page = const ReportBuilderScreen();
+        break;
+      case 'vault':
+        page = const ClientVaultScreen();
+        break;
+      case 'search':
+        page = const AiNumerologistScreen();
+        break;
+    }
+    if (page != null) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => page!));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ye feature jald aa raha hai')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
