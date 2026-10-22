@@ -10,6 +10,7 @@ import 'compatibility_screen.dart';
 import 'daily_lucky_screen.dart';
 import 'date_selection_screen.dart';
 import 'learn_screen.dart';
+import 'number_guide_screen.dart';
 import 'name_correction_screen.dart';
 import 'predictions_screen.dart';
 import 'profession_screen.dart';
@@ -184,6 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final modules = <_Module>[
+      const _Module('Number Guide', Icons.menu_book, NumberGuideScreen()),
       const _Module('Name Correction', Icons.spellcheck, NameCorrectionScreen()),
       const _Module('Compatibility', Icons.favorite_border, CompatibilityScreen()),
       const _Module('Predictions', Icons.timeline, PredictionsScreen()),
