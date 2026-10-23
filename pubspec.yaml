@@ -27,6 +27,12 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+  fonts:
+    - family: NotoDeva
+      fonts:
+        - asset: assets/fonts/NotoDeva-Regular.ttf
+        - asset: assets/fonts/NotoDeva-Bold.ttf
+          weight: 700
 flutter_launcher_icons:
   android: true
   ios: false
