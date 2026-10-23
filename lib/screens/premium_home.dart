@@ -1,20 +1,28 @@
-import 'extras_screens.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+import '../core/app_settings.dart';
+import '../core/root_profiles.dart' show L;
 import 'ai_numerologist_screen.dart';
+import 'baby_names_screen.dart';
 import 'business_screen.dart';
 import 'client_vault_screen.dart';
 import 'compatibility_screen.dart';
+import 'daily_lucky_screen.dart';
+import 'date_selection_screen.dart';
+import 'extras_screens.dart';
 import 'home_screen.dart';
 import 'learn_screen.dart';
 import 'name_correction_screen.dart';
 import 'number_check_screens.dart';
 import 'predictions_screen.dart';
+import 'profession_screen.dart';
 import 'remedies_screen.dart';
 import 'report_builder_screen.dart';
+import 'settings_screen.dart';
 
-/// Ankdhara premium home (Myntra-style layout, golden / cream theme).
-/// Koi extra package nahi chahiye. Taps seedha asli screens kholte hain.
+/// Ankdhara home. Four numbered steps, one language at a time
+/// (English or Hindi, chosen in the three-dot menu).
 class PremiumHome extends StatefulWidget {
   final void Function(String key)? onOpen;
   const PremiumHome({super.key, this.onOpen});
@@ -33,45 +41,105 @@ class _Gold {
   static const soft = Color(0xFF7A6A48);
 }
 
-class _Item {
+class _F {
   final String key;
-  final String label;
+  final L label;
+  final L sub;
   final IconData icon;
-  const _Item(this.key, this.label, this.icon);
+  const _F(this.key, this.label, this.sub, this.icon);
 }
 
+class _Step {
+  final L title;
+  final L sub;
+  final List<_F> items;
+  const _Step(this.title, this.sub, this.items);
+}
+
+class _Banner {
+  final L small;
+  final L big;
+  final L button;
+  final String key;
+  const _Banner(this.small, this.big, this.button, this.key);
+}
+
+const _steps = <_Step>[
+  _Step(
+    L('Know your numbers', 'अपने अंक जानिए'),
+    L('Start here. Your birth date, name and phone number.',
+        'यहाँ से शुरू कीजिए। आपकी जन्म तिथि, नाम और फ़ोन नंबर।'),
+    [
+      _F('mynumbers', L('My Numbers', 'मेरे अंक'),
+          L('Birth and destiny number', 'मूलांक और भाग्यांक'), Icons.auto_awesome),
+      _F('name', L('Name', 'नाम'),
+          L('Check and correct a name', 'नाम जाँचिए और सुधारिए'), Icons.spellcheck),
+      _F('mobile', L('Mobile', 'मोबाइल'),
+          L('Is your number lucky?', 'क्या आपका नंबर शुभ है?'), Icons.phone_android),
+      _F('vehicle', L('Vehicle', 'वाहन'),
+          L('Check a vehicle number', 'वाहन नंबर जाँचिए'), Icons.directions_car_outlined),
+      _F('business', L('Business', 'व्यापार'),
+          L('Business name and number', 'व्यापार का नाम और अंक'), Icons.storefront_outlined),
+      _F('compatibility', L('Match', 'मिलान'),
+          L('Two people together', 'दो लोगों का मेल'), Icons.favorite_border),
+    ],
+  ),
+  _Step(
+    L('Look at your future', 'अपना भविष्य देखिए'),
+    L('Your years, months and good dates.',
+        'आपके साल, महीने और शुभ तारीख़ें।'),
+    [
+      _F('predictions', L('Years and Months', 'साल और महीने'),
+          L('10 years and more', '10 साल या ज़्यादा'), Icons.calendar_month),
+      _F('daily', L('Today', 'आज का दिन'),
+          L('Lucky number and colour', 'शुभ अंक और रंग'), Icons.wb_sunny_outlined),
+      _F('dates', L('Good Dates', 'शुभ तारीख़ें'),
+          L('Pick a lucky day', 'शुभ दिन चुनिए'), Icons.event_available_outlined),
+      _F('baby', L('Baby Names', 'बच्चे का नाम'),
+          L('Lucky names for a baby', 'शुभ नाम के सुझाव'), Icons.child_care),
+    ],
+  ),
+  _Step(
+    L('Get simple guidance', 'आसान सलाह पाइए'),
+    L('Easy things you can do, and a place to learn.',
+        'आसान उपाय जो आप कर सकते हैं, और सीखने की जगह।'),
+    [
+      _F('remedies', L('Remedies', 'उपाय'),
+          L('Colours, stones, habits', 'रंग, रत्न, आदतें'), Icons.diamond_outlined),
+      _F('profession', L('Career', 'करियर'),
+          L('Work that suits you', 'आपके लायक काम'), Icons.work_outline),
+      _F('learn', L('Learn and Quiz', 'सीखिए और क्विज़'),
+          L('Understand numbers easily', 'अंकों को आसानी से समझिए'), Icons.school_outlined),
+      _F('ask', L('Ask', 'पूछिए'),
+          L('Ask a question about numbers', 'अंकों के बारे में सवाल पूछिए'), Icons.chat_bubble_outline),
+    ],
+  ),
+  _Step(
+    L('Your reports', 'आपकी रिपोर्ट'),
+    L('A full PDF report, and your saved clients.',
+        'पूरी PDF रिपोर्ट, और आपके सेव किए हुए ग्राहक।'),
+    [
+      _F('reports', L('PDF Report', 'PDF रिपोर्ट'),
+          L('Download, print, share', 'डाउनलोड, प्रिंट, शेयर'), Icons.picture_as_pdf_outlined),
+      _F('vault', L('Client Vault', 'ग्राहक वॉल्ट'),
+          L('Private and safe', 'निजी और सुरक्षित'), Icons.lock_outline),
+    ],
+  ),
+];
+
+const _banners = <_Banner>[
+  _Banner(L('Your first report', 'आपकी पहली रिपोर्ट'), L('FREE', 'मुफ़्त'),
+      L('Try now', 'अभी देखें'), 'reports'),
+  _Banner(L('Fix your name', 'अपना नाम सुधारिए'), L('Lucky spelling', 'शुभ वर्तनी'),
+      L('Open', 'खोलिए'), 'name'),
+  _Banner(L('Mobile and vehicle', 'मोबाइल और वाहन'), L('Lucky number', 'शुभ अंक'),
+      L('Check', 'जाँचिए'), 'mobile'),
+];
+
 class _PremiumHomeState extends State<PremiumHome> {
-  int _tab = 0;
   int _banner = 0;
-  int _nav = 0;
   final PageController _pc = PageController(viewportFraction: 0.92);
   Timer? _timer;
-
-  static const _tabs = ['ALL', 'NUMBERS', 'NAME', 'REPORTS', 'LEARN'];
-
-  static const _circles = <_Item>[
-    _Item('profile', 'Profile', Icons.person_outline),
-    _Item('compound', 'Compound', Icons.auto_awesome),
-    _Item('name', 'Name', Icons.spellcheck),
-    _Item('mobile', 'Mobile', Icons.phone_android),
-    _Item('vehicle', 'Vehicle', Icons.directions_car_outlined),
-    _Item('business', 'Business', Icons.storefront_outlined),
-    _Item('compatibility', 'Match', Icons.favorite_border),
-    _Item('predictions', 'Predict', Icons.timeline),
-  ];
-
-  static const _grid = <_Item>[
-    _Item('predictions', 'Personal Year\nand Month', Icons.calendar_month),
-    _Item('remedies', 'Remedies and\nGemstones', Icons.diamond_outlined),
-    _Item('learn', 'Learn and\nQuiz', Icons.school_outlined),
-    _Item('reports', 'Detailed\nPDF Report', Icons.picture_as_pdf_outlined),
-  ];
-
-  static const _banners = <List<String>>[
-    ['Pehli detailed report', 'FREE', 'Abhi try karo'],
-    ['Naam sahi karo', 'Lucky spelling', 'Name Correction'],
-    ['Mobile aur Vehicle', 'Lucky number', 'Check karo'],
-  ];
 
   @override
   void initState() {
@@ -91,91 +159,108 @@ class _PremiumHomeState extends State<PremiumHome> {
     super.dispose();
   }
 
+  void _go(Widget page) {
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+  }
+
   void _open(String key) {
     widget.onOpen?.call(key);
-    if (key == 'referral' || key == 'pro') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => extraPage(key)));
-      return;
-    }
-    Widget? page;
     switch (key) {
-      case 'profile':
-      case 'compound':
-        page = const HomeScreen(); // purana screen: profile + analysis
+      case 'mynumbers':
+        _go(const HomeScreen());
         break;
       case 'name':
-        page = const NameCorrectionScreen();
+        _go(const NameCorrectionScreen());
         break;
       case 'mobile':
-        page = const MobileNumberScreen();
+        _go(const MobileNumberScreen());
         break;
       case 'vehicle':
-        page = const VehicleNumberScreen();
+        _go(const VehicleNumberScreen());
         break;
       case 'business':
-        page = const BusinessScreen();
+        _go(const BusinessScreen());
         break;
       case 'compatibility':
-        page = const CompatibilityScreen();
+        _go(const CompatibilityScreen());
         break;
       case 'predictions':
-        page = const PredictionsScreen();
+        _go(const PredictionsScreen());
+        break;
+      case 'daily':
+        _go(const DailyLuckyScreen());
+        break;
+      case 'dates':
+        _go(const DateSelectionScreen());
+        break;
+      case 'baby':
+        _go(const BabyNamesScreen());
         break;
       case 'remedies':
-        page = const RemediesScreen();
+        _go(const RemediesScreen());
+        break;
+      case 'profession':
+        _go(const ProfessionScreen());
         break;
       case 'learn':
-        page = const LearnScreen();
+        _go(const LearnScreen());
+        break;
+      case 'ask':
+        _go(const AiNumerologistScreen());
         break;
       case 'reports':
-        page = const ReportBuilderScreen();
+        _go(const ReportBuilderScreen());
         break;
       case 'vault':
-        page = const ClientVaultScreen();
+        _go(const ClientVaultScreen());
         break;
-      case 'search':
-        page = const AiNumerologistScreen();
+      case 'referral':
+      case 'pro':
+        _go(extraPage(key));
+        break;
+      case 'settings':
+        _go(const SettingsScreen());
         break;
     }
-    if (page != null) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => page!));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ye feature jald aa raha hai')),
-      );
-    }
+  }
+
+  Future<void> _search() async {
+    final s = AppLang.of(context);
+    final key = await showSearch<String?>(
+      context: context,
+      delegate: _FeatureSearch(s),
+    );
+    if (key != null) _open(key);
   }
 
   @override
   Widget build(BuildContext context) {
+    final s = AppLang.of(context);
     return Scaffold(
       backgroundColor: _Gold.cream,
       body: SafeArea(
         child: Column(
           children: [
-            _header(),
+            _header(s),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.only(bottom: 24),
                 children: [
-                  _circleRow(),
-                  _offerStrip(),
-                  _bannerCarousel(),
+                  _bannerCarousel(s),
                   _dots(),
-                  _sectionTitle('Explore karo'),
-                  _featureGrid(),
-                  _cashbackStrip(),
+                  for (var i = 0; i < _steps.length; i++) _stepBlock(s, i),
+                  _inviteStrip(s),
                 ],
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: _bottomNav(),
+      bottomNavigationBar: _bottomNav(s),
     );
   }
 
-  Widget _header() {
+  Widget _header(AppSettings s) {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -184,173 +269,99 @@ class _PremiumHomeState extends State<PremiumHome> {
           colors: [Color(0xFFFBEFC9), Color(0xFFFFF8EC)],
         ),
       ),
-      padding: const EdgeInsets.fromLTRB(14, 10, 14, 0),
-      child: Column(
+      padding: const EdgeInsets.fromLTRB(14, 10, 4, 10),
+      child: Row(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => _open('search'),
-                  child: Container(
-                    height: 46,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: _Gold.pearl,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: _Gold.gold, width: 1),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Color(0x22C9A24A),
-                            blurRadius: 8,
-                            offset: Offset(0, 3))
-                      ],
+          Expanded(
+            child: GestureDetector(
+              onTap: _search,
+              child: Container(
+                height: 46,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: _Gold.pearl,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: _Gold.gold, width: 1),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.search, color: _Gold.goldDark),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        s.t(const L('Search a feature', 'सुविधा खोजिए')),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: _Gold.soft, fontSize: 14),
+                      ),
                     ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.auto_awesome, color: _Gold.gold, size: 20),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Text('Search "Name Correction"',
-                              style: TextStyle(color: _Gold.soft, fontSize: 14)),
-                        ),
-                        Icon(Icons.search, color: _Gold.goldDark),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 10),
-              IconButton(
-                onPressed: () => _open('notifications'),
-                icon: const Icon(Icons.notifications_none,
-                    color: _Gold.ink, size: 28),
+            ),
+          ),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: _Gold.ink, size: 28),
+            onSelected: (v) {
+              if (v == 'english') {
+                s.setHindi(false);
+              } else if (v == 'hindi') {
+                s.setHindi(true);
+              } else if (v == 'share') {
+                Share.share(s.t(const L(
+                  'Try Ankdhara, a simple numerology app in English and Hindi.',
+                  'अंकधारा आज़माइए, हिन्दी और अंग्रेज़ी में एक आसान अंक-ज्योतिष ऐप।',
+                )));
+              } else {
+                _open(v);
+              }
+            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: 'settings',
+                child: ListTile(
+                  leading: const Icon(Icons.settings_outlined),
+                  title: Text(s.t(const L('Settings', 'सेटिंग्स'))),
+                ),
               ),
-              IconButton(
-                onPressed: () => _open('account'),
-                icon: const Icon(Icons.account_circle_outlined,
-                    color: _Gold.ink, size: 28),
+              PopupMenuItem(
+                value: s.hindi ? 'english' : 'hindi',
+                child: ListTile(
+                  leading: const Icon(Icons.translate),
+                  title: Text(s.hindi ? 'Switch to English' : 'हिन्दी में बदलें'),
+                ),
+              ),
+              PopupMenuItem(
+                value: 'referral',
+                child: ListTile(
+                  leading: const Icon(Icons.card_giftcard),
+                  title: Text(s.t(const L('Invite a friend', 'दोस्त को बुलाइए'))),
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'pro',
+                child: ListTile(
+                  leading: Icon(Icons.workspace_premium_outlined),
+                  title: Text('Ankdhara Pro'),
+                ),
+              ),
+              PopupMenuItem(
+                value: 'share',
+                child: ListTile(
+                  leading: const Icon(Icons.share_outlined),
+                  title: Text(s.t(const L('Share this app', 'यह ऐप शेयर करें'))),
+                ),
               ),
             ],
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 44,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _tabs.length,
-              itemBuilder: (_, i) {
-                final sel = i == _tab;
-                return GestureDetector(
-                  onTap: () => setState(() => _tab = i),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                            color: sel ? _Gold.gold : Colors.transparent,
-                            width: 3),
-                      ),
-                    ),
-                    child: Text(
-                      _tabs[i],
-                      style: TextStyle(
-                        letterSpacing: 1.5,
-                        fontWeight: sel ? FontWeight.w800 : FontWeight.w500,
-                        color: sel ? _Gold.ink : _Gold.soft,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _circleRow() {
+  Widget _bannerCarousel(AppSettings s) {
     return SizedBox(
-      height: 104,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        itemCount: _circles.length,
-        itemBuilder: (_, i) {
-          final it = _circles[i];
-          return GestureDetector(
-            onTap: () => _open(it.key),
-            child: Container(
-              width: 76,
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              child: Column(
-                children: [
-                  Container(
-                    width: 58,
-                    height: 58,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [_Gold.goldLight, _Gold.gold],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0x44C9A24A),
-                            blurRadius: 8,
-                            offset: Offset(0, 4))
-                      ],
-                    ),
-                    child: Icon(it.icon, color: Colors.white, size: 28),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(it.label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 12,
-                          color: _Gold.ink,
-                          fontWeight: FontWeight.w600)),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _offerStrip() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(colors: [
-          Color(0xFF8A6A1F),
-          Color(0xFFC9A24A),
-          Color(0xFF8A6A1F),
-        ]),
-      ),
-      child: const Center(
-        child: Text(
-          'PEHLI REPORT FREE  *  ANKDHARA',
-          style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 2,
-              fontSize: 15),
-        ),
-      ),
-    );
-  }
-
-  Widget _bannerCarousel() {
-    return SizedBox(
-      height: 190,
+      height: 170,
       child: PageView.builder(
         controller: _pc,
         onPageChanged: (i) => setState(() => _banner = i),
@@ -359,7 +370,7 @@ class _PremiumHomeState extends State<PremiumHome> {
           final b = _banners[i];
           return Container(
             margin: const EdgeInsets.fromLTRB(6, 10, 6, 6),
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(22),
               gradient: const LinearGradient(
@@ -368,12 +379,6 @@ class _PremiumHomeState extends State<PremiumHome> {
                 colors: [Color(0xFFFFF3CF), Color(0xFFE9C766)],
               ),
               border: Border.all(color: _Gold.gold, width: 1.5),
-              boxShadow: const [
-                BoxShadow(
-                    color: Color(0x33C9A24A),
-                    blurRadius: 14,
-                    offset: Offset(0, 6))
-              ],
             ),
             child: Row(
               children: [
@@ -382,28 +387,34 @@ class _PremiumHomeState extends State<PremiumHome> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(b[0],
+                      Text(s.t(b.small),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                               color: _Gold.goldDark,
-                              fontSize: 16,
+                              fontSize: 15,
                               fontWeight: FontWeight.w600)),
                       const SizedBox(height: 4),
-                      Text(b[1],
-                          style: const TextStyle(
-                              color: _Gold.ink,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w900)),
-                      const SizedBox(height: 12),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(s.t(b.big),
+                            style: const TextStyle(
+                                color: _Gold.ink,
+                                fontSize: 28,
+                                fontWeight: FontWeight.w900)),
+                      ),
+                      const SizedBox(height: 10),
                       GestureDetector(
-                        onTap: () => _open(i == 0 ? 'reports' : i == 1 ? 'name' : 'mobile'),
+                        onTap: () => _open(b.key),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 8),
+                              horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
                             color: _Gold.ink,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Text(b[2],
+                          child: Text(s.t(b.button),
                               style: const TextStyle(
                                   color: _Gold.goldLight,
                                   fontWeight: FontWeight.w700)),
@@ -412,7 +423,8 @@ class _PremiumHomeState extends State<PremiumHome> {
                     ],
                   ),
                 ),
-                const Icon(Icons.auto_awesome, size: 84, color: Color(0xAAFFFFFF)),
+                const Icon(Icons.auto_awesome,
+                    size: 64, color: Color(0xAAFFFFFF)),
               ],
             ),
           );
@@ -440,67 +452,100 @@ class _PremiumHomeState extends State<PremiumHome> {
     );
   }
 
-  Widget _sectionTitle(String t) {
+  Widget _stepBlock(AppSettings s, int index) {
+    final step = _steps[index];
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
-      child: Text(t,
-          style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              color: _Gold.ink,
-              letterSpacing: 0.5)),
-    );
-  }
-
-  Widget _featureGrid() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: GridView.count(
-        crossAxisCount: 2,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 1.35,
-        children: _grid.map((it) {
-          return GestureDetector(
-            onTap: () => _open(it.key),
-            child: Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: _Gold.pearl,
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: _Gold.goldLight, width: 1.2),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Color(0x22C9A24A),
-                      blurRadius: 10,
-                      offset: Offset(0, 4))
-                ],
+      padding: const EdgeInsets.fromLTRB(12, 14, 12, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _Gold.gold,
+                ),
+                child: Text('${index + 1}',
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w800)),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(it.icon, color: _Gold.gold, size: 32),
-                  Text(it.label,
-                      style: const TextStyle(
-                          color: _Gold.ink,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 15,
-                          height: 1.2)),
-                ],
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(s.t(step.title),
+                    style: const TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.w800,
+                        color: _Gold.ink)),
               ),
-            ),
-          );
-        }).toList(),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(40, 2, 0, 10),
+            child: Text(s.t(step.sub),
+                style: const TextStyle(fontSize: 13, color: _Gold.soft)),
+          ),
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1.45,
+            children: [
+              for (final it in step.items) _featureCard(s, it),
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  Widget _cashbackStrip() {
+  Widget _featureCard(AppSettings s, _F it) {
+    return GestureDetector(
+      onTap: () => _open(it.key),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: _Gold.pearl,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: _Gold.goldLight, width: 1.2),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(it.icon, color: _Gold.gold, size: 28),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(s.t(it.label),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: _Gold.ink,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 15)),
+                const SizedBox(height: 2),
+                Text(s.t(it.sub),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: _Gold.soft, fontSize: 12, height: 1.25)),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _inviteStrip(AppSettings s) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(12, 16, 12, 0),
+      margin: const EdgeInsets.fromLTRB(12, 18, 12, 0),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: _Gold.pearl,
@@ -511,17 +556,18 @@ class _PremiumHomeState extends State<PremiumHome> {
         children: [
           const Icon(Icons.card_giftcard, color: _Gold.gold, size: 30),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Dost ko refer karo, aapko ek detailed report FREE',
-              style: TextStyle(
+              s.t(const L('Invite a friend and share your code.',
+                  'दोस्त को बुलाइए और अपना कोड बाँटिए।')),
+              style: const TextStyle(
                   color: _Gold.ink, fontWeight: FontWeight.w600, fontSize: 14),
             ),
           ),
           TextButton(
             onPressed: () => _open('referral'),
-            child: const Text('Refer',
-                style: TextStyle(
+            child: Text(s.t(const L('Invite', 'बुलाइए')),
+                style: const TextStyle(
                     color: _Gold.goldDark, fontWeight: FontWeight.w800)),
           ),
         ],
@@ -529,33 +575,101 @@ class _PremiumHomeState extends State<PremiumHome> {
     );
   }
 
-  Widget _bottomNav() {
+  Widget _bottomNav(AppSettings s) {
+    const keys = ['home', 'mynumbers', 'reports', 'learn', 'vault'];
     return Container(
       decoration: const BoxDecoration(
         color: _Gold.pearl,
         border: Border(top: BorderSide(color: _Gold.goldLight)),
       ),
       child: BottomNavigationBar(
-        currentIndex: _nav,
+        currentIndex: 0,
         backgroundColor: _Gold.pearl,
         elevation: 0,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: _Gold.goldDark,
         unselectedItemColor: _Gold.soft,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
         onTap: (i) {
-          setState(() => _nav = i);
-          const keys = ['home', 'reports', 'learn', 'vault', 'account'];
           if (i != 0) _open(keys[i]);
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
+        items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.picture_as_pdf_outlined), label: 'Reports'),
-          BottomNavigationBarItem(icon: Icon(Icons.school_outlined), label: 'Learn'),
-          BottomNavigationBarItem(icon: Icon(Icons.lock_outline), label: 'Vault'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+              icon: const Icon(Icons.home_outlined),
+              label: s.t(const L('Home', 'होम'))),
+          BottomNavigationBarItem(
+              icon: const Icon(Icons.auto_awesome),
+              label: s.t(const L('My Numbers', 'मेरे अंक'))),
+          BottomNavigationBarItem(
+              icon: const Icon(Icons.picture_as_pdf_outlined),
+              label: s.t(const L('Reports', 'रिपोर्ट'))),
+          BottomNavigationBarItem(
+              icon: const Icon(Icons.school_outlined),
+              label: s.t(const L('Learn', 'सीखें'))),
+          BottomNavigationBarItem(
+              icon: const Icon(Icons.lock_outline),
+              label: s.t(const L('Vault', 'वॉल्ट'))),
         ],
       ),
     );
   }
+}
+
+class _FeatureSearch extends SearchDelegate<String?> {
+  _FeatureSearch(this.s);
+  final AppSettings s;
+
+  @override
+  String get searchFieldLabel => s.t(const L('Search a feature', 'सुविधा खोजिए'));
+
+  List<_F> _matches() {
+    final q = query.trim().toLowerCase();
+    final all = [for (final st in _steps) ...st.items];
+    if (q.isEmpty) return all;
+    return all.where((f) {
+      return f.label.en.toLowerCase().contains(q) ||
+          f.label.hi.contains(q) ||
+          f.sub.en.toLowerCase().contains(q) ||
+          f.sub.hi.contains(q);
+    }).toList();
+  }
+
+  Widget _list(BuildContext context) {
+    final list = _matches();
+    if (list.isEmpty) {
+      return Center(
+        child: Text(s.t(const L('Nothing found', 'कुछ नहीं मिला'))),
+      );
+    }
+    return ListView(
+      children: [
+        for (final f in list)
+          ListTile(
+            leading: Icon(f.icon, color: _Gold.gold),
+            title: Text(s.t(f.label)),
+            subtitle: Text(s.t(f.sub)),
+            onTap: () => close(context, f.key),
+          ),
+      ],
+    );
+  }
+
+  @override
+  List<Widget>? buildActions(BuildContext context) => [
+        if (query.isNotEmpty)
+          IconButton(icon: const Icon(Icons.clear), onPressed: () => query = ''),
+      ];
+
+  @override
+  Widget? buildLeading(BuildContext context) => IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => close(context, null),
+      );
+
+  @override
+  Widget buildResults(BuildContext context) => _list(context);
+
+  @override
+  Widget buildSuggestions(BuildContext context) => _list(context);
 }
