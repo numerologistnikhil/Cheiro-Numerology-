@@ -1,3 +1,4 @@
+import 'extras_screens.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'ai_numerologist_screen.dart';
@@ -92,6 +93,10 @@ class _PremiumHomeState extends State<PremiumHome> {
 
   void _open(String key) {
     widget.onOpen?.call(key);
+    if (key == 'referral' || key == 'pro') {
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => extraPage(key)));
+      return;
+    }
     Widget? page;
     switch (key) {
       case 'profile':
