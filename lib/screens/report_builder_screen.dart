@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../core/entitlements.dart';
 import '../core/numerology_engine.dart';
-import '../core/pdf_report.dart';
 import '../core/pricing.dart';
 import '../core/report_share.dart';
+import '../core/story_report.dart';
 import 'ui_kit.dart';
 
 class ReportBuilderScreen extends StatefulWidget {
-  const ReportBuilderScreen({super.key});
+  const ReportBuilderScreen({super.key, this.initialDob, this.initialYears});
+
+  /// Filled when the customer comes here from the Predictions screen.
+  final DateTime? initialDob;
+  final int? initialYears;
 
   @override
   State<ReportBuilderScreen> createState() => _ReportBuilderScreenState();
@@ -20,9 +24,19 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
   final TextEditingController _mobile = TextEditingController();
   DateTime? _dob;
   bool _busy = false;
+  bool _hindi = false;
+  int _years = 10;
   String? _error;
   Uint8List? _pdf;
   String _pdfFor = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _dob = widget.initialDob;
+    final y = widget.initialYears;
+    if (y != null && y >= 1 && y <= 50) _years = y;
+  }
 
   @override
   void dispose() {
@@ -86,7 +100,9 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
       builder: (c) => AlertDialog(
         title: const Text('Create detailed report?'),
         content: Text(
-          'Report for: $name\n\n${_confirmText(access)}\n\n'
+          'Report for: $name\n'
+          'Language: ${_hindi ? 'Hindi' : 'English'}\n'
+          'Future years: $_years\n\n${_confirmText(access)}\n\n'
           '${Pricing.reportIncludes}',
         ),
         actions: [
@@ -112,11 +128,13 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
       } catch (_) {
         logo = null;
       }
-      final doc = ReportBuilder.build(
+      final doc = await StoryReport.build(
         name: name,
         dob: dob,
         mobile: _mobile.text,
         logo: logo,
+        hindi: _hindi,
+        years: _years,
       );
       final bytes = await doc.save();
       await Entitlements.consume(access);
@@ -214,6 +232,53 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
             prefixIcon: Icon(Icons.phone_android),
           ),
         ),
+        const SectionLabel('Report language'),
+        SizedBox(
+          width: double.infinity,
+          child: SegmentedButton<bool>(
+            segments: const [
+              ButtonSegment<bool>(value: false, label: Text('English')),
+              ButtonSegment<bool>(value: true, label: Text('हिन्दी')),
+            ],
+            selected: {_hindi},
+            onSelectionChanged: (v) => setState(() => _hindi = v.first),
+          ),
+        ),
+        const SectionLabel('Future years in the report'),
+        Row(
+          children: [
+            IconButton(
+              onPressed: _years > 1 ? () => setState(() => _years--) : null,
+              icon: const Icon(Icons.remove_circle_outline),
+            ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  '$_years years of predictions',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            IconButton(
+              onPressed: _years < 50 ? () => setState(() => _years++) : null,
+              icon: const Icon(Icons.add_circle_outline),
+            ),
+          ],
+        ),
+        Wrap(
+          spacing: 8,
+          children: [
+            for (final n in [5, 10, 15, 20, 30])
+              ChoiceChip(
+                label: Text('$n'),
+                selected: _years == n,
+                onSelected: (_) => setState(() => _years = n),
+              ),
+          ],
+        ),
         if (_error != null)
           Padding(
             padding: const EdgeInsets.only(top: 12),
@@ -269,8 +334,8 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
         ],
         Note(
           'Rs ${Pricing.reportPriceRupees} per detailed report. '
-          '${Pricing.reportIncludes} Your first report is free. Reports are '
-          'in English for now. Payment is not connected in this test build.',
+          '${Pricing.reportIncludes} Your first report is free. Payment is '
+          'not connected in this test build.',
         ),
       ],
     );
