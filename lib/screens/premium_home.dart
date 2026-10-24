@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import '../core/app_settings.dart';
 import '../core/root_profiles.dart' show L;
+import '../core/streaks.dart';
 import 'ai_numerologist_screen.dart';
+import 'badges_screen.dart';
 import 'baby_names_screen.dart';
 import 'business_screen.dart';
 import 'client_vault_screen.dart';
@@ -13,6 +15,7 @@ import 'date_selection_screen.dart';
 import 'extras_screens.dart';
 import 'home_screen.dart';
 import 'learn_screen.dart';
+import 'lo_shu_screen.dart';
 import 'name_correction_screen.dart';
 import 'number_check_screens.dart';
 import 'predictions_screen.dart';
@@ -82,6 +85,8 @@ const _steps = <_Step>[
           L('Business name and number', 'व्यापार का नाम और अंक'), Icons.storefront_outlined),
       _F('compatibility', L('Match', 'मिलान'),
           L('Two people together', 'दो लोगों का मेल'), Icons.favorite_border),
+      _F('loshu', L('Lo Shu Grid', 'लो शू ग्रिड'),
+          L('Strong and missing numbers', 'मज़बूत और कमज़ोर अंक'), Icons.grid_view),
     ],
   ),
   _Step(
@@ -123,6 +128,9 @@ const _steps = <_Step>[
           L('Download, print, share', 'डाउनलोड, प्रिंट, शेयर'), Icons.picture_as_pdf_outlined),
       _F('vault', L('Client Vault', 'ग्राहक वॉल्ट'),
           L('Private and safe', 'निजी और सुरक्षित'), Icons.lock_outline),
+      _F('badges', L('Streak and Badges', 'लगातार दिन और बैज'),
+          L('Keep opening, earn badges', 'रोज़ खोलिए, बैज पाइए'),
+          Icons.emoji_events_outlined),
     ],
   ),
 ];
@@ -138,12 +146,16 @@ const _banners = <_Banner>[
 
 class _PremiumHomeState extends State<PremiumHome> {
   int _banner = 0;
+  StreakInfo? _streak;
   final PageController _pc = PageController(viewportFraction: 0.92);
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
+    unawaited(Streaks.touch().then((v) {
+      if (mounted) setState(() => _streak = v);
+    }));
     _timer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (!mounted || !_pc.hasClients) return;
       final next = (_banner + 1) % _banners.length;
@@ -165,6 +177,9 @@ class _PremiumHomeState extends State<PremiumHome> {
 
   void _open(String key) {
     widget.onOpen?.call(key);
+    if (key != 'settings' && key != 'badges') {
+      unawaited(Streaks.visit(key));
+    }
     switch (key) {
       case 'mynumbers':
         _go(const HomeScreen());
@@ -218,6 +233,12 @@ class _PremiumHomeState extends State<PremiumHome> {
       case 'pro':
         _go(extraPage(key));
         break;
+      case 'loshu':
+        _go(const LoShuScreen());
+        break;
+      case 'badges':
+        _go(const BadgesScreen());
+        break;
       case 'settings':
         _go(const SettingsScreen());
         break;
@@ -248,6 +269,7 @@ class _PremiumHomeState extends State<PremiumHome> {
                 children: [
                   _bannerCarousel(s),
                   _dots(),
+                  _streakStrip(s),
                   for (var i = 0; i < _steps.length; i++) _stepBlock(s, i),
                   _inviteStrip(s),
                 ],
@@ -449,6 +471,44 @@ class _PremiumHomeState extends State<PremiumHome> {
           ),
         );
       }),
+    );
+  }
+
+  Widget _streakStrip(AppSettings s) {
+    final st = _streak;
+    if (st == null) return const SizedBox.shrink();
+    final text =
+        s.hindi ? '${st.current} दिन लगातार' : '${st.current}-day streak';
+    return GestureDetector(
+      onTap: () => _open('badges'),
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: _Gold.pearl,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: _Gold.goldLight),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.local_fire_department, color: _Gold.gold),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                text,
+                style: const TextStyle(
+                    color: _Gold.ink, fontWeight: FontWeight.w700),
+              ),
+            ),
+            Text(
+              s.t(const L('Badges', 'बैज')),
+              style: const TextStyle(
+                  color: _Gold.goldDark, fontWeight: FontWeight.w800),
+            ),
+            const Icon(Icons.chevron_right, color: _Gold.goldDark),
+          ],
+        ),
+      ),
     );
   }
 
