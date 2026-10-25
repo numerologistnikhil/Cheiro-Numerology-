@@ -47,6 +47,15 @@ jobs:
       - name: Build APK
         run: flutter build apk --release --build-number=${{ github.run_number }}
 
+      - name: Re-sign APK with the fixed key
+        run: |
+          SDK="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+          BT=$(ls -d "$SDK"/build-tools/* | sort -V | tail -1)
+          APK=build/app/outputs/flutter-apk/app-release.apk
+          keytool -list -keystore debug.keystore -storepass android || true
+          "$BT/apksigner" sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --ks-key-alias androiddebugkey "$APK"
+          "$BT/apksigner" verify --print-certs "$APK" | head -3
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
