@@ -128,9 +128,6 @@ const _steps = <_Step>[
           L('Download, print, share', 'डाउनलोड, प्रिंट, शेयर'), Icons.picture_as_pdf_outlined),
       _F('vault', L('Client Vault', 'ग्राहक वॉल्ट'),
           L('Private and safe', 'निजी और सुरक्षित'), Icons.lock_outline),
-      _F('badges', L('Streak and Badges', 'लगातार दिन और बैज'),
-          L('Keep opening, earn badges', 'रोज़ खोलिए, बैज पाइए'),
-          Icons.emoji_events_outlined),
     ],
   ),
 ];
@@ -475,6 +472,7 @@ class _PremiumHomeState extends State<PremiumHome> {
   }
 
   Widget _streakStrip(AppSettings s) {
+    return const SizedBox.shrink();
     final st = _streak;
     if (st == null) return const SizedBox.shrink();
     final text =
