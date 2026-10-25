@@ -35,7 +35,7 @@ jobs:
 
       - name: Set app name and launcher icon
         run: |
-          sed -i 's/android:label="[^"]*"/android:label="Ankdhara"/' android/app/src/main/AndroidManifest.xml
+          sed -i 's/android:label="[^"]*"/android:label="Ank Dhara"/' android/app/src/main/AndroidManifest.xml
           dart run flutter_launcher_icons
 
       - name: Static analysis (fails on errors only)

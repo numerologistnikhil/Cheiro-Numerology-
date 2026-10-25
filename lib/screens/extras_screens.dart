@@ -44,8 +44,8 @@ class _ReferralScreenState extends State<ReferralScreen> {
 
   void _share(AppSettings s) {
     final text = s.hindi
-        ? 'अंकधारा अंक-ज्योतिष ऐप आज़माइए! मेरा रेफ़रल कोड: $code'
-        : 'Try the Ankdhara numerology app! My referral code: $code';
+        ? 'अंक धारा अंक-ज्योतिष ऐप आज़माइए! मेरा रेफ़रल कोड: $code'
+        : 'Try the Ank Dhara numerology app! My referral code: $code';
     Share.share(text);
   }
 
@@ -142,7 +142,7 @@ class ProPlanScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: _cream,
       appBar: AppBar(
-        title: const Text('Ankdhara Pro'),
+        title: const Text('Ank Dhara Pro'),
         backgroundColor: _cream,
         foregroundColor: Colors.black87,
         elevation: 0,

@@ -58,7 +58,7 @@ class CheiroApp extends StatelessWidget {
     return AppLang(
       settings: AppSettings.instance,
       child: MaterialApp(
-        title: 'Ankdhara',
+        title: 'Ank Dhara',
         debugShowCheckedModeBanner: false,
         theme: base.copyWith(
           textTheme: text,

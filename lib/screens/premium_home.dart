@@ -24,7 +24,7 @@ import 'remedies_screen.dart';
 import 'report_builder_screen.dart';
 import 'settings_screen.dart';
 
-/// Ankdhara home. Four numbered steps, one language at a time
+/// Ank Dhara home. Four numbered steps, one language at a time
 /// (English or Hindi, chosen in the three-dot menu).
 class PremiumHome extends StatefulWidget {
   final void Function(String key)? onOpen;
@@ -328,8 +328,8 @@ class _PremiumHomeState extends State<PremiumHome> {
                 s.setHindi(true);
               } else if (v == 'share') {
                 Share.share(s.t(const L(
-                  'Try Ankdhara, a simple numerology app in English and Hindi.',
-                  'अंकधारा आज़माइए, हिन्दी और अंग्रेज़ी में एक आसान अंक-ज्योतिष ऐप।',
+                  'Try Ank Dhara, a simple numerology app in English and Hindi.',
+                  'अंक धारा आज़माइए, हिन्दी और अंग्रेज़ी में एक आसान अंक-ज्योतिष ऐप।',
                 )));
               } else {
                 _open(v);
@@ -361,7 +361,7 @@ class _PremiumHomeState extends State<PremiumHome> {
                 value: 'pro',
                 child: ListTile(
                   leading: Icon(Icons.workspace_premium_outlined),
-                  title: Text('Ankdhara Pro'),
+                  title: Text('Ank Dhara Pro'),
                 ),
               ),
               PopupMenuItem(

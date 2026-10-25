@@ -102,7 +102,7 @@ class ReportBuilder {
       ],
       pw.Center(
         child: pw.Text(
-          'Ankdhara Numerology Report',
+          'Ank Dhara Numerology Report',
           style: pw.TextStyle(
             fontSize: 26,
             fontWeight: pw.FontWeight.bold,
@@ -195,7 +195,7 @@ class ReportBuilder {
         footer: (ctx) => pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Ankdhara  |  @NikhilVGulatii',
+            pw.Text('Ank Dhara  |  @NikhilVGulatii',
                 style: const pw.TextStyle(fontSize: 9)),
             pw.Text('Page ${ctx.pageNumber} of ${ctx.pagesCount}',
                 style: const pw.TextStyle(fontSize: 9)),
@@ -228,7 +228,7 @@ class ReportBuilder {
         build: (_) => pw.Column(
           children: [
             pw.Text(
-              'Ankdhara Numerology',
+              'Ank Dhara Numerology',
               style: pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold),
             ),
             pw.SizedBox(height: 16),

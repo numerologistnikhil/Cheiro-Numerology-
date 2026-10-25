@@ -126,7 +126,7 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: 10),
           _tile(
             Icons.workspace_premium_outlined,
-            'Ankdhara Pro',
+            'Ank Dhara Pro',
             s.t(const L('Yearly plan for numerologists',
                 'अंक-ज्योतिषियों के लिए सालाना प्लान')),
             () => Navigator.of(context).push(
@@ -140,8 +140,8 @@ class SettingsScreen extends StatelessWidget {
             s.t(const L('Send it to family and friends',
                 'परिवार और दोस्तों को भेजिए')),
             () => Share.share(s.t(const L(
-              'Try Ankdhara, a simple numerology app in English and Hindi.',
-              'अंकधारा आज़माइए, हिन्दी और अंग्रेज़ी में एक आसान अंक-ज्योतिष ऐप।',
+              'Try Ank Dhara, a simple numerology app in English and Hindi.',
+              'अंक धारा आज़माइए, हिन्दी और अंग्रेज़ी में एक आसान अंक-ज्योतिष ऐप।',
             ))),
           ),
           _title(s.t(const L('ABOUT', 'जानकारी'))),
@@ -150,12 +150,12 @@ class SettingsScreen extends StatelessWidget {
               padding: const EdgeInsets.all(14),
               child: Text(
                 s.t(const L(
-                  'Ankdhara 1.0.0\n\n'
+                  'Ank Dhara 1.0.0\n\n'
                       'Your profiles, reports and vault stay on this phone.\n\n'
                       'Numerology is a traditional system for reflection. It '
                       'does not guarantee results and is not medical, legal '
                       'or financial advice.',
-                  'अंकधारा 1.0.0\n\n'
+                  'अंक धारा 1.0.0\n\n'
                       'आपकी प्रोफ़ाइल, रिपोर्ट और वॉल्ट इसी फ़ोन में रहते हैं।\n\n'
                       'अंक-ज्योतिष सोच-विचार के लिए एक पारंपरिक पद्धति है। यह '
                       'नतीजों की गारंटी नहीं देता और चिकित्सा, कानूनी या वित्तीय '

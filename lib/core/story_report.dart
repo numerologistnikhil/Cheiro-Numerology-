@@ -493,7 +493,7 @@ class StoryReport {
         footer: (ctx) => pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Ankdhara  |  @NikhilVGulatii',
+            pw.Text('Ank Dhara  |  @NikhilVGulatii',
                 style: const pw.TextStyle(fontSize: 9)),
             pw.Text('Page ${ctx.pageNumber} of ${ctx.pagesCount}',
                 style: const pw.TextStyle(fontSize: 9)),

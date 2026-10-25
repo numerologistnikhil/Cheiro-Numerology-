@@ -28,7 +28,7 @@ class ReportShare {
     await file.writeAsBytes(bytes, flush: true);
     await Share.shareXFiles(
       [XFile(file.path, mimeType: 'application/pdf')],
-      subject: 'Ankdhara numerology report',
+      subject: 'Ank Dhara numerology report',
     );
   }
 

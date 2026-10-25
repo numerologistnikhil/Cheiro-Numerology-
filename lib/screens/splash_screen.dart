@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'premium_home.dart';
 
-/// Animated Ankdhara splash:
+/// Animated Ank Dhara splash:
 /// 1) logo fade + zoom in, 2) golden shimmer, 3) logo shrinks, floats up and
 /// fades away into the Home screen. Tap anywhere to skip.
 class SplashScreen extends StatefulWidget {

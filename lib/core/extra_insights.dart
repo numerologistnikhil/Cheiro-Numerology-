@@ -1,4 +1,4 @@
-// Ankdhara - extra insights (pure Dart, no packages needed).
+// Ank Dhara - extra insights (pure Dart, no packages needed).
 // 1) NumberPatterns: pattern check for mobile / vehicle numbers
 // 2) TimeEnergy:     small message for special times (11:11, 22:22 ...)
 // 3) NameScore:      simple wealth + luck guide for a name / business name

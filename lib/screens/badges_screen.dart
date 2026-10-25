@@ -57,7 +57,7 @@ final List<_Badge> _badges = [
     (i) => i.visited.contains('loshu'),
   ),
   _Badge(
-    const L('Friend of Ankdhara', 'अंकधारा का दोस्त'),
+    const L('Friend of Ank Dhara', 'अंक धारा का दोस्त'),
     const L('Open Invite a friend', 'दोस्त को बुलाइए खोलिए'),
     Icons.card_giftcard,
     (i) => i.visited.contains('referral'),

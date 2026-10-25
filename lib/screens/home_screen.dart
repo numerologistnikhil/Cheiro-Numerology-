@@ -148,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const [
           Text(
-            'ANKDHARA',
+            'ANK DHARA',
             style: TextStyle(
               color: Colors.white,
               fontSize: 13,
@@ -158,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(height: 8),
           Text(
-            'अंकधारा',
+            'अंक धारा',
             style: TextStyle(
               color: Colors.white,
               fontSize: 34,
@@ -213,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox.shrink(),
             ),
             const SizedBox(width: 8),
-            const Text('Ankdhara'),
+            const Text('Ank Dhara'),
           ],
         ),
       ),
