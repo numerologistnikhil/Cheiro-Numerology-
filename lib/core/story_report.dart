@@ -6,28 +6,47 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
+import 'angel_numbers.dart';
 import 'knowledge_pack.dart';
 import 'numerology_engine.dart';
 import 'numerology_tools.dart';
+import 'report_border.dart';
+import 'report_options.dart';
+import 'report_pages.dart';
 import 'report_text.dart';
 import 'root_profiles.dart';
+import 'year_details.dart';
+
+/// One picture of text (used for Hindi text and for the footer lines).
+class _Img {
+  final Uint8List png;
+  final double w;
+  final double h;
+  const _Img(this.png, this.w, this.h);
+}
 
 /// Story style report in simple language. English or Hindi.
 /// Hindi text is drawn with Flutter's own text engine and placed in the PDF
 /// as pictures, so letters and matras always look correct.
+///
+/// Page order: cover, customer details, disclaimer, precautions and how to
+/// read, then the report itself. Border, colours, language, years and the
+/// footer lines come from [ReportOptions].
 class StoryReport {
-  StoryReport._(this.hindi);
+  StoryReport._(this.opts);
 
-  final bool hindi;
+  final ReportOptions opts;
 
-  static const int _goldI = 0xFFB8860B;
-  static const int _inkI = 0xFF2B2418;
-  static const int _paperI = 0xFFFAF5E8;
-  static const double _fullWidth = 520;
-  static const double _boxWidth = 494;
+  bool get hindi => opts.hindi;
+  int get _goldI => opts.palette.primary;
+  int get _inkI => opts.palette.text;
+  int get _paperI => opts.palette.tint;
 
-  /// Builds the report. [years] is how many years of future predictions to
-  /// include (starting from this year). Minimum 1, default 10.
+  static const double _fullWidth = 500;
+  static const double _boxWidth = 474;
+
+  /// Builds the report. Pass [options] for the full set of choices. The old
+  /// [hindi] and [years] are used only when [options] is not given.
   static Future<pw.Document> build({
     required String name,
     required DateTime dob,
@@ -35,11 +54,13 @@ class StoryReport {
     Uint8List? logo,
     bool hindi = false,
     int years = 10,
+    ReportOptions? options,
   }) {
-    var n = years;
+    final base = options ?? ReportOptions(hindi: hindi, years: years);
+    var n = base.years;
     if (n < 1) n = 1;
     if (n > 50) n = 50;
-    return StoryReport._(hindi)._build(name, dob, mobile, logo, n);
+    return StoryReport._(base.copyWith(years: n))._build(name, dob, mobile, logo);
   }
 
   /// Opens the print / save-as-PDF sheet.
@@ -50,6 +71,7 @@ class StoryReport {
     Uint8List? logo,
     bool hindi = false,
     int years = 10,
+    ReportOptions? options,
   }) async {
     final doc = await build(
       name: name,
@@ -58,6 +80,7 @@ class StoryReport {
       logo: logo,
       hindi: hindi,
       years: years,
+      options: options,
     );
     await Printing.layoutPdf(onLayout: (_) => doc.save());
   }
@@ -70,6 +93,7 @@ class StoryReport {
     Uint8List? logo,
     bool hindi = false,
     int years = 10,
+    ReportOptions? options,
   }) async {
     final doc = await build(
       name: name,
@@ -78,32 +102,21 @@ class StoryReport {
       logo: logo,
       hindi: hindi,
       years: years,
+      options: options,
     );
     return doc.save();
   }
 
   // ---------------------------------------------------------------- text
 
-  Future<pw.Widget> _text(
+  Future<_Img> _renderImage(
     String s, {
     double size = 11.5,
     bool bold = false,
-    int color = _inkI,
+    int? color,
     double width = _fullWidth,
     bool center = false,
   }) async {
-    if (!hindi) {
-      return pw.Text(
-        s,
-        textAlign: center ? pw.TextAlign.center : pw.TextAlign.left,
-        style: pw.TextStyle(
-          fontSize: size,
-          fontWeight: bold ? pw.FontWeight.bold : pw.FontWeight.normal,
-          lineSpacing: 3,
-          color: PdfColor.fromInt(color),
-        ),
-      );
-    }
     const scale = 3.0;
     final tp = TextPainter(
       text: TextSpan(
@@ -113,7 +126,7 @@ class StoryReport {
           fontSize: size * scale,
           height: 1.55,
           fontWeight: bold ? ui.FontWeight.bold : ui.FontWeight.normal,
-          color: ui.Color(color),
+          color: ui.Color(color ?? _inkI),
         ),
       ),
       textDirection: ui.TextDirection.ltr,
@@ -134,11 +147,32 @@ class StoryReport {
     final img = await pic.toImage(w, h);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
     final png = data!.buffer.asUint8List();
-    return pw.Image(
-      pw.MemoryImage(png),
-      width: w / scale,
-      height: h / scale,
-    );
+    return _Img(png, w / scale, h / scale);
+  }
+
+  Future<pw.Widget> _text(
+    String s, {
+    double size = 11.5,
+    bool bold = false,
+    int? color,
+    double width = _fullWidth,
+    bool center = false,
+  }) async {
+    if (!hindi) {
+      return pw.Text(
+        s,
+        textAlign: center ? pw.TextAlign.center : pw.TextAlign.left,
+        style: pw.TextStyle(
+          fontSize: size,
+          fontWeight: bold ? pw.FontWeight.bold : pw.FontWeight.normal,
+          lineSpacing: 3,
+          color: PdfColor.fromInt(color ?? _inkI),
+        ),
+      );
+    }
+    final r = await _renderImage(s,
+        size: size, bold: bold, color: color, width: width, center: center);
+    return pw.Image(pw.MemoryImage(r.png), width: r.w, height: r.h);
   }
 
   Future<pw.Widget> _h1(String s) async {
@@ -160,6 +194,16 @@ class StoryReport {
       padding: const pw.EdgeInsets.only(bottom: 7),
       child: await _text(s),
     );
+  }
+
+  /// Splits a long text at blank lines and adds each part as a paragraph.
+  Future<List<pw.Widget>> _paras(String s) async {
+    final out = <pw.Widget>[];
+    for (final part in s.split('\n\n')) {
+      final t = part.trim();
+      if (t.isNotEmpty) out.add(await _p(t));
+    }
+    return out;
   }
 
   pw.BoxDecoration _boxDeco() => pw.BoxDecoration(
@@ -185,7 +229,11 @@ class StoryReport {
     );
   }
 
-  Future<pw.Widget> _facts(List<MapEntry<String, String>> rows) async {
+  Future<pw.Widget> _facts(
+    List<MapEntry<String, String>> rows, {
+    double labelW = 105,
+    double size = 11.5,
+  }) async {
     final kids = <pw.Widget>[];
     for (final r in rows) {
       kids.add(
@@ -195,10 +243,14 @@ class StoryReport {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.SizedBox(
-                width: 105,
-                child: await _text(r.key, bold: true, width: 100),
+                width: labelW,
+                child: await _text(r.key,
+                    bold: true, size: size, width: labelW - 5),
               ),
-              pw.Expanded(child: await _text(r.value, width: 380)),
+              pw.Expanded(
+                child: await _text(r.value,
+                    size: size, width: _boxWidth - labelW - 4),
+              ),
             ],
           ),
         ),
@@ -300,16 +352,185 @@ class StoryReport {
     return '$subject number $root with your birth number $psychic: $rel';
   }
 
+  // --------------------------------------------------------- page pieces
+
+  /// Black and white printouts get a grey version of the logo.
+  Future<Uint8List> _gray(Uint8List png) async {
+    try {
+      final codec = await ui.instantiateImageCodec(png);
+      final frame = await codec.getNextFrame();
+      final img = frame.image;
+      final rec = ui.PictureRecorder();
+      final canvas = ui.Canvas(rec);
+      final paint = ui.Paint()
+        ..colorFilter = ui.ColorFilter.matrix(<double>[
+          0.299, 0.587, 0.114, 0, 0, //
+          0.299, 0.587, 0.114, 0, 0, //
+          0.299, 0.587, 0.114, 0, 0, //
+          0, 0, 0, 1, 0,
+        ]);
+      canvas.drawImage(img, ui.Offset.zero, paint);
+      final out = await rec.endRecording().toImage(img.width, img.height);
+      final data = await out.toByteData(format: ui.ImageByteFormat.png);
+      return data!.buffer.asUint8List();
+    } catch (_) {
+      return png;
+    }
+  }
+
+  pw.PageTheme _pageTheme() {
+    final main = opts.blackWhite ? 0xFF000000 : opts.palette.primary;
+    final soft = opts.blackWhite ? 0xFF666666 : opts.palette.accent;
+    return pw.PageTheme(
+      pageFormat: PdfPageFormat.a4,
+      margin: const pw.EdgeInsets.fromLTRB(46, 46, 46, 52),
+      buildBackground: (ctx) => ReportBorder.background(opts.border, main, soft),
+    );
+  }
+
+  Future<pw.Widget> _coverBody(String name, DateTime dob, Uint8List? logo) async {
+    final h = hindi;
+    final now = DateTime.now();
+    final kids = <pw.Widget>[];
+    if (logo != null) {
+      kids.add(pw.Image(pw.MemoryImage(logo), height: 190));
+      kids.add(pw.SizedBox(height: 28));
+    }
+    kids.add(await _text(ReportPages.coverKicker.t(h),
+        size: 11.5, bold: true, color: _goldI, center: true));
+    kids.add(pw.SizedBox(height: 10));
+    kids.add(await _text(ReportText.reportTitle.t(h),
+        size: 30, bold: true, color: _goldI, center: true));
+    kids.add(pw.SizedBox(height: 14));
+    kids.add(pw.Container(
+        width: 110, height: 2, color: PdfColor.fromInt(_goldI)));
+    kids.add(pw.SizedBox(height: 28));
+    kids.add(await _text(ReportPages.preparedFor.t(h), size: 12, center: true));
+    kids.add(pw.SizedBox(height: 6));
+    kids.add(await _text(name, size: 26, bold: true, center: true));
+    kids.add(pw.SizedBox(height: 12));
+    kids.add(await _text('${ReportText.bornOn.t(h)}: ${_date(dob)}',
+        size: 13, center: true));
+    kids.add(pw.SizedBox(height: 3));
+    kids.add(await _text('${ReportText.preparedOn.t(h)}: ${_date(now)}',
+        size: 13, center: true));
+    kids.add(pw.SizedBox(height: 44));
+    kids.add(await _text(ReportPages.coverTagline.t(h),
+        size: 12, center: true, width: 400));
+    return pw.Center(
+      child: pw.Column(
+        mainAxisSize: pw.MainAxisSize.min,
+        crossAxisAlignment: pw.CrossAxisAlignment.center,
+        children: kids,
+      ),
+    );
+  }
+
+  Future<List<pw.Widget>> _customerWidgets({
+    required String name,
+    required DateTime dob,
+    required String mobile,
+    required int psychic,
+    required int destiny,
+    required String planet,
+    required NumerologyResult nameResult,
+    required NumerologyResult mobileResult,
+    required bool hasWho,
+  }) async {
+    final h = hindi;
+    final now = DateTime.now();
+    final out = <pw.Widget>[];
+    out.add(await _h1(ReportPages.customerTitle.t(h)));
+    out.add(await _p(ReportPages.customerIntro.t(h)));
+
+    final rows = <MapEntry<String, String>>[
+      MapEntry(ReportPages.labelName.t(h), name),
+      MapEntry(ReportPages.labelDob.t(h), _date(dob)),
+      MapEntry(ReportPages.labelDay.t(h),
+          (h ? ReportPages.weekHi : ReportPages.weekEn)[dob.weekday - 1]),
+      MapEntry(ReportPages.labelMobile.t(h),
+          mobile.trim().isEmpty ? ReportPages.notGiven.t(h) : mobile.trim()),
+      MapEntry(ReportPages.labelMulank.t(h), '$psychic'),
+      MapEntry(ReportPages.labelBhagyank.t(h), '$destiny'),
+      if (planet.isNotEmpty) MapEntry(ReportPages.labelPlanet.t(h), planet),
+      if (nameResult.total > 0)
+        MapEntry(ReportPages.labelNameNo.t(h),
+            '${nameResult.total}  (${nameResult.root})'),
+      if (mobileResult.total > 0)
+        MapEntry(ReportPages.labelMobileNo.t(h),
+            '${mobileResult.total}  (${mobileResult.root})'),
+      MapEntry(ReportPages.labelLang.t(h),
+          h ? ReportPages.langHindi.t(h) : ReportPages.langEnglish.t(h)),
+      MapEntry(ReportPages.labelYears.t(h), '${opts.years}'),
+      MapEntry(ReportPages.labelDate.t(h), _date(now)),
+      MapEntry(ReportPages.labelBy.t(h), ReportPages.preparedByValue.t(h)),
+    ];
+    out.add(await _facts(rows, labelW: 165, size: 12.5));
+
+    out.add(await _h1(ReportPages.glanceTitle.t(h)));
+    final cells = <pw.Widget>[];
+    cells.add(await _cell(h ? 'मूलांक' : 'Mulank', psychic, planet));
+    cells.add(await _cell(h ? 'भाग्यांक' : 'Bhagyank', destiny, ''));
+    if (nameResult.total > 0) {
+      cells.add(await _cell(h ? 'नाम' : 'Name', nameResult.root, '${nameResult.total}'));
+    }
+    if (mobileResult.total > 0) {
+      cells.add(await _cell(h ? 'मोबाइल' : 'Mobile', mobileResult.root, '${mobileResult.total}'));
+    }
+    out.add(pw.Wrap(spacing: 6, runSpacing: 6, children: cells));
+    out.add(pw.SizedBox(height: 10));
+
+    out.add(await _h1(ReportPages.includesTitle.t(h)));
+    final items = <String>[
+      h ? 'आपके मुख्य अंक और उनका मतलब' : 'Your core numbers and what they mean',
+      if (hasWho)
+        h
+            ? 'आप कौन हैं: स्वभाव, खूबियाँ, काम, पैसा, प्रेम और सेहत'
+            : 'Who you are: personality, strengths, work, money, love and health',
+      if (nameResult.total > 0) h ? 'आपके नाम का विश्लेषण' : 'Name analysis',
+      if (mobileResult.total > 0) h ? 'आपके मोबाइल नंबर का विश्लेषण' : 'Mobile number analysis',
+      h
+          ? 'आपके अगले ${opts.years} साल: सेहत, परिवार, सीखना और महीने-दर-महीने मार्गदर्शन'
+          : 'Your next ${opts.years} years with health, family, learning and a month-by-month guide',
+      h ? 'इस साल के पर्सनल मंथ' : 'Personal months of this year',
+      h ? 'सरल उपाय' : 'Simple remedies',
+      if (opts.includeAngelNumbers)
+        h ? 'एंजल नंबर और आपकी जन्मतिथि' : 'Angel numbers and your date of birth',
+      h ? 'कार्य योजना' : 'Action plan',
+    ];
+    for (final it in items) {
+      out.add(await _p('${h ? '•' : '-'}  $it'));
+    }
+    return out;
+  }
+
+  Future<List<pw.Widget>> _secPage(
+    PBi title,
+    PBi intro,
+    List<Sec> secs,
+  ) async {
+    final h = hindi;
+    final out = <pw.Widget>[];
+    out.add(await _h1(title.t(h)));
+    out.add(await _p(intro.t(h)));
+    for (final s in secs) {
+      out.add(await _box(s.title.t(h), s.body.t(h)));
+    }
+    return out;
+  }
+
   // --------------------------------------------------------------- build
 
   Future<pw.Document> _build(
     String name,
     DateTime dob,
     String mobile,
-    Uint8List? logo,
-    int years,
+    Uint8List? logo0,
   ) async {
     final h = hindi;
+    var logo = logo0;
+    if (logo != null && opts.blackWhite) logo = await _gray(logo);
+
     final birth = NumerologyEngine.birth(dob);
     final nameResult = NumerologyEngine.name(name);
     final mobileResult = NumerologyEngine.mobile(mobile);
@@ -319,25 +540,94 @@ class StoryReport {
     final pp = RootProfiles.of(psychic);
     final dp = RootProfiles.of(destiny);
     final hab = ReportText.habits[psychic];
-    final w = <pw.Widget>[];
+    final mn = h ? ReportText.monthsHi : ReportText.monthsEn;
 
-    // Cover
-    if (logo != null) {
-      w.add(pw.Center(child: pw.Image(pw.MemoryImage(logo), height: 140)));
-      w.add(pw.SizedBox(height: 10));
+    // Footer: the customer's own lines (no page number).
+    final footerImgs = <_Img>[];
+    for (final line in opts.footerLines) {
+      footerImgs.add(await _renderImage(line, size: 9, center: true));
     }
-    w.add(await _text(ReportText.reportTitle.t(h),
-        size: 26, bold: true, color: _goldI, center: true));
-    w.add(pw.SizedBox(height: 12));
-    w.add(await _text(name, size: 20, center: true));
-    w.add(pw.SizedBox(height: 4));
-    w.add(await _text('${ReportText.bornOn.t(h)}: ${_date(dob)}',
-        center: true));
-    w.add(pw.SizedBox(height: 2));
-    w.add(await _text('${ReportText.preparedOn.t(h)}: ${_date(now)}',
-        center: true));
-    w.add(pw.SizedBox(height: 8));
-    w.add(pw.Divider(color: PdfColor.fromInt(_goldI)));
+    pw.Widget footer(pw.Context ctx) {
+      if (footerImgs.isEmpty) {
+        return pw.Center(
+          child: pw.Text(
+            'Ank Dhara',
+            style: pw.TextStyle(
+                fontSize: 9, color: PdfColor.fromInt(_inkI)),
+          ),
+        );
+      }
+      return pw.Column(
+        mainAxisSize: pw.MainAxisSize.min,
+        children: [
+          for (final r in footerImgs)
+            pw.Padding(
+              padding: const pw.EdgeInsets.only(top: 2),
+              child: pw.Image(pw.MemoryImage(r.png), width: r.w, height: r.h),
+            ),
+        ],
+      );
+    }
+
+    final theme = _pageTheme();
+    final doc = pw.Document();
+
+    // 1. Cover page
+    final cover = await _coverBody(name, dob, logo);
+    doc.addPage(pw.Page(pageTheme: theme, build: (_) => cover));
+
+    // 2. Customer details page
+    final cust = await _customerWidgets(
+      name: name,
+      dob: dob,
+      mobile: mobile,
+      psychic: psychic,
+      destiny: destiny,
+      planet: pp?.planet.t(h) ?? '',
+      nameResult: nameResult,
+      mobileResult: mobileResult,
+      hasWho: pp != null,
+    );
+    doc.addPage(pw.MultiPage(
+      pageTheme: theme,
+      maxPages: 200,
+      footer: footer,
+      build: (_) => cust,
+    ));
+
+    // 3. Disclaimer
+    final dis = await _secPage(
+      ReportPages.noticeTitle,
+      ReportPages.noticeIntro,
+      ReportPages.notice,
+    );
+    doc.addPage(pw.MultiPage(
+      pageTheme: theme,
+      maxPages: 200,
+      footer: footer,
+      build: (_) => dis,
+    ));
+
+    // 4. Precautions and how to read
+    final pre = await _secPage(
+      ReportPages.precautionsTitle,
+      ReportPages.precautionsIntro,
+      ReportPages.precautions,
+    );
+    pre.addAll(await _secPage(
+      ReportPages.readTitle,
+      ReportPages.readIntro,
+      ReportPages.read,
+    ));
+    doc.addPage(pw.MultiPage(
+      pageTheme: theme,
+      maxPages: 200,
+      footer: footer,
+      build: (_) => pre,
+    ));
+
+    // 5. The report itself
+    final w = <pw.Widget>[];
     w.add(await _box(ReportText.howTitle.t(h), ReportText.howBody.t(h)));
 
     // Two main numbers
@@ -402,6 +692,7 @@ class StoryReport {
     }
 
     // Future years
+    final years = opts.years;
     final first = now.year;
     final last = now.year + years - 1;
     w.add(await _h1(h
@@ -424,21 +715,36 @@ class StoryReport {
       final py = NumerologyTools.personalYear(dob, y);
       final ys = ReportText.years[py] ?? ReportText.years[1]!;
       final ar = ReportText.yearAreas[py] ?? ReportText.yearAreas[1]!;
+      final ex = YearDetails.extra[py] ?? YearDetails.extra[1]!;
       w.add(await _box('$y  -  ${ys.title.t(h)}', ys.story.t(h)));
       w.add(await _facts([
         MapEntry(ReportText.careerTitle.t(h), ar.work.t(h)),
         MapEntry(ReportText.moneyTitle.t(h), ar.money.t(h)),
         MapEntry(ReportText.loveTitle.t(h), ar.love.t(h)),
+        MapEntry(ReportPages.healthLabel.t(h), ex.health.t(h)),
+        MapEntry(ReportPages.familyLabel.t(h), ex.family.t(h)),
+        MapEntry(ReportPages.studyLabel.t(h), ex.study.t(h)),
+        MapEntry(ReportPages.spiritLabel.t(h), ex.spirit.t(h)),
         MapEntry(ReportText.doLabel.t(h), ys.doThis.t(h)),
         MapEntry(ReportText.takeCareLabel.t(h), ys.avoid.t(h)),
       ]));
+      w.add(await _text('$y  -  ${ReportPages.monthByMonth.t(h)}',
+          size: 12.5, bold: true, color: _goldI));
+      w.add(pw.SizedBox(height: 3));
+      w.add(await _p(ReportPages.monthByMonthIntro.t(h)));
+      final monthRows = <MapEntry<String, String>>[];
+      for (var m = 1; m <= 12; m++) {
+        final pm = NumerologyTools.personalMonth(dob, y, m);
+        final line = YearDetails.monthLine[pm] ?? YearDetails.monthLine[1]!;
+        monthRows.add(MapEntry('${mn[m - 1]} ($pm)', line.t(h)));
+      }
+      w.add(await _facts(monthRows));
     }
 
-    // Months of this year
+    // Months of this year (quick view)
     w.add(await _h1(ReportText.monthsTitle.t(h)));
     w.add(await _p(ReportText.monthsIntro.t(h)));
     final months = <pw.Widget>[];
-    final mn = h ? ReportText.monthsHi : ReportText.monthsEn;
     for (var m = 1; m <= 12; m++) {
       final pm = NumerologyTools.personalMonth(dob, now.year, m);
       final word = ReportText.monthWord[pm]?.t(h) ?? '';
@@ -459,8 +765,35 @@ class StoryReport {
         MapEntry(ReportText.daanLabel.t(h), hab.daan.t(h)),
         MapEntry(ReportText.avoidLabel.t(h), hab.avoid.t(h)),
       ]));
+    }
 
-      // Action plan
+    // Angel numbers
+    if (opts.includeAngelNumbers) {
+      w.add(await _h1(AngelNumbers.introTitle(h)));
+      w.addAll(await _paras(AngelNumbers.intro(h)));
+      w.add(await _h1(AngelNumbers.dobTitle(h)));
+      w.addAll(await _paras(AngelNumbers.dobGeneral(h)));
+      w.add(await _h1(ReportPages.angelYourBirth.t(h)));
+      w.addAll(await _paras(AngelNumbers.dobParagraph(dob, now.year, h)));
+      w.add(await _h1(ReportPages.angelAll.t(h)));
+      w.add(await _p(ReportPages.angelAllIntro.t(h)));
+      final links = AngelNumbers.linksForDob(dob, now.year);
+      for (final l in links) {
+        final a = l.angel;
+        w.add(await _box('${a.number}  -  ${a.title(h)}',
+            '${l.label(h)}: ${l.reason(h)}'));
+        w.add(await _facts([
+          MapEntry(ReportPages.angelMeaning.t(h), a.meaning(h)),
+          MapEntry(ReportPages.angelMessage.t(h), a.message(h)),
+          MapEntry(ReportPages.angelLove.t(h), a.love(h)),
+          MapEntry(ReportPages.angelCareer.t(h), a.career(h)),
+          MapEntry(ReportPages.angelStep.t(h), a.action(h)),
+        ]));
+      }
+    }
+
+    // Action plan
+    if (pp != null && hab != null) {
       final ys = ReportText.years[NumerologyTools.personalYear(dob, now.year)] ??
           ReportText.years[1]!;
       w.add(await _h1(ReportText.actionTitle.t(h)));
@@ -480,28 +813,20 @@ class StoryReport {
     // Closing
     w.add(await _h1(ReportText.closingTitle.t(h)));
     w.add(await _p(ReportText.closingBody.t(h)));
+    // The disclaimer and precautions are now at the front of the report.
     w.add(await _text(
-      h ? RootProfiles.disclaimerHi : RootProfiles.disclaimer,
+      h
+          ? 'ज़रूरी सूचना और सावधानियाँ इस रिपोर्ट की शुरुआत के पन्नों में दी गई हैं।'
+          : 'The notice and precautions are given on the first pages of this report.',
       size: 9,
     ));
 
-    final doc = pw.Document();
-    doc.addPage(
-      pw.MultiPage(
-        pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.all(36),
-        footer: (ctx) => pw.Row(
-          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-          children: [
-            pw.Text('Ank Dhara  |  @NikhilVGulatii',
-                style: const pw.TextStyle(fontSize: 9)),
-            pw.Text('Page ${ctx.pageNumber} of ${ctx.pagesCount}',
-                style: const pw.TextStyle(fontSize: 9)),
-          ],
-        ),
-        build: (_) => w,
-      ),
-    );
+    doc.addPage(pw.MultiPage(
+      pageTheme: theme,
+      maxPages: 200,
+      footer: footer,
+      build: (_) => w,
+    ));
     return doc;
   }
 }
