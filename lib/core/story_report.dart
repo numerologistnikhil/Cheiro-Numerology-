@@ -10,6 +10,7 @@ import 'angel_numbers.dart';
 import 'knowledge_pack.dart';
 import 'numerology_engine.dart';
 import 'numerology_tools.dart';
+import 'pricing.dart';
 import 'report_border.dart';
 import 'report_options.dart';
 import 'report_pages.dart';
@@ -33,9 +34,12 @@ class _Img {
 /// read, then the report itself. Border, colours, language, years and the
 /// footer lines come from [ReportOptions].
 class StoryReport {
-  StoryReport._(this.opts);
+  StoryReport._(this.opts, this.sample);
 
   final ReportOptions opts;
+
+  /// Free first report: shorter version with a sample mark.
+  final bool sample;
 
   bool get hindi => opts.hindi;
   int get _goldI => opts.palette.primary;
@@ -55,12 +59,16 @@ class StoryReport {
     bool hindi = false,
     int years = 10,
     ReportOptions? options,
+    bool sample = false,
   }) {
-    final base = options ?? ReportOptions(hindi: hindi, years: years);
+    var base = options ?? ReportOptions(hindi: hindi, years: years);
+    if (sample) base = base.copyWith(includeAngelNumbers: false);
     var n = base.years;
+    if (sample && n > Pricing.sampleYears) n = Pricing.sampleYears;
     if (n < 1) n = 1;
     if (n > 50) n = 50;
-    return StoryReport._(base.copyWith(years: n))._build(name, dob, mobile, logo);
+    return StoryReport._(base.copyWith(years: n), sample)
+        ._build(name, dob, mobile, logo);
   }
 
   /// Opens the print / save-as-PDF sheet.
@@ -72,6 +80,7 @@ class StoryReport {
     bool hindi = false,
     int years = 10,
     ReportOptions? options,
+    bool sample = false,
   }) async {
     final doc = await build(
       name: name,
@@ -81,6 +90,7 @@ class StoryReport {
       hindi: hindi,
       years: years,
       options: options,
+      sample: sample,
     );
     await Printing.layoutPdf(onLayout: (_) => doc.save());
   }
@@ -94,6 +104,7 @@ class StoryReport {
     bool hindi = false,
     int years = 10,
     ReportOptions? options,
+    bool sample = false,
   }) async {
     final doc = await build(
       name: name,
@@ -103,6 +114,7 @@ class StoryReport {
       hindi: hindi,
       years: years,
       options: options,
+      sample: sample,
     );
     return doc.save();
   }
@@ -398,6 +410,11 @@ class StoryReport {
     }
     kids.add(await _text(ReportPages.coverKicker.t(h),
         size: 11.5, bold: true, color: _goldI, center: true));
+    if (sample) {
+      kids.add(pw.SizedBox(height: 4));
+      kids.add(await _text(h ? 'फ्री सैंपल रिपोर्ट' : 'FREE SAMPLE REPORT',
+          size: 11, bold: true, center: true));
+    }
     kids.add(pw.SizedBox(height: 10));
     kids.add(await _text(ReportText.reportTitle.t(h),
         size: 30, bold: true, color: _goldI, center: true));
@@ -490,8 +507,8 @@ class StoryReport {
       if (nameResult.total > 0) h ? 'आपके नाम का विश्लेषण' : 'Name analysis',
       if (mobileResult.total > 0) h ? 'आपके मोबाइल नंबर का विश्लेषण' : 'Mobile number analysis',
       h
-          ? 'आपके अगले ${opts.years} साल: सेहत, परिवार, सीखना और महीने-दर-महीने मार्गदर्शन'
-          : 'Your next ${opts.years} years with health, family, learning and a month-by-month guide',
+          ? 'आपके अगले ${opts.years} साल: सेहत, परिवार, सीखना${sample ? '' : ' और महीने-दर-महीने मार्गदर्शन'}'
+          : 'Your next ${opts.years} years with health, family, learning${sample ? '' : ' and a month-by-month guide'}',
       h ? 'इस साल के पर्सनल मंथ' : 'Personal months of this year',
       h ? 'सरल उपाय' : 'Simple remedies',
       if (opts.includeAngelNumbers)
@@ -543,29 +560,44 @@ class StoryReport {
     final mn = h ? ReportText.monthsHi : ReportText.monthsEn;
 
     // Footer: the customer's own lines (no page number).
-    final footerImgs = <_Img>[];
-    for (final line in opts.footerLines) {
-      footerImgs.add(await _renderImage(line, size: 9, center: true));
+    final footerLines = <String>[...opts.footerLines];
+    if (sample) {
+      footerLines.add(h
+          ? 'फ्री सैंपल रिपोर्ट - पूरी रिपोर्ट ऐप में मिलती है'
+          : 'Free sample report - the full report is available in the app');
+    }
+    final footerItems = <Object>[];
+    for (final line in footerLines) {
+      final plain = !h && line.runes.every((r) => r < 256);
+      footerItems.add(
+          plain ? line : await _renderImage(line, size: 9, center: true));
     }
     pw.Widget footer(pw.Context ctx) {
-      if (footerImgs.isEmpty) {
+      if (footerItems.isEmpty) {
         return pw.Center(
           child: pw.Text(
             'Ank Dhara',
-            style: pw.TextStyle(
-                fontSize: 9, color: PdfColor.fromInt(_inkI)),
+            style: pw.TextStyle(fontSize: 9, color: PdfColor.fromInt(_inkI)),
           ),
         );
       }
-      return pw.Column(
-        mainAxisSize: pw.MainAxisSize.min,
-        children: [
-          for (final r in footerImgs)
-            pw.Padding(
-              padding: const pw.EdgeInsets.only(top: 2),
-              child: pw.Image(pw.MemoryImage(r.png), width: r.w, height: r.h),
-            ),
-        ],
+      return pw.Center(
+        child: pw.Column(
+          mainAxisSize: pw.MainAxisSize.min,
+          children: [
+            for (final it in footerItems)
+              pw.Padding(
+                padding: const pw.EdgeInsets.only(top: 2),
+                child: it is _Img
+                    ? pw.Image(pw.MemoryImage(it.png), width: it.w, height: it.h)
+                    : pw.Text(
+                        it as String,
+                        style: pw.TextStyle(
+                            fontSize: 9, color: PdfColor.fromInt(_inkI)),
+                      ),
+              ),
+          ],
+        ),
       );
     }
 
@@ -728,6 +760,7 @@ class StoryReport {
         MapEntry(ReportText.doLabel.t(h), ys.doThis.t(h)),
         MapEntry(ReportText.takeCareLabel.t(h), ys.avoid.t(h)),
       ]));
+      if (!sample) {
       w.add(await _text('$y  -  ${ReportPages.monthByMonth.t(h)}',
           size: 12.5, bold: true, color: _goldI));
       w.add(pw.SizedBox(height: 3));
@@ -739,6 +772,7 @@ class StoryReport {
         monthRows.add(MapEntry('${mn[m - 1]} ($pm)', line.t(h)));
       }
       w.add(await _facts(monthRows));
+      }
     }
 
     // Months of this year (quick view)
@@ -813,6 +847,14 @@ class StoryReport {
     // Closing
     w.add(await _h1(ReportText.closingTitle.t(h)));
     w.add(await _p(ReportText.closingBody.t(h)));
+    if (sample) {
+      w.add(await _box(
+        h ? 'पूरी रिपोर्ट में और क्या मिलता है' : 'What the full report adds',
+        h
+            ? 'पूरी रिपोर्ट में आपके चुने हुए सभी आगे के साल, हर साल के लिए महीने-दर-महीने मार्गदर्शन और एंजल नंबर वाला पूरा हिस्सा मिलता है।'
+            : 'The full report gives all the future years you choose, a month-by-month guide for every year and the complete angel numbers section.',
+      ));
+    }
     // The disclaimer and precautions are now at the front of the report.
     w.add(await _text(
       h

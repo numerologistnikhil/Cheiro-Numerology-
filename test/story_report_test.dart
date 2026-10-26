@@ -41,6 +41,14 @@ void main() {
     expect(isPdf(await doc.save()), true);
   });
 
+  test('free sample report builds and is smaller than the full one', () async {
+    const o = ReportOptions(years: 10);
+    final full = await (await StoryReport.build(name: 'Annu Test', dob: dob, options: o)).save();
+    final sample = await (await StoryReport.build(name: 'Annu Test', dob: dob, options: o, sample: true)).save();
+    expect(isPdf(sample), true);
+    expect(sample.length < full.length, true);
+  });
+
   test('old call style still works (hindi false, years 2)', () async {
     final doc = await StoryReport.build(name: 'Annu Test', dob: dob, years: 2);
     expect(isPdf(await doc.save()), true);

@@ -75,7 +75,12 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
   String _confirmText(ReportAccess access) {
     switch (access) {
       case ReportAccess.freeFirst:
-        return 'Your first detailed report is free.';
+        return Pricing.freeReportIsSample
+            ? 'Your first report is free. It is a sample: ${Pricing.sampleYears} '
+                'years of predictions, without the month-by-month guide and '
+                'the angel numbers section. The full report is Rs '
+                '${Pricing.reportPriceRupees}.'
+            : 'Your first detailed report is free.';
       case ReportAccess.paidCredit:
         return 'This uses 1 of your paid report credits.';
       case ReportAccess.testing:
@@ -160,6 +165,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
         mobile: _mobile.text,
         logo: logo,
         options: _opts,
+        sample: access == ReportAccess.freeFirst && Pricing.freeReportIsSample,
       );
       final bytes = await doc.save();
       await Entitlements.consume(access);
@@ -334,7 +340,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
         ],
         Note(
           'Rs ${Pricing.reportPriceRupees} per detailed report. '
-          '${Pricing.reportIncludes} Your first report is free. Payment is '
+          '${Pricing.reportIncludes} ${Pricing.freeReportIsSample ? 'Your first report is a free sample.' : 'Your first report is free.'} Payment is '
           'not connected in this test build.',
         ),
       ],

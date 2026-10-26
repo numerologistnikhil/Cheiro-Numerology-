@@ -11,6 +11,13 @@ class Pricing {
       'One detailed PDF report: download, print and WhatsApp/share of the '
       'same report. No extra charge for these options.';
 
+  /// true  = the free first report is a shorter SAMPLE (marked on every page).
+  /// false = the free first report is the full report.
+  static const bool freeReportIsSample = true;
+
+  /// Years of predictions in the free sample report.
+  static const int sampleYears = 3;
+
   /// Keep this false until Google Play Billing is really connected.
   /// While false, the app does NOT block reports (test build), so that
   /// nobody is asked to pay through a payment system that does not exist.
