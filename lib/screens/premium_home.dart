@@ -5,6 +5,7 @@ import '../core/app_settings.dart';
 import '../core/root_profiles.dart' show L;
 import '../core/streaks.dart';
 import 'ai_numerologist_screen.dart';
+import 'angel_numbers_screen.dart';
 import 'badges_screen.dart';
 import 'baby_names_screen.dart';
 import 'business_screen.dart';
@@ -115,6 +116,8 @@ const _steps = <_Step>[
           L('Work that suits you', 'आपके लायक काम'), Icons.work_outline),
       _F('learn', L('Learn and Quiz', 'सीखिए और क्विज़'),
           L('Understand numbers easily', 'अंकों को आसानी से समझिए'), Icons.school_outlined),
+      _F('angel', L('Angel Numbers', 'एंजल नंबर'),
+          L('What repeating numbers mean', 'दोहराए अंकों का मतलब'), Icons.stars_outlined),
       _F('ask', L('Ask', 'पूछिए'),
           L('Ask a question about numbers', 'अंकों के बारे में सवाल पूछिए'), Icons.chat_bubble_outline),
     ],
@@ -220,6 +223,9 @@ class _PremiumHomeState extends State<PremiumHome> {
       case 'ask':
         _go(const AiNumerologistScreen());
         break;
+      case 'angel':
+        _go(const AngelNumbersScreen());
+        break;
       case 'reports':
         _go(const ReportBuilderScreen());
         break;
@@ -288,14 +294,14 @@ class _PremiumHomeState extends State<PremiumHome> {
           colors: [Color(0xFFFBEFC9), Color(0xFFFFF8EC)],
         ),
       ),
-      padding: const EdgeInsets.fromLTRB(14, 10, 4, 10),
+      padding: const EdgeInsets.fromLTRB(12, 6, 2, 6),
       child: Row(
         children: [
           Expanded(
             child: GestureDetector(
               onTap: _search,
               child: Container(
-                height: 46,
+                height: 42,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   color: _Gold.pearl,
@@ -380,7 +386,7 @@ class _PremiumHomeState extends State<PremiumHome> {
 
   Widget _bannerCarousel(AppSettings s) {
     return SizedBox(
-      height: 170,
+      height: 124,
       child: PageView.builder(
         controller: _pc,
         onPageChanged: (i) => setState(() => _banner = i),
@@ -388,8 +394,8 @@ class _PremiumHomeState extends State<PremiumHome> {
         itemBuilder: (_, i) {
           final b = _banners[i];
           return Container(
-            margin: const EdgeInsets.fromLTRB(6, 10, 6, 6),
-            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.fromLTRB(6, 8, 6, 2),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(22),
               gradient: const LinearGradient(
@@ -411,24 +417,24 @@ class _PremiumHomeState extends State<PremiumHome> {
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                               color: _Gold.goldDark,
-                              fontSize: 15,
+                              fontSize: 13.5,
                               fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 2),
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         alignment: Alignment.centerLeft,
                         child: Text(s.t(b.big),
                             style: const TextStyle(
                                 color: _Gold.ink,
-                                fontSize: 28,
+                                fontSize: 24,
                                 fontWeight: FontWeight.w900)),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 6),
                       GestureDetector(
                         onTap: () => _open(b.key),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
+                              horizontal: 14, vertical: 6),
                           decoration: BoxDecoration(
                             color: _Gold.ink,
                             borderRadius: BorderRadius.circular(10),
@@ -443,7 +449,7 @@ class _PremiumHomeState extends State<PremiumHome> {
                   ),
                 ),
                 const Icon(Icons.auto_awesome,
-                    size: 64, color: Color(0xAAFFFFFF)),
+                    size: 48, color: Color(0xAAFFFFFF)),
               ],
             ),
           );
@@ -459,7 +465,7 @@ class _PremiumHomeState extends State<PremiumHome> {
         final sel = i == _banner;
         return AnimatedContainer(
           duration: const Duration(milliseconds: 250),
-          margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
+          margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 4),
           width: sel ? 18 : 8,
           height: 8,
           decoration: BoxDecoration(
@@ -513,87 +519,97 @@ class _PremiumHomeState extends State<PremiumHome> {
   Widget _stepBlock(AppSettings s, int index) {
     final step = _steps[index];
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 14, 12, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 30,
-                height: 30,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _Gold.gold,
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
+        decoration: BoxDecoration(
+          color: _Gold.pearl,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: _Gold.goldLight),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 24,
+                  height: 24,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _Gold.gold,
+                  ),
+                  child: Text('${index + 1}',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800)),
                 ),
-                child: Text('${index + 1}',
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w800)),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(s.t(step.title),
-                    style: const TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w800,
-                        color: _Gold.ink)),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(40, 2, 0, 10),
-            child: Text(s.t(step.sub),
-                style: const TextStyle(fontSize: 13, color: _Gold.soft)),
-          ),
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 1.45,
-            children: [
-              for (final it in step.items) _featureCard(s, it),
-            ],
-          ),
-        ],
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(s.t(step.title),
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: _Gold.ink)),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(32, 1, 0, 6),
+              child: Text(s.t(step.sub),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12, color: _Gold.soft)),
+            ),
+            GridView.count(
+              crossAxisCount: 4,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 4,
+              childAspectRatio: 0.8,
+              children: [
+                for (final it in step.items) _featureCard(s, it),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _featureCard(AppSettings s, _F it) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () => _open(it.key),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: _Gold.pearl,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: _Gold.goldLight, width: 1.2),
-        ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(it.icon, color: _Gold.gold, size: 28),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(s.t(it.label),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        color: _Gold.ink,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 15)),
-                const SizedBox(height: 2),
-                Text(s.t(it.sub),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        color: _Gold.soft, fontSize: 12, height: 1.25)),
-              ],
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _Gold.cream,
+                border: Border.all(color: _Gold.goldLight),
+              ),
+              child: Icon(it.icon, color: _Gold.goldDark, size: 22),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              s.t(it.label),
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                  color: _Gold.ink,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 11.5,
+                  height: 1.2),
             ),
           ],
         ),
@@ -603,8 +619,8 @@ class _PremiumHomeState extends State<PremiumHome> {
 
   Widget _inviteStrip(AppSettings s) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(12, 18, 12, 0),
-      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: _Gold.pearl,
         borderRadius: BorderRadius.circular(16),
@@ -612,14 +628,14 @@ class _PremiumHomeState extends State<PremiumHome> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.card_giftcard, color: _Gold.gold, size: 30),
+          const Icon(Icons.card_giftcard, color: _Gold.gold, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               s.t(const L('Invite a friend and share your code.',
                   'दोस्त को बुलाइए और अपना कोड बाँटिए।')),
               style: const TextStyle(
-                  color: _Gold.ink, fontWeight: FontWeight.w600, fontSize: 14),
+                  color: _Gold.ink, fontWeight: FontWeight.w600, fontSize: 13),
             ),
           ),
           TextButton(

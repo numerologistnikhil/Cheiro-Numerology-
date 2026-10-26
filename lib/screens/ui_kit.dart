@@ -22,7 +22,7 @@ class PageShell extends StatelessWidget {
       appBar: AppBar(title: Text(title)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(18, 8, 18, 32),
+          padding: const EdgeInsets.fromLTRB(14, 6, 14, 24),
           children: children,
         ),
       ),
@@ -56,7 +56,7 @@ class GoldCard extends StatelessWidget {
   const GoldCard({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(18),
+    this.padding = const EdgeInsets.all(14),
   });
 
   @override
@@ -72,7 +72,7 @@ class SectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 22, bottom: 10),
+      padding: const EdgeInsets.only(top: 16, bottom: 8),
       child: Text(
         text.toUpperCase(),
         style: const TextStyle(
@@ -94,8 +94,8 @@ class Note extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 14),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: AnkdharaColors.cream,
         borderRadius: BorderRadius.circular(14),
@@ -177,7 +177,7 @@ class DateField extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -210,13 +210,13 @@ class InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.only(top: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 38,
-            height: 38,
+            width: 34,
+            height: 34,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: AnkdharaColors.cream,
