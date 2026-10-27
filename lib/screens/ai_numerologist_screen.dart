@@ -1,3 +1,4 @@
+import '../core/user_profile.dart';
 import 'package:flutter/material.dart';
 import '../core/app.dart';
 import '../core/knowledge_pack.dart';
@@ -24,7 +25,7 @@ class _AiNumerologistScreenState extends State<AiNumerologistScreen> {
     'This year',
   ];
 
-  final TextEditingController _name = TextEditingController();
+  final TextEditingController _name = ProfileController.name();
   DateTime? _dob;
   String _topic = 'Career';
   List<String>? _answer;

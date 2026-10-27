@@ -124,7 +124,8 @@ class _CompatibilityScreenState extends State<CompatibilityScreen> {
           }),
         ),
         const SectionLabel('Second person'),
-        DateField(
+        DateField(usesProfile: false,
+
           label: 'Date of birth',
           value: _b,
           onChanged: (d) => setState(() {

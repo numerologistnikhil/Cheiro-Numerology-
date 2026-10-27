@@ -1,3 +1,4 @@
+import '../core/user_profile.dart';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,8 +24,8 @@ class ReportBuilderScreen extends StatefulWidget {
 }
 
 class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
-  final TextEditingController _name = TextEditingController();
-  final TextEditingController _mobile = TextEditingController();
+  final TextEditingController _name = ProfileController.name();
+  final TextEditingController _mobile = ProfileController.mobile();
   DateTime? _dob;
   bool _busy = false;
   ReportOptions _opts = const ReportOptions();

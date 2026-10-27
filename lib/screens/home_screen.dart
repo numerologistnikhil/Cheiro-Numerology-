@@ -1,3 +1,4 @@
+import '../core/user_profile.dart';
 import 'package:flutter/material.dart';
 import '../core/app.dart';
 import '../core/numerology_engine.dart';
@@ -32,8 +33,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final nameController = TextEditingController();
-  final mobileController = TextEditingController();
+  final nameController = ProfileController.name();
+  final mobileController = ProfileController.mobile();
   final vehicleController = TextEditingController();
 
   DateTime? dob;

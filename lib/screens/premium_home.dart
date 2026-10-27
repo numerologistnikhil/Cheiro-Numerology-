@@ -16,6 +16,7 @@ import 'date_selection_screen.dart';
 import 'extras_screens.dart';
 import 'home_screen.dart';
 import 'learn_screen.dart';
+import 'profile_screen.dart';
 import 'lo_shu_screen.dart';
 import 'name_correction_screen.dart';
 import 'number_check_screens.dart';
@@ -37,7 +38,7 @@ class PremiumHome extends StatefulWidget {
 
 class _Gold {
   static const cream = Color(0xFFFFF8EC);
-  static const pearl = Color(0xFFFFFDF8);
+  static const pearl = Color(0xFFFFFFFF);
   static const gold = Color(0xFFC9A24A);
   static const goldDark = Color(0xFF8A6A1F);
   static const goldLight = Color(0xFFF3DFA2);
@@ -261,7 +262,7 @@ class _PremiumHomeState extends State<PremiumHome> {
   Widget build(BuildContext context) {
     final s = AppLang.of(context);
     return Scaffold(
-      backgroundColor: _Gold.cream,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -270,6 +271,7 @@ class _PremiumHomeState extends State<PremiumHome> {
               child: ListView(
                 padding: const EdgeInsets.only(bottom: 24),
                 children: [
+                  const ProfileStrip(),
                   _bannerCarousel(s),
                   _dots(),
                   _streakStrip(s),
@@ -291,7 +293,7 @@ class _PremiumHomeState extends State<PremiumHome> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFFBEFC9), Color(0xFFFFF8EC)],
+          colors: [Color(0xFFFBEFC9), Color(0xFFFFFFFF)],
         ),
       ),
       padding: const EdgeInsets.fromLTRB(12, 6, 2, 6),

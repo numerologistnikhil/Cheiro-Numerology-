@@ -90,7 +90,8 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> {
       title: 'Baby Names',
       children: [
         const SectionLabel('Baby\'s birth date'),
-        DateField(
+        DateField(usesProfile: false,
+
           label: 'Select date of birth',
           value: _dob,
           lastDate: DateTime(2100),

@@ -1,3 +1,4 @@
+import '../core/user_profile.dart';
 import 'package:flutter/material.dart';
 import '../core/numerology_engine.dart';
 
@@ -11,7 +12,7 @@ class NameCorrectionScreen extends StatefulWidget {
 
 class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
   final TextEditingController _originalController =
-      TextEditingController();
+      ProfileController.name();
   final TextEditingController _candidateController =
       TextEditingController();
 

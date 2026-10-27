@@ -3,7 +3,7 @@ import '../screens/splash_screen.dart';
 import 'app_settings.dart';
 
 class AnkdharaColors {
-  static const pearl = Color(0xFFFBF8F1);
+  static const pearl = Color(0xFFFFFFFF);
   static const cream = Color(0xFFF5EEDC);
   static const gold = Color(0xFFB8860B);
   static const goldLight = Color(0xFFD4AF37);

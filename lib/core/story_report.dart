@@ -1,3 +1,4 @@
+import 'month_details.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -281,15 +282,18 @@ class StoryReport {
 
   Future<pw.Widget> _cell(String top, int n, String word) async {
     return pw.Container(
-      width: 80,
-      padding: const pw.EdgeInsets.all(6),
+      width: 108,
+      height: 80,
+      padding: const pw.EdgeInsets.symmetric(horizontal: 4, vertical: 5),
       decoration: _boxDeco(),
       child: pw.Column(
+        mainAxisAlignment: pw.MainAxisAlignment.center,
         children: [
-          await _text(top, size: 9.5, bold: true, width: 68, center: true),
+          await _text(top, size: 9.5, bold: true, width: 98, center: true),
           await _text('$n',
-              size: 16, bold: true, color: _goldI, width: 68, center: true),
-          await _text(word, size: 9.5, width: 68, center: true),
+              size: 16, bold: true, color: _goldI, width: 98, center: true),
+          if (word.trim().isNotEmpty)
+            await _text(word, size: 9.5, width: 98, center: true),
         ],
       ),
     );
@@ -416,8 +420,8 @@ class StoryReport {
           size: 11, bold: true, center: true));
     }
     kids.add(pw.SizedBox(height: 10));
-    kids.add(await _text(ReportText.reportTitle.t(h),
-        size: 30, bold: true, color: _goldI, center: true));
+    kids.add(await _text(ReportPages.coverTitle.t(h),
+        size: 28, bold: true, color: _goldI, center: true, width: 440));
     kids.add(pw.SizedBox(height: 14));
     kids.add(pw.Container(
         width: 110, height: 2, color: PdfColor.fromInt(_goldI)));
@@ -487,7 +491,7 @@ class StoryReport {
     out.add(await _h1(ReportPages.glanceTitle.t(h)));
     final cells = <pw.Widget>[];
     cells.add(await _cell(h ? 'मूलांक' : 'Mulank', psychic, planet));
-    cells.add(await _cell(h ? 'भाग्यांक' : 'Bhagyank', destiny, ''));
+    cells.add(await _cell(h ? 'भाग्यांक' : 'Bhagyank', destiny, h ? 'भाग्य' : 'Destiny'));
     if (nameResult.total > 0) {
       cells.add(await _cell(h ? 'नाम' : 'Name', nameResult.root, '${nameResult.total}'));
     }
@@ -507,8 +511,8 @@ class StoryReport {
       if (nameResult.total > 0) h ? 'आपके नाम का विश्लेषण' : 'Name analysis',
       if (mobileResult.total > 0) h ? 'आपके मोबाइल नंबर का विश्लेषण' : 'Mobile number analysis',
       h
-          ? 'आपके अगले ${opts.years} साल: सेहत, परिवार, सीखना${sample ? '' : ' और महीने-दर-महीने मार्गदर्शन'}'
-          : 'Your next ${opts.years} years with health, family, learning${sample ? '' : ' and a month-by-month guide'}',
+          ? 'आपके अगले ${opts.years} साल: सेहत, परिवार, सीखना और महीने-दर-महीने मार्गदर्शन'
+          : 'Your next ${opts.years} years with health, family, learning and a month-by-month guide',
       h ? 'इस साल के पर्सनल मंथ' : 'Personal months of this year',
       h ? 'सरल उपाय' : 'Simple remedies',
       if (opts.includeAngelNumbers)
@@ -760,18 +764,22 @@ class StoryReport {
         MapEntry(ReportText.doLabel.t(h), ys.doThis.t(h)),
         MapEntry(ReportText.takeCareLabel.t(h), ys.avoid.t(h)),
       ]));
-      if (!sample) {
-      w.add(await _text('$y  -  ${ReportPages.monthByMonth.t(h)}',
-          size: 12.5, bold: true, color: _goldI));
-      w.add(pw.SizedBox(height: 3));
-      w.add(await _p(ReportPages.monthByMonthIntro.t(h)));
-      final monthRows = <MapEntry<String, String>>[];
-      for (var m = 1; m <= 12; m++) {
-        final pm = NumerologyTools.personalMonth(dob, y, m);
-        final line = YearDetails.monthLine[pm] ?? YearDetails.monthLine[1]!;
-        monthRows.add(MapEntry('${mn[m - 1]} ($pm)', line.t(h)));
-      }
-      w.add(await _facts(monthRows));
+      if (!sample || y == first) {
+        w.add(await _h1('$y  -  ${ReportPages.monthByMonth.t(h)}'));
+        w.add(await _p(ReportPages.monthByMonthIntro.t(h)));
+        for (var m = 1; m <= 12; m++) {
+          final pm = NumerologyTools.personalMonth(dob, y, m);
+          final md = MonthDetails.all[pm] ?? MonthDetails.all[1]!;
+          w.add(await _box(
+              '${mn[m - 1]} $y  -  ${MonthDetails.personalMonth.t(h)} $pm  (${md.word.t(h)})',
+              md.story.t(h)));
+          w.add(await _facts([
+            MapEntry(MonthDetails.workLabel.t(h), md.work.t(h)),
+            MapEntry(MonthDetails.loveLabel.t(h), md.love.t(h)),
+            MapEntry(MonthDetails.healthLabel.t(h), md.health.t(h)),
+            MapEntry(MonthDetails.tipLabel.t(h), md.tip.t(h)),
+          ]));
+        }
       }
     }
 

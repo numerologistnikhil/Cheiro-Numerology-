@@ -1,3 +1,4 @@
+import '../core/user_profile.dart';
 import 'package:flutter/material.dart';
 import '../core/app.dart';
 
@@ -146,12 +147,16 @@ class NumberBadge extends StatelessWidget {
   }
 }
 
-class DateField extends StatelessWidget {
+class DateField extends StatefulWidget {
   final String label;
   final DateTime? value;
   final ValueChanged<DateTime> onChanged;
   final DateTime? firstDate;
   final DateTime? lastDate;
+
+  /// When true and nothing is chosen yet, the saved profile date of birth is
+  /// filled in automatically. Use false for another person's date.
+  final bool usesProfile;
 
   const DateField({
     super.key,
@@ -160,20 +165,42 @@ class DateField extends StatelessWidget {
     required this.onChanged,
     this.firstDate,
     this.lastDate,
+    this.usesProfile = true,
   });
 
   @override
+  State<DateField> createState() => _DateFieldState();
+}
+
+class _DateFieldState extends State<DateField> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.usesProfile && widget.value == null) {
+      UserProfile.instance.ensureLoaded().then((_) {
+        final d = UserProfile.instance.dob;
+        if (!mounted || d == null || widget.value != null) return;
+        final first = widget.firstDate ?? DateTime(1900);
+        final last = widget.lastDate ?? DateTime.now();
+        if (d.isBefore(first) || d.isAfter(last)) return;
+        widget.onChanged(d);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final value = widget.value;
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: () async {
         final picked = await showDatePicker(
           context: context,
-          firstDate: firstDate ?? DateTime(1900),
-          lastDate: lastDate ?? DateTime.now(),
+          firstDate: widget.firstDate ?? DateTime(1900),
+          lastDate: widget.lastDate ?? DateTime.now(),
           initialDate: value ?? DateTime(1990),
         );
-        if (picked != null) onChanged(picked);
+        if (picked != null) widget.onChanged(picked);
       },
       child: Container(
         width: double.infinity,
@@ -188,7 +215,7 @@ class DateField extends StatelessWidget {
             const Icon(Icons.calendar_month, color: AnkdharaColors.gold),
             const SizedBox(width: 12),
             Text(
-              value == null ? label : formatDate(value!),
+              value == null ? widget.label : formatDate(value),
               style: TextStyle(
                 fontSize: 16,
                 color: value == null ? const Color(0xFF8A7F6A) : null,

@@ -26,7 +26,8 @@ class ReportPages {
   );
 
   // ---------------- Customer page ----------------
-  static const PBi customerTitle = PBi('Customer Details', 'ग्राहक का विवरण');
+  static const PBi customerTitle = PBi('Personal Details', 'जातक का विवरण');
+  static const PBi coverTitle = PBi('Premium Numerology Report', 'प्रीमियम अंक ज्योतिष रिपोर्ट');
   static const PBi customerIntro = PBi(
     'Please check every detail on this page. The whole report is calculated from these details, so if any spelling or digit is wrong, please ask for the report to be made again with the correct details.',
     'कृपया इस पन्ने की हर जानकारी ध्यान से जाँच लीजिए। पूरी रिपोर्ट इन्हीं जानकारियों से बनी है, इसलिए अगर कोई वर्तनी या अंक गलत हो तो सही जानकारी के साथ रिपोर्ट दोबारा बनवाइए।',
@@ -79,8 +80,8 @@ class ReportPages {
     Sec(
       PBi('Your details must be correct', 'आपकी जानकारी सही होनी चाहिए'),
       PBi(
-        'Every number in this report is calculated from the spelling of the name, the date of birth and the mobile number you entered. If even one letter or digit is wrong, the numbers and the messages can change. Please check the details on the customer details page before you rely on the report.',
-        'इस रिपोर्ट का हर अंक आपके लिखे नाम की वर्तनी, जन्म तिथि और मोबाइल नंबर से निकाला गया है। अगर एक भी अक्षर या अंक गलत हो तो अंक और संदेश बदल सकते हैं। रिपोर्ट पर भरोसा करने से पहले कृपया ग्राहक विवरण वाले पन्ने की जानकारी जाँच लीजिए।',
+        'Every number in this report is calculated from the spelling of the name, the date of birth and the mobile number you entered. If even one letter or digit is wrong, the numbers and the messages can change. Please check the details on the personal details page before you rely on the report.',
+        'इस रिपोर्ट का हर अंक आपके लिखे नाम की वर्तनी, जन्म तिथि और मोबाइल नंबर से निकाला गया है। अगर एक भी अक्षर या अंक गलत हो तो अंक और संदेश बदल सकते हैं। रिपोर्ट पर भरोसा करने से पहले कृपया जातक विवरण वाले पन्ने की जानकारी जाँच लीजिए।',
       ),
     ),
     Sec(
@@ -224,8 +225,8 @@ class ReportPages {
   static const PBi spiritLabel = PBi('Inner life', 'अंदरूनी जीवन');
   static const PBi monthByMonth = PBi('Month by month', 'महीने-दर-महीने');
   static const PBi monthByMonthIntro = PBi(
-    'Each month of this year has its own number. The line next to each month tells you the mood of that month.',
-    'इस साल के हर महीने का अपना अंक है। हर महीने के सामने लिखी पंक्ति उस महीने का मिज़ाज बताती है।',
+    'Each month of this year has its own number. Below, every month is explained one by one: the mood of the month, work and money, love and family, health and one simple tip.',
+    'इस साल के हर महीने का अपना अंक है। नीचे हर महीना एक-एक करके समझाया गया है: महीने का मिज़ाज, काम और पैसा, प्रेम और परिवार, सेहत और एक सरल सुझाव।',
   );
 
   // ---------------- Angel number labels ----------------

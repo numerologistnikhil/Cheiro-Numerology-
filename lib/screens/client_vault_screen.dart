@@ -76,7 +76,8 @@ class _ClientVaultScreenState extends State<ClientVaultScreen> {
                   decoration: const InputDecoration(labelText: 'Full name'),
                 ),
                 const SizedBox(height: 12),
-                DateField(
+                DateField(usesProfile: false,
+
                   label: 'Date of birth',
                   value: dob,
                   onChanged: (d) => setDialog(() => dob = d),
