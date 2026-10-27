@@ -42,6 +42,9 @@ class StoryReport {
   /// Free first report: shorter version with a sample mark.
   final bool sample;
 
+  /// Headings; each one is kept on the same page as the widget after it.
+  final Set<pw.Widget> _heads = <pw.Widget>{};
+
   bool get hindi => opts.hindi;
   int get _goldI => opts.palette.primary;
   int get _inkI => opts.palette.text;
@@ -189,7 +192,7 @@ class StoryReport {
   }
 
   Future<pw.Widget> _h1(String s) async {
-    return pw.Padding(
+    final hw = pw.Padding(
       padding: const pw.EdgeInsets.only(top: 16, bottom: 6),
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -200,6 +203,32 @@ class StoryReport {
         ],
       ),
     );
+    _heads.add(hw);
+    return hw;
+  }
+
+  /// Keeps every heading together with the widget that follows it, so a
+  /// heading is never left alone at the bottom of a page.
+  List<pw.Widget> _glue(List<pw.Widget> src) {
+    final out = <pw.Widget>[];
+    var i = 0;
+    while (i < src.length) {
+      final x = src[i];
+      if (_heads.contains(x) && i + 1 < src.length) {
+        out.add(pw.Inseparable(
+          canSpan: false,
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [x, src[i + 1]],
+          ),
+        ));
+        i += 2;
+      } else {
+        out.add(x);
+        i++;
+      }
+    }
+    return out;
   }
 
   Future<pw.Widget> _p(String s) async {
@@ -225,19 +254,28 @@ class StoryReport {
         borderRadius: pw.BorderRadius.circular(6),
       );
 
-  Future<pw.Widget> _box(String title, String body) async {
-    return pw.Container(
-      margin: const pw.EdgeInsets.only(bottom: 9),
-      padding: const pw.EdgeInsets.all(11),
-      decoration: _boxDeco(),
-      child: pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          await _text(title,
-              size: 12.5, bold: true, color: _goldI, width: _boxWidth),
-          pw.SizedBox(height: 4),
-          await _text(body, width: _boxWidth),
-        ],
+  Future<pw.Widget> _box(
+    String title,
+    String body, {
+    double size = 11.5,
+    double pad = 11,
+    double gap = 9,
+  }) async {
+    return pw.Inseparable(
+      canSpan: false,
+      child: pw.Container(
+        margin: pw.EdgeInsets.only(bottom: gap),
+        padding: pw.EdgeInsets.all(pad),
+        decoration: _boxDeco(),
+        child: pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            await _text(title,
+                size: size + 1, bold: true, color: _goldI, width: _boxWidth),
+            pw.SizedBox(height: 4),
+            await _text(body, size: size, width: _boxWidth),
+          ],
+        ),
       ),
     );
   }
@@ -269,13 +307,16 @@ class StoryReport {
         ),
       );
     }
-    return pw.Container(
-      margin: const pw.EdgeInsets.only(bottom: 9),
-      padding: const pw.EdgeInsets.all(11),
-      decoration: _boxDeco(),
-      child: pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: kids,
+    return pw.Inseparable(
+      canSpan: false,
+      child: pw.Container(
+        margin: const pw.EdgeInsets.only(bottom: 9),
+        padding: const pw.EdgeInsets.all(11),
+        decoration: _boxDeco(),
+        child: pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: kids,
+        ),
       ),
     );
   }
@@ -520,7 +561,10 @@ class StoryReport {
       h ? 'कार्य योजना' : 'Action plan',
     ];
     for (final it in items) {
-      out.add(await _p('${h ? '•' : '-'}  $it'));
+      out.add(pw.Padding(
+        padding: const pw.EdgeInsets.only(bottom: 3),
+        child: await _text('${h ? '•' : '-'}  $it', size: 11),
+      ));
     }
     return out;
   }
@@ -535,7 +579,8 @@ class StoryReport {
     out.add(await _h1(title.t(h)));
     out.add(await _p(intro.t(h)));
     for (final s in secs) {
-      out.add(await _box(s.title.t(h), s.body.t(h)));
+      out.add(await _box(s.title.t(h), s.body.t(h),
+          size: 10.5, pad: 9, gap: 6));
     }
     return out;
   }
@@ -624,42 +669,36 @@ class StoryReport {
       mobileResult: mobileResult,
       hasWho: pp != null,
     );
+    final custG = _glue(cust);
     doc.addPage(pw.MultiPage(
       pageTheme: theme,
       maxPages: 200,
       footer: footer,
-      build: (_) => cust,
+      build: (_) => custG,
     ));
 
-    // 3. Disclaimer
+    // 3. Notice, precautions and how to read (one flowing run of pages)
     final dis = await _secPage(
       ReportPages.noticeTitle,
       ReportPages.noticeIntro,
       ReportPages.notice,
     );
-    doc.addPage(pw.MultiPage(
-      pageTheme: theme,
-      maxPages: 200,
-      footer: footer,
-      build: (_) => dis,
-    ));
-
-    // 4. Precautions and how to read
-    final pre = await _secPage(
+    dis.addAll(await _secPage(
       ReportPages.precautionsTitle,
       ReportPages.precautionsIntro,
       ReportPages.precautions,
-    );
-    pre.addAll(await _secPage(
+    ));
+    dis.addAll(await _secPage(
       ReportPages.readTitle,
       ReportPages.readIntro,
       ReportPages.read,
     ));
+    final disG = _glue(dis);
     doc.addPage(pw.MultiPage(
       pageTheme: theme,
       maxPages: 200,
       footer: footer,
-      build: (_) => pre,
+      build: (_) => disG,
     ));
 
     // 5. The report itself
@@ -871,11 +910,12 @@ class StoryReport {
       size: 9,
     ));
 
+    final wG = _glue(w);
     doc.addPage(pw.MultiPage(
       pageTheme: theme,
       maxPages: 200,
       footer: footer,
-      build: (_) => w,
+      build: (_) => wG,
     ));
     return doc;
   }
