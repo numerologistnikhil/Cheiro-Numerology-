@@ -8,13 +8,17 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 import 'angel_numbers.dart';
+import 'extra_insights.dart' show NameScore;
 import 'knowledge_pack.dart';
+import 'lo_shu.dart';
+import 'lo_shu_text.dart';
 import 'numerology_engine.dart';
 import 'numerology_tools.dart';
 import 'pricing.dart';
 import 'report_border.dart';
 import 'report_options.dart';
 import 'report_pages.dart';
+import 'report_summary.dart';
 import 'report_text.dart';
 import 'root_profiles.dart';
 import 'year_details.dart';
@@ -340,6 +344,150 @@ class StoryReport {
     );
   }
 
+
+  // ------------------------------------------------- lo shu and summary
+
+  Future<pw.Widget> _loShuGrid(Map<int, int> c) async {
+    pw.Widget cell(int n) {
+      final k = c[n] ?? 0;
+      return pw.Container(
+        width: 64,
+        height: 54,
+        alignment: pw.Alignment.center,
+        decoration: pw.BoxDecoration(
+          color: k > 0 ? PdfColor.fromInt(_paperI) : PdfColors.white,
+          border: pw.Border.all(color: PdfColor.fromInt(_goldI), width: 0.8),
+        ),
+        child: pw.Text(
+          k > 0 ? List.filled(k, '$n').join() : '-',
+          style: pw.TextStyle(
+            fontSize: k > 3 ? 14 : 18,
+            fontWeight: pw.FontWeight.bold,
+            color: k > 0 ? PdfColor.fromInt(_goldI) : PdfColors.grey500,
+          ),
+        ),
+      );
+    }
+
+    return pw.Inseparable(
+      canSpan: false,
+      child: pw.Center(
+        child: pw.Column(
+          mainAxisSize: pw.MainAxisSize.min,
+          children: [
+            for (final row in LoShu.rows)
+              pw.Row(
+                mainAxisSize: pw.MainAxisSize.min,
+                children: [for (final n in row) cell(n)],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// One page that sums up the whole report.
+  Future<List<pw.Widget>> _summaryWidgets(
+    String name,
+    DateTime dob,
+    int psychic,
+    int destiny,
+    RootProfile? pp,
+  ) async {
+    final h = hindi;
+    final out = <pw.Widget>[];
+    final c = LoShu.counts(dob);
+    final missing = LoShu.missing(c);
+    final lines = LoShu.completePlanes(c);
+    out.add(await _h1(ReportSummary.title.t(h)));
+    out.add(await _p(ReportSummary.intro.t(h)));
+    out.add(await _loShuGrid(c));
+    out.add(pw.SizedBox(height: 6));
+    out.add(await _text(ReportSummary.gridCaption.t(h),
+        size: 9.5, center: true, width: 440));
+    out.add(pw.SizedBox(height: 12));
+
+    final lucky = <int>{psychic, destiny}.toList()..sort();
+    final ns = NameScore.of(name);
+    final rows = <MapEntry<String, String>>[
+      MapEntry(ReportSummary.luckyNumbers.t(h), lucky.join(', ')),
+      if (pp != null) MapEntry(ReportSummary.luckyColours.t(h), pp.colours.t(h)),
+      if (pp != null) MapEntry(ReportSummary.luckyDays.t(h), pp.luckyDays.t(h)),
+      if (pp != null) MapEntry(ReportSummary.gemstone.t(h), pp.gemstone.t(h)),
+      MapEntry(
+        ReportSummary.missingNumbers.t(h),
+        missing.isEmpty ? ReportSummary.none.t(h) : missing.join(', '),
+      ),
+      MapEntry(
+        ReportSummary.strongLines.t(h),
+        lines.isEmpty
+            ? ReportSummary.none.t(h)
+            : lines.map((i) => LoShuText.planeNames[i].t(h)).join(', '),
+      ),
+      if (ns != null)
+        MapEntry(
+          ReportSummary.nameGuide.t(h),
+          h
+              ? '${ns.compound} (${ns.root}) - ${ns.label.of(h)}; धन ${ns.wealth}/100, भाग्य ${ns.luck}/100'
+              : '${ns.compound} (${ns.root}) - ${ns.label.of(h)}; money ${ns.wealth}/100, luck ${ns.luck}/100',
+        ),
+    ];
+    out.add(await _facts(rows, labelW: 140, size: 11.5));
+    out.add(await _p(ReportSummary.next.t(h)));
+    return out;
+  }
+
+  /// The full Lo Shu section for the main report.
+  Future<List<pw.Widget>> _loShuSection(DateTime dob) async {
+    final h = hindi;
+    final out = <pw.Widget>[];
+    final c = LoShu.counts(dob);
+    final missing = LoShu.missing(c);
+    final lines = LoShu.completePlanes(c);
+    out.add(await _h1(ReportSummary.loShuTitle.t(h)));
+    out.add(await _p(ReportSummary.loShuIntro.t(h)));
+    out.add(await _loShuGrid(c));
+    out.add(pw.SizedBox(height: 10));
+
+    out.add(await _h1(ReportSummary.haveTitle.t(h)));
+    for (var n = 1; n <= 9; n++) {
+      final k = c[n] ?? 0;
+      if (k == 0) continue;
+      final have = LoShuText.have[n];
+      if (have == null) continue;
+      final head = h
+          ? '${ReportSummary.number.t(h)} $n  -  $k ${ReportSummary.times.t(h)} ${ReportSummary.appears.t(h)}'
+          : '${ReportSummary.number.t(h)} $n  -  ${ReportSummary.appears.t(h)} $k ${ReportSummary.times.t(h)}';
+      out.add(await _box(
+        head,
+        k > 1 ? '${have.t(h)}\n\n${ReportSummary.repeatNote.t(h)}' : have.t(h),
+      ));
+    }
+
+    out.add(await _h1(ReportSummary.lackTitle.t(h)));
+    if (missing.isEmpty) {
+      out.add(await _p(ReportSummary.noMissing.t(h)));
+    } else {
+      for (final n in missing) {
+        final lack = LoShuText.lack[n];
+        if (lack == null) continue;
+        out.add(await _box('${ReportSummary.number.t(h)} $n', lack.t(h)));
+      }
+    }
+
+    out.add(await _h1(ReportSummary.linesTitle.t(h)));
+    if (lines.isEmpty) {
+      out.add(await _p(ReportSummary.noLines.t(h)));
+    } else {
+      for (final i in lines) {
+        out.add(await _box(
+            LoShuText.planeNames[i].t(h), LoShuText.planeMeanings[i].t(h)));
+      }
+    }
+    out.add(await _p(ReportSummary.loShuNote.t(h)));
+    return out;
+  }
+
   // ------------------------------------------------------------- helpers
 
   String _date(DateTime d) {
@@ -549,6 +697,7 @@ class StoryReport {
         h
             ? 'आप कौन हैं: स्वभाव, खूबियाँ, काम, पैसा, प्रेम और सेहत'
             : 'Who you are: personality, strengths, work, money, love and health',
+      h ? 'एक पन्ने में आपकी रिपोर्ट और लो शू ग्रिड' : 'Your report in one page and your Lo Shu grid',
       if (nameResult.total > 0) h ? 'आपके नाम का विश्लेषण' : 'Name analysis',
       if (mobileResult.total > 0) h ? 'आपके मोबाइल नंबर का विश्लेषण' : 'Mobile number analysis',
       h
@@ -677,6 +826,15 @@ class StoryReport {
       build: (_) => custG,
     ));
 
+    // 2b. One page summary with the Lo Shu grid
+    final sumG = _glue(await _summaryWidgets(name, dob, psychic, destiny, pp));
+    doc.addPage(pw.MultiPage(
+      pageTheme: theme,
+      maxPages: 200,
+      footer: footer,
+      build: (_) => sumG,
+    ));
+
     // 3. Notice, precautions and how to read (one flowing run of pages)
     final dis = await _secPage(
       ReportPages.noticeTitle,
@@ -743,6 +901,9 @@ class StoryReport {
       w.add(await _box(ReportText.careerTitle.t(h), dp.career.t(h)));
       w.add(await _box(ReportText.adviceTitle.t(h), dp.advice.t(h)));
     }
+
+    // Lo Shu
+    w.addAll(await _loShuSection(dob));
 
     // Name
     if (nameResult.total > 0) {
