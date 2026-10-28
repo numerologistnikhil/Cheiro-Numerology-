@@ -1,3 +1,4 @@
+import 'profile_screen.dart';
 import '../core/user_profile.dart';
 import 'package:flutter/material.dart';
 import '../core/numerology_engine.dart';
@@ -134,7 +135,8 @@ class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
             'and an alternative spelling.',
           ),
           const SizedBox(height: 20),
-          TextField(
+          const ProfileStrip(margin: EdgeInsets.only(bottom: 14)),
+          ProfileHide(child: TextField(
             controller: _originalController,
             textCapitalization: TextCapitalization.words,
             decoration: const InputDecoration(
@@ -143,7 +145,7 @@ class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.person_outline),
             ),
-          ),
+          )),
           const SizedBox(height: 14),
           TextField(
             controller: _candidateController,

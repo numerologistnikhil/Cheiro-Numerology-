@@ -1,3 +1,5 @@
+import 'ui_kit.dart' show DateField;
+import 'profile_screen.dart';
 import '../core/user_profile.dart';
 import 'package:flutter/material.dart';
 import '../core/app.dart';
@@ -226,61 +228,29 @@ class _HomeScreenState extends State<HomeScreen> {
             heroCard(),
             const SizedBox(height: 26),
             sectionTitle('Your Details'),
-            TextField(
+            ProfileHide(child: TextField(
               controller: nameController,
               textCapitalization: TextCapitalization.words,
               decoration: const InputDecoration(
                 labelText: 'Full Name',
                 prefixIcon: Icon(Icons.person_outline),
               ),
+            )),
+            const SizedBox(height: 12),
+            DateField(
+              label: 'Date of Birth',
+              value: dob,
+              onChanged: (d) => setState(() => dob = d),
             ),
             const SizedBox(height: 12),
-            InkWell(
-              borderRadius: BorderRadius.circular(16),
-              onTap: () async {
-                final picked = await showDatePicker(
-                  context: context,
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now(),
-                  initialDate: dob ?? DateTime(1990),
-                );
-                if (picked != null) {
-                  setState(() => dob = picked);
-                }
-              },
-              child: Container(
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AnkdharaColors.goldLine),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.calendar_month,
-                        color: AnkdharaColors.gold),
-                    const SizedBox(width: 12),
-                    Text(
-                      dob == null
-                          ? 'Date of Birth'
-                          : '${dob!.day}/${dob!.month}/${dob!.year}',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
+            ProfileHide(mobile: true, child: TextField(
               controller: mobileController,
               keyboardType: TextInputType.phone,
               decoration: const InputDecoration(
                 labelText: 'Mobile Number',
                 prefixIcon: Icon(Icons.phone_android),
               ),
-            ),
+            )),
             const SizedBox(height: 12),
             TextField(
               controller: vehicleController,

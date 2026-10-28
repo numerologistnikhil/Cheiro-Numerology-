@@ -1,3 +1,4 @@
+import 'profile_screen.dart';
 import '../core/user_profile.dart';
 import 'package:flutter/material.dart';
 import '../core/app.dart';
@@ -121,14 +122,14 @@ class _AiNumerologistScreenState extends State<AiNumerologistScreen> {
       title: 'Ask Your Numbers',
       children: [
         const SectionLabel('Your details'),
-        TextField(
+        ProfileHide(child: TextField(
           controller: _name,
           textCapitalization: TextCapitalization.words,
           decoration: const InputDecoration(
             labelText: 'Full name (needed for "My name")',
             prefixIcon: Icon(Icons.person_outline),
           ),
-        ),
+        )),
         const SizedBox(height: 12),
         DateField(
           label: 'Date of birth',

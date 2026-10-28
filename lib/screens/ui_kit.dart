@@ -1,3 +1,4 @@
+import 'profile_screen.dart';
 import '../core/user_profile.dart';
 import 'package:flutter/material.dart';
 import '../core/app.dart';
@@ -173,23 +174,40 @@ class DateField extends StatefulWidget {
 }
 
 class _DateFieldState extends State<DateField> {
+  bool get _fromProfile =>
+      widget.usesProfile && UserProfile.instance.dob != null;
+
+  void _sync() {
+    if (!mounted) return;
+    final d = UserProfile.instance.dob;
+    if (widget.usesProfile && d != null && widget.value != d) {
+      final first = widget.firstDate ?? DateTime(1900);
+      final last = widget.lastDate ?? DateTime.now();
+      if (!d.isBefore(first) && !d.isAfter(last)) widget.onChanged(d);
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
-    if (widget.usesProfile && widget.value == null) {
-      UserProfile.instance.ensureLoaded().then((_) {
-        final d = UserProfile.instance.dob;
-        if (!mounted || d == null || widget.value != null) return;
-        final first = widget.firstDate ?? DateTime(1900);
-        final last = widget.lastDate ?? DateTime.now();
-        if (d.isBefore(first) || d.isAfter(last)) return;
-        widget.onChanged(d);
-      });
+    if (widget.usesProfile) {
+      UserProfile.instance.addListener(_sync);
+      UserProfile.instance.ensureLoaded().then((_) => _sync());
     }
   }
 
   @override
+  void dispose() {
+    if (widget.usesProfile) UserProfile.instance.removeListener(_sync);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_fromProfile) {
+      return const ProfileStrip(margin: EdgeInsets.zero);
+    }
     final value = widget.value;
     return InkWell(
       borderRadius: BorderRadius.circular(16),

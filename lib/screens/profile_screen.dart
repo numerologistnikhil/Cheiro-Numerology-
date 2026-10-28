@@ -161,7 +161,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 /// Small card on the home screen: shows who is selected, opens the profile.
 class ProfileStrip extends StatefulWidget {
-  const ProfileStrip({super.key});
+  const ProfileStrip({
+    super.key,
+    this.margin = const EdgeInsets.fromLTRB(12, 8, 12, 0),
+  });
+
+  final EdgeInsets margin;
 
   @override
   State<ProfileStrip> createState() => _ProfileStripState();
@@ -197,7 +202,7 @@ class _ProfileStripState extends State<ProfileStrip> {
                 : 'Name, date of birth, mobile: filled in everywhere automatically')
             : parts.join('   ');
         return Padding(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+          padding: widget.margin,
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
             onTap: () => Navigator.push(
@@ -248,6 +253,28 @@ class _ProfileStripState extends State<ProfileStrip> {
             ),
           ),
         );
+      },
+    );
+  }
+}
+
+/// Hides a name or mobile box once the profile already holds that detail
+/// (and a date of birth), so the same thing is never asked twice.
+class ProfileHide extends StatelessWidget {
+  const ProfileHide({super.key, this.mobile = false, required this.child});
+
+  final bool mobile;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: UserProfile.instance,
+      builder: (context, _) {
+        final p = UserProfile.instance;
+        final v = mobile ? p.mobile : p.name;
+        if (p.dob != null && v.trim().isNotEmpty) return const SizedBox.shrink();
+        return child;
       },
     );
   }

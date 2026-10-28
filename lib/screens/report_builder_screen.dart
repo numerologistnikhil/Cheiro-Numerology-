@@ -1,3 +1,4 @@
+import 'profile_screen.dart';
 import '../core/user_profile.dart';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -241,14 +242,14 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
       title: 'Report Builder',
       children: [
         const SectionLabel('Report details'),
-        TextField(
+        ProfileHide(child: TextField(
           controller: _name,
           textCapitalization: TextCapitalization.words,
           decoration: const InputDecoration(
             labelText: 'Full name',
             prefixIcon: Icon(Icons.person_outline),
           ),
-        ),
+        )),
         const SizedBox(height: 12),
         DateField(
           label: 'Date of birth',
@@ -256,14 +257,14 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
           onChanged: (d) => setState(() => _dob = d),
         ),
         const SizedBox(height: 12),
-        TextField(
+        ProfileHide(mobile: true, child: TextField(
           controller: _mobile,
           keyboardType: TextInputType.phone,
           decoration: const InputDecoration(
             labelText: 'Mobile number (optional)',
             prefixIcon: Icon(Icons.phone_android),
           ),
-        ),
+        )),
         const SectionLabel('PDF options'),
         GoldCard(
           padding: const EdgeInsets.all(14),
