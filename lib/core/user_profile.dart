@@ -10,10 +10,14 @@ class UserProfile extends ChangeNotifier {
   static const String _kName = 'profile_name';
   static const String _kDob = 'profile_dob';
   static const String _kMobile = 'profile_mobile';
+  static const String _kChosen = 'profile_chosen_name';
 
   String name = '';
   DateTime? dob;
   String mobile = '';
+
+  /// The spelling the customer chose in Name Correction (may be empty).
+  String chosenName = '';
 
   bool _loaded = false;
   Future<void>? _loading;
@@ -30,6 +34,7 @@ class UserProfile extends ChangeNotifier {
       final p = await SharedPreferences.getInstance();
       name = p.getString(_kName) ?? '';
       mobile = p.getString(_kMobile) ?? '';
+      chosenName = p.getString(_kChosen) ?? '';
       final d = p.getString(_kDob);
       dob = d == null ? null : DateTime.tryParse(d);
     } catch (_) {
@@ -66,7 +71,21 @@ class UserProfile extends ChangeNotifier {
     }
   }
 
-  Future<void> clear() => save(name: '', dob: null, mobile: '');
+  Future<void> setChosenName(String v) async {
+    chosenName = v.trim();
+    notifyListeners();
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setString(_kChosen, chosenName);
+    } catch (_) {
+      // Saving is best effort.
+    }
+  }
+
+  Future<void> clear() async {
+    await save(name: '', dob: null, mobile: '');
+    await setChosenName('');
+  }
 }
 
 /// A text box controller that starts with the saved name or mobile number.

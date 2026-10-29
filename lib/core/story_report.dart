@@ -1,4 +1,6 @@
 import 'month_details.dart';
+import 'name_suggester.dart';
+import 'name_texts.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -46,6 +48,9 @@ class StoryReport {
   /// Free first report: shorter version with a sample mark.
   final bool sample;
 
+  /// The spelling the customer chose in Name Correction (may be empty).
+  String chosenName = '';
+
   /// Headings; each one is kept on the same page as the widget after it.
   final Set<pw.Widget> _heads = <pw.Widget>{};
 
@@ -68,6 +73,7 @@ class StoryReport {
     int years = 10,
     ReportOptions? options,
     bool sample = false,
+    String chosenName = '',
   }) {
     var base = options ?? ReportOptions(hindi: hindi, years: years);
     if (sample) base = base.copyWith(includeAngelNumbers: false);
@@ -75,7 +81,8 @@ class StoryReport {
     if (sample && n > Pricing.sampleYears) n = Pricing.sampleYears;
     if (n < 1) n = 1;
     if (n > 50) n = 50;
-    return StoryReport._(base.copyWith(years: n), sample)
+    return (StoryReport._(base.copyWith(years: n), sample)
+          ..chosenName = chosenName)
         ._build(name, dob, mobile, logo);
   }
 
@@ -89,6 +96,7 @@ class StoryReport {
     int years = 10,
     ReportOptions? options,
     bool sample = false,
+    String chosenName = '',
   }) async {
     final doc = await build(
       name: name,
@@ -99,6 +107,7 @@ class StoryReport {
       years: years,
       options: options,
       sample: sample,
+      chosenName: chosenName,
     );
     await Printing.layoutPdf(onLayout: (_) => doc.save());
   }
@@ -113,6 +122,7 @@ class StoryReport {
     int years = 10,
     ReportOptions? options,
     bool sample = false,
+    String chosenName = '',
   }) async {
     final doc = await build(
       name: name,
@@ -123,6 +133,7 @@ class StoryReport {
       years: years,
       options: options,
       sample: sample,
+      chosenName: chosenName,
     );
     return doc.save();
   }
@@ -344,6 +355,45 @@ class StoryReport {
     );
   }
 
+
+
+  // ------------------------------------------------------ name suggestions
+
+  /// Better spellings of the name, each explained, plus how to choose.
+  Future<List<pw.Widget>> _nameSuggestionSection(String name, DateTime dob) async {
+    final h = hindi;
+    final out = <pw.Widget>[];
+    final r = NameSuggester.suggest(name, dob: dob);
+    if (r == null) return out;
+    final sc = r.originalScore;
+    out.add(await _h1(NameTexts.title.t(h)));
+    out.add(await _p(NameTexts.intro.t(h)));
+    out.add(await _box(
+      NameTexts.current.t(h),
+      h
+          ? '${r.original}: जोड़ ${r.originalTotal}, मूल अंक ${r.originalRoot}. नाम का संकेत: ${sc.label.of(true)} (धन ${sc.wealth}/100, भाग्य ${sc.luck}/100)।'
+          : '${r.original}: total ${r.originalTotal}, root ${r.originalRoot}. Name guide: ${sc.label.of(false)} (money ${sc.wealth}/100, luck ${sc.luck}/100).',
+    ));
+    if (!r.anyBetter) out.add(await _p(NameTexts.noneBetter.t(h)));
+    final limit = sample ? 3 : r.items.length;
+    for (var i = 0; i < r.items.length && i < limit; i++) {
+      final s = r.items[i];
+      final tag = s.better ? NameTexts.better.t(h) : NameTexts.similar.t(h);
+      out.add(await _box('${i + 1}.  ${s.name}  ($tag)', NameSuggester.explain(r, s, h)));
+      out.add(await _facts(NameSuggester.details(s, h)));
+    }
+    if (sample && r.items.length > limit) {
+      out.add(await _p(h
+          ? 'पूरी रिपोर्ट में 10 तक वर्तनी सुझाव, हर एक विस्तार से, दिए जाते हैं।'
+          : 'The full report gives up to 10 spellings, each explained in detail.'));
+    }
+    if (chosenName.trim().isNotEmpty) {
+      out.add(await _box(NameTexts.chosenTitle.t(h), chosenName.trim()));
+    }
+    out.add(await _box(NameTexts.chooseTitle.t(h), NameTexts.chooseBody.t(h)));
+    out.add(await _box(NameTexts.cautionTitle.t(h), NameTexts.cautionBody.t(h)));
+    return out;
+  }
 
   // ------------------------------------------------- lo shu and summary
 
@@ -699,6 +749,8 @@ class StoryReport {
             : 'Who you are: personality, strengths, work, money, love and health',
       h ? 'एक पन्ने में आपकी रिपोर्ट और लो शू ग्रिड' : 'Your report in one page and your Lo Shu grid',
       if (nameResult.total > 0) h ? 'आपके नाम का विश्लेषण' : 'Name analysis',
+      if (nameResult.total > 0)
+        h ? 'आपके नाम के बेहतर वर्तनी-सुझाव' : 'Better spellings for your name',
       if (mobileResult.total > 0) h ? 'आपके मोबाइल नंबर का विश्लेषण' : 'Mobile number analysis',
       h
           ? 'आपके अगले ${opts.years} साल: सेहत, परिवार, सीखना और महीने-दर-महीने मार्गदर्शन'
@@ -914,6 +966,11 @@ class StoryReport {
         psychic: psychic,
         subject: h ? 'आपके नाम' : 'Your name',
       ));
+    }
+
+    // Better spellings of the name
+    if (nameResult.total > 0) {
+      w.addAll(await _nameSuggestionSection(name, dob));
     }
 
     // Mobile

@@ -168,6 +168,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
         logo: logo,
         options: _opts,
         sample: access == ReportAccess.freeFirst && Pricing.freeReportIsSample,
+        chosenName: UserProfile.instance.chosenName,
       );
       final bytes = await doc.save();
       await Entitlements.consume(access);

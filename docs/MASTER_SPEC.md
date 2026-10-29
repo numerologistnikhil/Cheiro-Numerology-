@@ -7,7 +7,7 @@ Premium self-service numerology app; no consultation/appointment workflow.
 Calculation -> normalized result -> interpretation knowledge pack -> report renderer. Never mix hard-coded UI text with calculation logic.
 
 ## Locked framework
-Cheiro compound framework 1–54. Do not implement 1–98. Raw totals remain available; interpretation mapping must be explicit rather than clamping a total into 1–54.
+Cheiro compound framework 1–52 (owner-approved; roots 1–9 plus compound numbers 10–52). Do not implement 1–54 or 1–98. Raw totals remain available; interpretation mapping must be explicit rather than clamping a total into 1–52.
 
 ## Modules
 Profile, Core Numbers, Compound Numbers, Lo Shu, Name Correction, Mobile, Vehicle, Business, Partnership Compatibility, Profession Intelligence, Date Selection, Baby Names, Predictions, Remedies, Gemstones, Q&A, AI Numerologist, Learn, Timeline, Report Builder, Client Vault, Privacy Vault, localization, signed knowledge updates.
