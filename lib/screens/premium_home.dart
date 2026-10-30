@@ -157,12 +157,6 @@ class _PremiumHomeState extends State<PremiumHome> {
     unawaited(Streaks.touch().then((v) {
       if (mounted) setState(() => _streak = v);
     }));
-    _timer = Timer.periodic(const Duration(seconds: 4), (_) {
-      if (!mounted || !_pc.hasClients) return;
-      final next = (_banner + 1) % _banners.length;
-      _pc.animateToPage(next,
-          duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-    });
   }
 
   @override
@@ -272,8 +266,6 @@ class _PremiumHomeState extends State<PremiumHome> {
                 padding: const EdgeInsets.only(bottom: 24),
                 children: [
                   const ProfileStrip(),
-                  _bannerCarousel(s),
-                  _dots(),
                   _streakStrip(s),
                   for (var i = 0; i < _steps.length; i++) _stepBlock(s, i),
                   _inviteStrip(s),
