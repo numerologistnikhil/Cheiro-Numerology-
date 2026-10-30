@@ -131,49 +131,23 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget heroCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
+        borderRadius: BorderRadius.circular(14),
         gradient: const LinearGradient(
           colors: [Color(0xFF9C6F08), AnkdharaColors.gold, AnkdharaColors.goldLight],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x33B8860B),
-            blurRadius: 22,
-            offset: Offset(0, 10),
-          ),
-        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
-            'ANK DHARA',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 13,
-              letterSpacing: 4,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            'अंक धारा',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 34,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          SizedBox(height: 10),
-          Text(
-            'Your numbers, patterns and personal guidance in one private place.',
-            style: TextStyle(color: Colors.white, fontSize: 14, height: 1.5),
-          ),
-        ],
+      child: const Text(
+        'ANK DHARA  ·  अंक धारा',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          letterSpacing: 1.5,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }

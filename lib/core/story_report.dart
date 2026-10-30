@@ -52,6 +52,10 @@ class StoryReport {
   /// The spelling the customer chose in Name Correction (may be empty).
   String chosenName = '';
 
+  /// Safe mode: leaves out the name-suggestion section and the extra Lo Shu
+  /// parts, used only when the full report could not be made.
+  bool lite = false;
+
   /// Headings; each one is kept on the same page as the widget after it.
   final Set<pw.Widget> _heads = <pw.Widget>{};
 
@@ -75,6 +79,7 @@ class StoryReport {
     ReportOptions? options,
     bool sample = false,
     String chosenName = '',
+    bool lite = false,
   }) {
     var base = options ?? ReportOptions(hindi: hindi, years: years);
     if (sample) base = base.copyWith(includeAngelNumbers: false);
@@ -83,7 +88,8 @@ class StoryReport {
     if (n < 1) n = 1;
     if (n > 50) n = 50;
     return (StoryReport._(base.copyWith(years: n), sample)
-          ..chosenName = chosenName)
+          ..chosenName = chosenName
+          ..lite = lite)
         ._build(name, dob, mobile, logo);
   }
 
@@ -526,6 +532,19 @@ class StoryReport {
         if (lack == null) continue;
         out.add(await _box('${ReportSummary.number.t(h)} $n', lack.t(h)));
       }
+    }
+
+    if (lite) {
+      out.add(await _h1(ReportSummary.linesTitle.t(h)));
+      if (lines.isEmpty) {
+        out.add(await _p(ReportSummary.noLines.t(h)));
+      } else {
+        for (final i in lines) {
+          out.add(await _box(LoShuText.planeNames[i].t(h), LoShuText.planeMeanings[i].t(h)));
+        }
+      }
+      out.add(await _p(ReportSummary.loShuNote.t(h)));
+      return out;
     }
 
     out.add(await _h1(LoShuMore.linesTitle.t(h)));
@@ -1021,7 +1040,7 @@ class StoryReport {
     }
 
     // Better spellings of the name
-    if (nameResult.total > 0) {
+    if (nameResult.total > 0 && !lite) {
       w.addAll(await _nameSuggestionSection(name, dob));
     }
 

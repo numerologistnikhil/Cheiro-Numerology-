@@ -161,26 +161,47 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
       } catch (_) {
         logo = null;
       }
-      final doc = await StoryReport.build(
-        name: name,
-        dob: dob,
-        mobile: _mobile.text,
-        logo: logo,
-        options: _opts,
-        sample: access == ReportAccess.freeFirst && Pricing.freeReportIsSample,
-        chosenName: UserProfile.instance.chosenName,
-      );
-      final bytes = await doc.save();
+      Future<Uint8List> make(bool lite) async {
+        final doc = await StoryReport.build(
+          name: name,
+          dob: dob,
+          mobile: _mobile.text,
+          logo: logo,
+          options: _opts,
+          sample: access == ReportAccess.freeFirst && Pricing.freeReportIsSample,
+          chosenName: UserProfile.instance.chosenName,
+          lite: lite,
+        );
+        return doc.save();
+      }
+
+      Uint8List bytes;
+      String? note;
+      try {
+        bytes = await make(false);
+      } catch (first) {
+        // Safe mode: try again without the extra sections, and say so.
+        try {
+          bytes = await make(true);
+          final msg = first.toString().replaceAll('\n', ' ');
+          note = 'Some extra sections were left out because of an error. '
+              'Details: ${msg.length > 160 ? msg.substring(0, 160) : msg}';
+        } catch (second) {
+          final msg = second.toString().replaceAll('\n', ' ');
+          throw Exception(msg.length > 200 ? msg.substring(0, 200) : msg);
+        }
+      }
       await Entitlements.consume(access);
       if (mounted) {
         setState(() {
           _pdf = bytes;
           _pdfFor = name;
+          _error = note;
         });
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _error = 'Could not create the report. Please try again.');
+        setState(() => _error = 'Could not create the report. Details: $e');
       }
     } finally {
       if (mounted) setState(() => _busy = false);

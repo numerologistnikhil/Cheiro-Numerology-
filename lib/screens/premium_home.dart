@@ -137,8 +137,6 @@ const _steps = <_Step>[
 ];
 
 const _banners = <_Banner>[
-  _Banner(L('Your first report', 'आपकी पहली रिपोर्ट'), L('FREE', 'मुफ़्त'),
-      L('Try now', 'अभी देखें'), 'reports'),
   _Banner(L('Fix your name', 'अपना नाम सुधारिए'), L('Lucky spelling', 'शुभ वर्तनी'),
       L('Open', 'खोलिए'), 'name'),
   _Banner(L('Mobile and vehicle', 'मोबाइल और वाहन'), L('Lucky number', 'शुभ अंक'),
