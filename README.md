@@ -3,7 +3,7 @@
 Offline-first Flutter foundation for a professional self-service numerology application.
 
 ## Locked product decisions
-- Cheiro compound framework: **1–54** (not 1–98).
+- Cheiro compound framework: **1–52** (owner-confirmed; not 1–54, not 1–98).
 - Self-service app; no consultation/appointment/numerologist dashboard.
 - Customer data stays local by default; no customer cloud database.
 - Pricing: Rs 100 per PDF report, or Rs 250 per year for all features with unlimited PDFs. Payments are not implemented yet.

@@ -132,8 +132,8 @@ class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
           const SizedBox(height: 6),
           Text(
             hi
-                ? 'जोड़ ${r.originalTotal}, मूल अंक ${r.originalRoot}. नाम का संकेत: ${sc.label.of(true)} (धन ${sc.wealth}/100, भाग्य ${sc.luck}/100)'
-                : 'Total ${r.originalTotal}, root ${r.originalRoot}. Name guide: ${sc.label.of(false)} (money ${sc.wealth}/100, luck ${sc.luck}/100)',
+                ? 'जोड़ ${r.originalTotal}, मूल अंक ${r.originalRoot}. परंपरागत व्याख्या: ${sc.label.of(true)} (धन ${sc.wealth}/100, भाग्य ${sc.luck}/100). ${NameSuggester.scoreLine(r.originalPoints, true)}'
+                : 'Total ${r.originalTotal}, root ${r.originalRoot}. Traditional reading: ${sc.label.of(false)} (money ${sc.wealth}/100, luck ${sc.luck}/100). ${NameSuggester.scoreLine(r.originalPoints, false)}',
             style: const TextStyle(fontSize: 14, height: 1.5),
           ),
         ],

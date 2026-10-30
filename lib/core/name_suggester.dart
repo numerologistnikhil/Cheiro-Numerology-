@@ -70,12 +70,14 @@ class NameSuggester {
   static const int maxResults = 10;
   static const int _maxPerTotal = 3;
 
+  /// A spelling this many points below the current one is not suggested.
+  static const int similarMargin = 10;
+
   // Sound-preserving spelling swaps (from, to), applied one at a time.
   static const List<List<String>> _swaps = [
     ['ee', 'i'], ['i', 'ee'], ['oo', 'u'], ['u', 'oo'], ['aa', 'a'],
     ['a', 'aa'], ['ai', 'ay'], ['ay', 'ai'], ['ph', 'f'], ['f', 'ph'],
-    ['k', 'c'], ['c', 'k'], ['v', 'w'], ['w', 'v'], ['sh', 's'],
-    ['th', 't'], ['dh', 'd'], ['bh', 'b'], ['kh', 'k'], ['y', 'i'],
+    ['k', 'c'], ['c', 'k'], ['v', 'w'], ['w', 'v'], ['y', 'i'],
     ['i', 'y'], ['ie', 'y'], ['y', 'ie'], ['ck', 'k'], ['ee', 'ea'],
   ];
 
@@ -152,6 +154,8 @@ class NameSuggester {
     });
 
     final picked = <NameSuggestion>[];
+    // Never force a list: drop spellings that are clearly worse than now.
+    pool.removeWhere((x) => x.points < originalPoints - similarMargin);
     final perTotal = <int, int>{};
     for (final s in pool) {
       final n = perTotal[s.total] ?? 0;
@@ -223,6 +227,10 @@ class NameSuggester {
         from = i + 1;
         // Do not change the first letter.
         if (i == 0) continue;
+        // 'k' -> 'c' changes the sound before e, i or y (Ken -> Cen).
+        if (sw[0] == 'k' && sw[1] == 'c' && i + 1 < w.length && 'eiy'.contains(w[i + 1])) {
+          continue;
+        }
         final v = w.substring(0, i) + sw[1] + w.substring(i + sw[0].length);
         out.add(MapEntry(cap(v), '${sw[0]} -> ${sw[1]}'));
       }
@@ -256,27 +264,74 @@ class NameSuggester {
     }
   }
 
+  /// One line with the Ankdhara Numerology Compatibility Score.
+  static String scoreLine(int points, bool hi) => hi
+      ? '${NameTexts.score.t(true)}: $points अंक'
+      : '${NameTexts.score.t(false)}: $points points';
+
   /// A short plain-language explanation of one suggestion.
   static String explain(NameSuggestions all, NameSuggestion s, bool hi) {
     final b = StringBuffer();
     if (hi) {
-      b.write('${s.name}: जोड़ ${s.total} है, जो घटकर ${s.root} बनता है।');
+      b.write('मौजूदा: ${all.original}  ->  सुझाई गई: ${s.name}। ');
+      b.write('जोड़ ${s.total} है, जो घटकर ${s.root} बनता है।');
       if (s.relMulank != null && s.relBhagyank != null) {
         b.write(
             ' आपके मूलांक ${all.mulank} के साथ यह ${relWord(s.relMulank!, true)} है और भाग्यांक ${all.bhagyank} के साथ ${relWord(s.relBhagyank!, true)}।');
       }
       b.write(
-          ' नाम का संकेत: ${s.score.label.of(true)} (धन ${s.score.wealth}/100, भाग्य ${s.score.luck}/100)।');
+          ' संयुक्त अंक की परंपरागत व्याख्या: ${s.score.label.of(true)}। ${scoreLine(s.points, true)}।');
     } else {
-      b.write('${s.name}: the total is ${s.total}, which reduces to ${s.root}.');
+      b.write('Current: ${all.original}  ->  Suggested: ${s.name}. ');
+      b.write('The total is ${s.total}, which reduces to ${s.root}.');
       if (s.relMulank != null && s.relBhagyank != null) {
         b.write(
             ' With your Mulank ${all.mulank} it is ${relWord(s.relMulank!, false)}, and with your Bhagyank ${all.bhagyank} it is ${relWord(s.relBhagyank!, false)}.');
       }
       b.write(
-          ' Name guide: ${s.score.label.of(false)} (money ${s.score.wealth}/100, luck ${s.score.luck}/100).');
+          ' Traditional reading of the compound number: ${s.score.label.of(false)}. ${scoreLine(s.points, false)}.');
     }
+    b.write('\n${reason(all, s, hi)}');
     return b.toString();
+  }
+
+  /// Why this spelling sits where it does, compared with the current one.
+  static String reason(NameSuggestions all, NameSuggestion s, bool hi) {
+    final parts = <String>[];
+    final dLuck = s.score.luck - all.originalScore.luck;
+    final dWealth = s.score.wealth - all.originalScore.wealth;
+    if (dLuck > 0 || dWealth > 0) {
+      parts.add(hi
+          ? 'इसके संयुक्त अंक की परंपरागत व्याख्या मौजूदा से बेहतर है'
+          : 'its compound number reads better in the tradition than your current one');
+    } else if (dLuck < 0 || dWealth < 0) {
+      parts.add(hi
+          ? 'इसके संयुक्त अंक की परंपरागत व्याख्या मौजूदा से हल्की है'
+          : 'its compound number reads lighter in the tradition than your current one');
+    }
+    if (s.relMulank != null && all.originalRelMulank != null) {
+      final d = NumerologyTools.points(s.relMulank!) -
+          NumerologyTools.points(all.originalRelMulank!);
+      if (d > 0) {
+        parts.add(hi ? 'यह आपके मूलांक के साथ ज़्यादा मेल खाता है' : 'it fits your Mulank better');
+      } else if (d < 0) {
+        parts.add(hi ? 'यह आपके मूलांक के साथ कम मेल खाता है' : 'it fits your Mulank less');
+      }
+    }
+    if (s.relBhagyank != null && all.originalRelBhagyank != null) {
+      final d = NumerologyTools.points(s.relBhagyank!) -
+          NumerologyTools.points(all.originalRelBhagyank!);
+      if (d > 0) {
+        parts.add(hi ? 'यह आपके भाग्यांक के साथ ज़्यादा मेल खाता है' : 'it fits your Bhagyank better');
+      } else if (d < 0) {
+        parts.add(hi ? 'यह आपके भाग्यांक के साथ कम मेल खाता है' : 'it fits your Bhagyank less');
+      }
+    }
+    parts.add(hi
+        ? '${s.edits} बदलाव करने पड़े'
+        : '${s.edits} spelling ${s.edits == 1 ? 'change' : 'changes'} needed');
+    final head = hi ? 'इस क्रम का कारण: ' : 'Why it is ranked here: ';
+    return '$head${parts.join(hi ? '; ' : '; ')}.';
   }
 
   /// Detail rows for one suggestion (same for the app and the PDF).

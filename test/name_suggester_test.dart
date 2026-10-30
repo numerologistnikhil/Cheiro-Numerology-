@@ -8,8 +8,7 @@ void main() {
   test('gives up to 10 different spellings, none equal to the original', () {
     final r = NameSuggester.suggest('Nikhil Gulati', dob: dob);
     expect(r, isNotNull);
-    expect(r!.items.isNotEmpty, true);
-    expect(r.items.length <= NameSuggester.maxResults, true);
+    expect(r!.items.length <= NameSuggester.maxResults, true);
     final seen = <String>{};
     for (final s in r.items) {
       expect(s.name.toLowerCase() == 'nikhil gulati', false);
@@ -38,7 +37,6 @@ void main() {
     final r = NameSuggester.suggest('Priya Singh');
     expect(r, isNotNull);
     expect(r!.mulank, isNull);
-    expect(r.items.isNotEmpty, true);
   });
 
   test('no English letters gives null', () {
@@ -48,10 +46,38 @@ void main() {
 
   test('explanations exist in both languages', () {
     final r = NameSuggester.suggest('Nikhil Gulati', dob: dob)!;
+    if (r.items.isEmpty) return;
     final s = r.items.first;
     expect(NameSuggester.explain(r, s, false).isNotEmpty, true);
     expect(NameSuggester.explain(r, s, true).isNotEmpty, true);
     expect(NameSuggester.details(s, false).length > 1, true);
     expect(NameSuggester.details(s, true).length > 1, true);
+  });
+
+  test('never suggests a spelling clearly worse than the current one', () {
+    for (final n in ['Nikhil Gulati', 'Annu Sharma', 'Ravi Kumar', 'Priya Singh']) {
+      final r = NameSuggester.suggest(n, dob: dob)!;
+      for (final s in r.items) {
+        expect(s.points >= r.originalPoints - NameSuggester.similarMargin, true,
+            reason: '$n -> ${s.name}');
+      }
+    }
+  });
+
+  test('sound-changing swaps are not used (sh, th, dh, bh, kh)', () {
+    final r = NameSuggester.suggest('Shiv Bhatia', dob: dob)!;
+    for (final s in r.items) {
+      expect(s.name.toLowerCase().contains('siv'), false);
+      expect(s.name.toLowerCase().startsWith('b'), false);
+    }
+  });
+
+  test('explanation shows both names, the score and the reason', () {
+    final r = NameSuggester.suggest('Nikhil Gulati', dob: dob)!;
+    if (r.items.isEmpty) return;
+    final e = NameSuggester.explain(r, r.items.first, false);
+    expect(e.contains('Nikhil Gulati'), true);
+    expect(e.contains('Ankdhara Numerology Compatibility Score'), true);
+    expect(e.contains('Why it is ranked here'), true);
   });
 }

@@ -372,8 +372,8 @@ class StoryReport {
     out.add(await _box(
       NameTexts.current.t(h),
       h
-          ? '${r.original}: जोड़ ${r.originalTotal}, मूल अंक ${r.originalRoot}. नाम का संकेत: ${sc.label.of(true)} (धन ${sc.wealth}/100, भाग्य ${sc.luck}/100)।'
-          : '${r.original}: total ${r.originalTotal}, root ${r.originalRoot}. Name guide: ${sc.label.of(false)} (money ${sc.wealth}/100, luck ${sc.luck}/100).',
+          ? '${r.original}: जोड़ ${r.originalTotal}, मूल अंक ${r.originalRoot}. परंपरागत व्याख्या: ${sc.label.of(true)} (धन ${sc.wealth}/100, भाग्य ${sc.luck}/100)। ${NameSuggester.scoreLine(r.originalPoints, true)}।'
+          : '${r.original}: total ${r.originalTotal}, root ${r.originalRoot}. Traditional reading: ${sc.label.of(false)} (money ${sc.wealth}/100, luck ${sc.luck}/100). ${NameSuggester.scoreLine(r.originalPoints, false)}.',
     ));
     if (!r.anyBetter) out.add(await _p(NameTexts.noneBetter.t(h)));
     final limit = sample ? 3 : r.items.length;
@@ -385,14 +385,15 @@ class StoryReport {
     }
     if (sample && r.items.length > limit) {
       out.add(await _p(h
-          ? 'पूरी रिपोर्ट में 10 तक वर्तनी सुझाव, हर एक विस्तार से, दिए जाते हैं।'
-          : 'The full report gives up to 10 spellings, each explained in detail.'));
+          ? 'पूरी रिपोर्ट में, जितनी उपयुक्त वर्तनियाँ मिलें (अधिकतम 10), हर एक विस्तार से दी जाती हैं।'
+          : 'The full report gives every suitable spelling found (up to 10), each explained in detail.'));
     }
     if (chosenName.trim().isNotEmpty) {
       out.add(await _box(NameTexts.chosenTitle.t(h), chosenName.trim()));
     }
     out.add(await _box(NameTexts.chooseTitle.t(h), NameTexts.chooseBody.t(h)));
     out.add(await _box(NameTexts.cautionTitle.t(h), NameTexts.cautionBody.t(h)));
+    out.add(await _p(NameTexts.method.t(h)));
     return out;
   }
 

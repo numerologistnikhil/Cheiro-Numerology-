@@ -26,7 +26,8 @@ class NameTexts {
   static const PBi totalLabel = PBi('Total and root', 'जोड़ और मूल अंक');
   static const PBi withMulank = PBi('With your Mulank', 'आपके मूलांक के साथ');
   static const PBi withBhagyank = PBi('With your Bhagyank', 'आपके भाग्यांक के साथ');
-  static const PBi guide = PBi('Name guide', 'नाम का संकेत');
+  static const PBi guide = PBi('Ankdhara Numerology Compatibility Score', 'अंकधारा अंक-अनुकूलता स्कोर');
+  static const PBi score = PBi('Ankdhara Numerology Compatibility Score', 'अंकधारा अंक-अनुकूलता स्कोर');
   static const PBi compound = PBi('Compound number', 'संयुक्त अंक');
   static const PBi strengthsL = PBi('Strengths', 'खूबियाँ');
   static const PBi carefulL = PBi('Be careful', 'सावधानी');
@@ -44,8 +45,8 @@ class NameTexts {
   );
   static const PBi cautionTitle = PBi('Before you change anything', 'कुछ भी बदलने से पहले');
   static const PBi cautionBody = PBi(
-    'Changing the spelling in legal papers (Aadhaar, PAN, passport, school and bank records) needs proper formal steps and takes time. Do not hurry, and do not pay anyone who promises results from a name change. Numerology is a traditional belief and gives no guarantee.',
-    'क़ानूनी काग़ज़ों (आधार, पैन, पासपोर्ट, स्कूल और बैंक के रिकॉर्ड) में वर्तनी बदलने के लिए सही औपचारिक कदम उठाने पड़ते हैं और समय लगता है। जल्दबाज़ी मत कीजिए, और नाम बदलने से नतीजों का वादा करने वाले किसी को पैसे मत दीजिए। अंक शास्त्र एक पारंपरिक मान्यता है, इसकी कोई गारंटी नहीं।',
+    'Name spelling suggestions are generated using Ankdhara\'s traditional Chaldean numerology methodology. These suggestions are interpretative and are not scientifically proven to improve luck, wealth, health, relationships, career or other life outcomes. Consider pronunciation, personal identity, legal documents and practical consequences before changing the spelling of a name. Ankdhara does not guarantee any particular result. Do not change official documents only because a score is higher; changing legal records needs proper formal steps.',
+    'नाम की वर्तनी के सुझाव अंकधारा की पारंपरिक कलडीन अंक-शास्त्र पद्धति से बनाए गए हैं। ये सुझाव व्याख्या मात्र हैं और इनके भाग्य, धन, स्वास्थ्य, रिश्तों, करियर या जीवन के किसी भी नतीजे को बेहतर करने का कोई वैज्ञानिक प्रमाण नहीं है। नाम की वर्तनी बदलने से पहले उच्चारण, अपनी पहचान, क़ानूनी काग़ज़ों और व्यावहारिक असर पर विचार कीजिए। अंकधारा किसी नतीजे की गारंटी नहीं देता। सिर्फ़ इसलिए सरकारी या क़ानूनी काग़ज़ मत बदलवाइए कि कोई स्कोर ज़्यादा है; क़ानूनी रिकॉर्ड बदलने के लिए सही औपचारिक कदम उठाने पड़ते हैं।',
   );
   static const PBi chosenTitle = PBi('Your chosen spelling', 'आपकी चुनी हुई वर्तनी');
 
@@ -59,7 +60,7 @@ class NameTexts {
   static const PBi compareButton = PBi('Compare', 'तुलना कीजिए');
   static const PBi nameLabel = PBi('Full name (English letters)', 'पूरा नाम (अंग्रेज़ी अक्षरों में)');
   static const PBi method = PBi(
-    'Method: Chaldean letter values and the traditional compound numbers 10 to 52. Numerology is a traditional belief system, not a scientific way to predict outcomes.',
-    'तरीका: कलडीन अक्षर-मान और परंपरागत संयुक्त अंक 10 से 52। अंक शास्त्र एक पारंपरिक मान्यता है, नतीजे बताने का वैज्ञानिक तरीका नहीं।',
+    'Method: Chaldean letter values and the traditional compound numbers 10 to 52. Ranking score (Ankdhara Numerology Compatibility Score) = traditional luck reading of the compound number (0 to 100) + traditional money reading (0 to 100) + 15 x (fit with Mulank + fit with Bhagyank) - 6 x number of spelling changes. These weights are Ankdhara\'s own ranking choice, not a scientific measure and not a chance of success. Only spellings that keep the sound are suggested, and fewer than 10 are shown when fewer suit.',
+    'तरीका: कलडीन अक्षर-मान और परंपरागत संयुक्त अंक 10 से 52। रैंकिंग स्कोर (अंकधारा अंक-अनुकूलता स्कोर) = संयुक्त अंक की परंपरागत भाग्य-व्याख्या (0 से 100) + परंपरागत धन-व्याख्या (0 से 100) + 15 x (मूलांक से मेल + भाग्यांक से मेल) - 6 x वर्तनी बदलावों की संख्या। ये भार अंकधारा के अपने रैंकिंग-चुनाव हैं, कोई वैज्ञानिक माप या सफलता की संभावना नहीं। सिर्फ़ वही वर्तनियाँ सुझाई जाती हैं जिनमें आवाज़ वही रहे, और कम उपयुक्त होने पर 10 से कम दिखाई जाती हैं।',
   );
 }
