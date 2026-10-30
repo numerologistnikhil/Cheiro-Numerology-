@@ -51,4 +51,37 @@ class LoShu {
         for (var i = 0; i < planes.length; i++)
           if (planes[i].every((n) => (c[n] ?? 0) > 0)) i,
       ];
+
+  /// How many of the three numbers of line [i] are present (0 to 3).
+  static int lineCount(Map<int, int> c, int i) =>
+      planes[i].where((n) => (c[n] ?? 0) > 0).length;
+
+  /// How many numbers of row [g] (0 top, 1 middle, 2 bottom) are present.
+  static int rowCount(Map<int, int> c, int g) => lineCount(c, g);
+
+  /// Row with clearly the most numbers (counting repeats), or -1 if the
+  /// rows are about equal.
+  static int dominantRow(Map<int, int> c) {
+    final t = [
+      for (final r in rows) r.fold<int>(0, (a, n) => a + (c[n] ?? 0)),
+    ];
+    var best = 0;
+    for (var i = 1; i < 3; i++) {
+      if (t[i] > t[best]) best = i;
+    }
+    final sorted = [...t]..sort();
+    return sorted[2] - sorted[1] >= 2 ? best : -1;
+  }
+
+  /// Numbers that appear two or more times.
+  static List<int> repeated(Map<int, int> c) => [
+        for (var i = 1; i <= 9; i++)
+          if ((c[i] ?? 0) >= 2) i,
+      ];
+
+  /// The digits taken from the date itself, before psychic/destiny are added.
+  static String dateDigits(DateTime dob) => [
+        for (final ch in '${dob.day}${dob.month}${dob.year}'.split(''))
+          if (ch != '0') ch,
+      ].join(' ');
 }

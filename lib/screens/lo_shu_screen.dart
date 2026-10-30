@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/app.dart';
 import '../core/app_settings.dart';
 import '../core/lo_shu.dart';
+import '../core/lo_shu_more.dart';
 import '../core/numerology_engine.dart';
 import '../core/root_profiles.dart' show L;
 import 'ui_kit.dart';
@@ -216,7 +217,6 @@ class _LoShuScreenState extends State<LoShuScreen> {
     final birth = NumerologyEngine.birth(dob);
     final c = LoShu.counts(dob);
     final missing = LoShu.missing(c);
-    final complete = LoShu.completePlanes(c);
     final heavy = c.values.any((v) => v >= 4);
 
     return [
@@ -230,6 +230,7 @@ class _LoShuScreenState extends State<LoShuScreen> {
       ),
       SectionLabel(s.t(const L('Your grid', 'आपका ग्रिड'))),
       GoldCard(child: _grid(c)),
+      Note('${s.t(LoShuMore.usedFrom)}: ${LoShu.dateDigits(dob)}.  ${s.t(LoShuMore.usedAdded)}.'),
       if (heavy)
         Note(s.t(const L(
           'A number that repeats 4 or more times is very strong in you. '
@@ -240,10 +241,37 @@ class _LoShuScreenState extends State<LoShuScreen> {
       SectionLabel(s.t(const L('Your strong numbers', 'आपके मज़बूत अंक'))),
       for (var n = 1; n <= 9; n++)
         if ((c[n] ?? 0) > 0) InfoRow(Icons.check_circle_outline, '$n', s.t(_have[n]!)),
-      if (complete.isNotEmpty) ...[
-        SectionLabel(s.t(const L('Complete lines', 'पूरी रेखाएँ'))),
-        for (final i in complete)
-          InfoRow(Icons.auto_awesome, s.t(_planeNames[i]), s.t(_planeMeanings[i])),
+      SectionLabel(s.t(LoShuMore.linesTitle)),
+      Note(s.t(LoShuMore.linesIntro)),
+      for (var i = 0; i < LoShu.planes.length; i++)
+        InfoRow(
+          LoShu.lineCount(c, i) == 3
+              ? Icons.auto_awesome
+              : (LoShu.lineCount(c, i) == 0
+                  ? Icons.radio_button_unchecked
+                  : Icons.timelapse),
+          '${s.t(_planeNames[i])}  (${LoShu.planes[i].join('-')})',
+          '${s.t(L(LoShuMore.stateWordEn[LoShu.lineCount(c, i)], LoShuMore.stateWordHi[LoShu.lineCount(c, i)]))}. '
+          '${LoShu.lineCount(c, i) == 3 ? '${s.t(_planeMeanings[i])} ' : ''}'
+          '${s.t(LoShuMore.lineState[LoShu.lineCount(c, i)])}',
+        ),
+      SectionLabel(s.t(LoShuMore.planesTitle)),
+      Note(s.t(LoShuMore.planesIntro)),
+      for (var g = 0; g < 3; g++)
+        InfoRow(
+          Icons.layers_outlined,
+          s.t(LoShuMore.groupNames[g]),
+          '${s.t(LoShuMore.groupMeaning[g])} ${s.t(LoShuMore.groupLevel[LoShu.rowCount(c, g)])}',
+        ),
+      Note(s.t(LoShu.dominantRow(c) < 0
+          ? LoShuMore.balanced
+          : LoShuMore.dominant[LoShu.dominantRow(c)])),
+      SectionLabel(s.t(LoShuMore.centreTitle)),
+      Note(s.t((c[5] ?? 0) > 0 ? LoShuMore.centrePresent : LoShuMore.centreAbsent)),
+      if (LoShu.repeated(c).isNotEmpty) ...[
+        SectionLabel(s.t(LoShuMore.excessTitle)),
+        for (final n in LoShu.repeated(c))
+          InfoRow(Icons.repeat, '$n  x${c[n]}', s.t(LoShuMore.excess[n]!)),
       ],
       SectionLabel(s.t(const L('Numbers you can build', 'जिन अंकों को आप बना सकते हैं'))),
       if (missing.isEmpty)
@@ -251,9 +279,20 @@ class _LoShuScreenState extends State<LoShuScreen> {
           'All nine numbers are present in your grid.',
           'आपके ग्रिड में नौ के नौ अंक मौजूद हैं।',
         )))
-      else
+      else ...[
         for (final n in missing)
           InfoRow(Icons.add_circle_outline, '$n', s.t(_lack[n]!)),
+        SectionLabel(s.t(LoShuMore.remedyTitle)),
+        Note(s.t(LoShuMore.remedyNote)),
+        for (final n in missing)
+          InfoRow(
+            Icons.self_improvement,
+            '$n  -  ${s.t(LoShuMore.remedy[n]!.planet)}',
+            '${s.t(LoShuMore.dayLabel)}: ${s.t(LoShuMore.remedy[n]!.day)}. '
+            '${s.t(LoShuMore.colourLabel)}: ${s.t(LoShuMore.remedy[n]!.colour)}. '
+            '${s.t(LoShuMore.habitLabel)}: ${s.t(LoShuMore.remedy[n]!.habit)}',
+          ),
+      ],
     ];
   }
 

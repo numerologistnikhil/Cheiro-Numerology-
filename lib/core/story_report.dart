@@ -13,6 +13,7 @@ import 'angel_numbers.dart';
 import 'extra_insights.dart' show NameScore;
 import 'knowledge_pack.dart';
 import 'lo_shu.dart';
+import 'lo_shu_more.dart';
 import 'lo_shu_text.dart';
 import 'numerology_engine.dart';
 import 'numerology_tools.dart';
@@ -497,7 +498,8 @@ class StoryReport {
     out.add(await _h1(ReportSummary.loShuTitle.t(h)));
     out.add(await _p(ReportSummary.loShuIntro.t(h)));
     out.add(await _loShuGrid(c));
-    out.add(pw.SizedBox(height: 10));
+    out.add(pw.SizedBox(height: 6));
+    out.add(await _p('${LoShuMore.usedFrom.t(h)}: ${LoShu.dateDigits(dob)}.  ${LoShuMore.usedAdded.t(h)}.'));
 
     out.add(await _h1(ReportSummary.haveTitle.t(h)));
     for (var n = 1; n <= 9; n++) {
@@ -525,15 +527,64 @@ class StoryReport {
       }
     }
 
-    out.add(await _h1(ReportSummary.linesTitle.t(h)));
-    if (lines.isEmpty) {
-      out.add(await _p(ReportSummary.noLines.t(h)));
-    } else {
-      for (final i in lines) {
+    out.add(await _h1(LoShuMore.linesTitle.t(h)));
+    out.add(await _p(LoShuMore.linesIntro.t(h)));
+    for (var i = 0; i < LoShu.planes.length; i++) {
+      final k = LoShu.lineCount(c, i);
+      final word = h ? LoShuMore.stateWordHi[k] : LoShuMore.stateWordEn[k];
+      final nums = LoShu.planes[i].join(' - ');
+      final body = k == 3
+          ? '${LoShuText.planeMeanings[i].t(h)}\n\n${LoShuMore.lineState[k].t(h)}'
+          : LoShuMore.lineState[k].t(h);
+      out.add(await _box(
+          '${LoShuText.planeNames[i].t(h)}  ($nums)  -  $word', body));
+    }
+    if (lines.isEmpty) out.add(await _p(ReportSummary.noLines.t(h)));
+
+    out.add(await _h1(LoShuMore.planesTitle.t(h)));
+    out.add(await _p(LoShuMore.planesIntro.t(h)));
+    for (var g = 0; g < 3; g++) {
+      out.add(await _box(
+          LoShuMore.groupNames[g].t(h),
+          '${LoShuMore.groupMeaning[g].t(h)}\n\n'
+          '${LoShuMore.groupLevel[LoShu.rowCount(c, g)].t(h)}'));
+    }
+    final dom = LoShu.dominantRow(c);
+    out.add(await _p(
+        dom < 0 ? LoShuMore.balanced.t(h) : LoShuMore.dominant[dom].t(h)));
+
+    out.add(await _h1(LoShuMore.centreTitle.t(h)));
+    out.add(await _p(
+        (c[5] ?? 0) > 0 ? LoShuMore.centrePresent.t(h) : LoShuMore.centreAbsent.t(h)));
+
+    final rep = LoShu.repeated(c);
+    if (rep.isNotEmpty) {
+      out.add(await _h1(LoShuMore.excessTitle.t(h)));
+      for (final n in rep) {
+        final e = LoShuMore.excess[n];
+        if (e == null) continue;
         out.add(await _box(
-            LoShuText.planeNames[i].t(h), LoShuText.planeMeanings[i].t(h)));
+            '${ReportSummary.number.t(h)} $n  -  ${c[n]} ${ReportSummary.times.t(h)}',
+            e.t(h)));
       }
     }
+
+    if (missing.isNotEmpty) {
+      out.add(await _h1(LoShuMore.remedyTitle.t(h)));
+      out.add(await _p(LoShuMore.remedyNote.t(h)));
+      for (final n in missing) {
+        final r = LoShuMore.remedy[n];
+        if (r == null) continue;
+        out.add(await _facts([
+          MapEntry('${ReportSummary.number.t(h)} $n  -  ${LoShuMore.planetLabel.t(h)}',
+              r.planet.t(h)),
+          MapEntry(LoShuMore.dayLabel.t(h), r.day.t(h)),
+          MapEntry(LoShuMore.colourLabel.t(h), r.colour.t(h)),
+          MapEntry(LoShuMore.habitLabel.t(h), r.habit.t(h)),
+        ], labelW: 125));
+      }
+    }
+
     out.add(await _p(ReportSummary.loShuNote.t(h)));
     return out;
   }
