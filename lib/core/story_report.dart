@@ -1082,6 +1082,19 @@ class StoryReport {
     w.add(pw.Wrap(spacing: 6, runSpacing: 6, children: glance));
     w.add(pw.SizedBox(height: 10));
 
+    // Months of this year (quick view)
+    w.add(await _h1(ReportText.monthsTitle.t(h)));
+    w.add(await _p(ReportText.monthsIntro.t(h)));
+    final months = <pw.Widget>[];
+    for (var m = 1; m <= 12; m++) {
+      final pm = NumerologyTools.personalMonth(dob, now.year, m);
+      final word = ReportText.monthWord[pm]?.t(h) ?? '';
+      months.add(await _cell(mn[m - 1], pm, word));
+    }
+    w.add(pw.Wrap(spacing: 6, runSpacing: 6, children: months));
+    w.add(pw.SizedBox(height: 10));
+
+
     for (var y = first; y <= last; y++) {
       final py = NumerologyTools.personalYear(dob, y);
       final ys = ReportText.years[py] ?? ReportText.years[1]!;
@@ -1117,18 +1130,6 @@ class StoryReport {
         }
       }
     }
-
-    // Months of this year (quick view)
-    w.add(await _h1(ReportText.monthsTitle.t(h)));
-    w.add(await _p(ReportText.monthsIntro.t(h)));
-    final months = <pw.Widget>[];
-    for (var m = 1; m <= 12; m++) {
-      final pm = NumerologyTools.personalMonth(dob, now.year, m);
-      final word = ReportText.monthWord[pm]?.t(h) ?? '';
-      months.add(await _cell(mn[m - 1], pm, word));
-    }
-    w.add(pw.Wrap(spacing: 6, runSpacing: 6, children: months));
-    w.add(pw.SizedBox(height: 10));
 
     // Simple remedies
     if (pp != null && hab != null) {

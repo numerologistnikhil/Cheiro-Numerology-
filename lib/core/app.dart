@@ -4,7 +4,7 @@ import 'app_settings.dart';
 
 class AnkdharaColors {
   static const pearl = Color(0xFFFFFFFF);
-  static const cream = Color(0xFFF5EEDC);
+  static const cream = Color(0xFFFFFFFF); // pure white (was beige)
   static const gold = Color(0xFFB8860B);
   static const goldLight = Color(0xFFD4AF37);
   static const ink = Color(0xFF2B2418);
@@ -24,6 +24,14 @@ class CheiroApp extends StatelessWidget {
       onPrimary: Colors.white,
       secondary: AnkdharaColors.goldLight,
       surface: AnkdharaColors.pearl,
+      surfaceTint: Colors.transparent,
+      surfaceDim: AnkdharaColors.pearl,
+      surfaceBright: AnkdharaColors.pearl,
+      surfaceContainerLowest: AnkdharaColors.pearl,
+      surfaceContainerLow: AnkdharaColors.pearl,
+      surfaceContainer: AnkdharaColors.pearl,
+      surfaceContainerHigh: AnkdharaColors.pearl,
+      surfaceContainerHighest: AnkdharaColors.pearl,
     );
 
     final base = ThemeData(
@@ -65,6 +73,8 @@ class CheiroApp extends StatelessWidget {
           scaffoldBackgroundColor: AnkdharaColors.pearl,
           appBarTheme: AppBarTheme(
             backgroundColor: AnkdharaColors.pearl,
+            surfaceTintColor: Colors.transparent,
+            scrolledUnderElevation: 0,
             foregroundColor: AnkdharaColors.ink,
             elevation: 0,
             centerTitle: true,
@@ -79,6 +89,7 @@ class CheiroApp extends StatelessWidget {
             elevation: 0,
             margin: EdgeInsets.zero,
             color: Colors.white,
+            surfaceTintColor: Colors.transparent,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(22)),
               side: BorderSide(color: AnkdharaColors.goldLine),

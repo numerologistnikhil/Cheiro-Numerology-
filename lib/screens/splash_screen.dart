@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen>
     final logoWidth = size.width * 0.8 > 360 ? 360.0 : size.width * 0.8;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFBF4E2),
+      backgroundColor: const Color(0xFFFFFFFF),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: _goHome,

@@ -6,7 +6,7 @@ import '../core/root_profiles.dart' show L;
 import 'extras_screens.dart';
 
 const Color _gold = Color(0xFFB8860B);
-const Color _cream = Color(0xFFFAF5E8);
+const Color _cream = Color(0xFFFFFFFF);
 const Color _line = Color(0x55B8860B);
 
 class SettingsScreen extends StatelessWidget {

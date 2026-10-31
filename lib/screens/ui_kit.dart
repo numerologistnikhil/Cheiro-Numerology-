@@ -101,6 +101,7 @@ class Note extends StatelessWidget {
       decoration: BoxDecoration(
         color: AnkdharaColors.cream,
         borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AnkdharaColors.goldLine),
       ),
       child: Text(
         text,
@@ -262,9 +263,10 @@ class InfoRow extends StatelessWidget {
           Container(
             width: 34,
             height: 34,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: AnkdharaColors.cream,
+              border: Border.all(color: AnkdharaColors.goldLine),
             ),
             child: Icon(icon, size: 19, color: AnkdharaColors.gold),
           ),

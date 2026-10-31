@@ -6,7 +6,7 @@ import '../core/app_settings.dart';
 import '../core/root_profiles.dart' show L;
 
 const Color _gold = Color(0xFFB8860B);
-const Color _cream = Color(0xFFFAF5E8);
+const Color _cream = Color(0xFFFFFFFF);
 
 /// Returns the page for the extra buttons (referral, pro).
 Widget extraPage(String key) {

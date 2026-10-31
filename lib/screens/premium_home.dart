@@ -37,7 +37,7 @@ class PremiumHome extends StatefulWidget {
 }
 
 class _Gold {
-  static const cream = Color(0xFFFFF8EC);
+  static const cream = Color(0xFFFFFFFF);
   static const pearl = Color(0xFFFFFFFF);
   static const gold = Color(0xFFC9A24A);
   static const goldDark = Color(0xFF8A6A1F);
@@ -283,7 +283,7 @@ class _PremiumHomeState extends State<PremiumHome> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFFBEFC9), Color(0xFFFFFFFF)],
+          colors: [Color(0xFFFFFFFF), Color(0xFFFFFFFF)],
         ),
       ),
       padding: const EdgeInsets.fromLTRB(12, 6, 2, 6),
