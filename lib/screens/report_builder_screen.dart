@@ -161,7 +161,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
       } catch (_) {
         logo = null;
       }
-      Future<Uint8List> make(bool lite) async {
+      Future<Uint8List> make(int lite) async {
         final doc = await StoryReport.build(
           name: name,
           dob: dob,
@@ -175,20 +175,26 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
         return doc.save();
       }
 
-      Uint8List bytes;
+      String shortMsg(Object e) {
+        final m = e.toString().replaceAll('\n', ' ');
+        return m.length > 150 ? m.substring(0, 150) : m;
+      }
+
+      Uint8List? bytes;
       String? note;
-      try {
-        bytes = await make(false);
-      } catch (first) {
-        // Safe mode: try again without the extra sections, and say so.
+      Object? firstError;
+      for (var level = 0; level <= 3 && bytes == null; level++) {
         try {
-          bytes = await make(true);
-          final msg = first.toString().replaceAll('\n', ' ');
-          note = 'Some extra sections were left out because of an error. '
-              'Details: ${msg.length > 160 ? msg.substring(0, 160) : msg}';
-        } catch (second) {
-          final msg = second.toString().replaceAll('\n', ' ');
-          throw Exception(msg.length > 200 ? msg.substring(0, 200) : msg);
+          bytes = await make(level);
+          if (level > 0) {
+            note = 'Safe mode level $level was used because of an error. '
+                'Details: ${shortMsg(firstError ?? '')}';
+          }
+        } catch (e) {
+          firstError ??= e;
+          if (level == 3) {
+            throw Exception('${shortMsg(firstError)} | last: ${shortMsg(e)}');
+          }
         }
       }
       await Entitlements.consume(access);

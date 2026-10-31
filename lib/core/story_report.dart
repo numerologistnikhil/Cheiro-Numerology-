@@ -54,7 +54,9 @@ class StoryReport {
 
   /// Safe mode: leaves out the name-suggestion section and the extra Lo Shu
   /// parts, used only when the full report could not be made.
-  bool lite = false;
+  /// 0 = full report, 1 = no name suggestions or extra Lo Shu parts,
+  /// 2 = also no summary page, 3 = also no Lo Shu section.
+  int lite = 0;
 
   /// Headings; each one is kept on the same page as the widget after it.
   final Set<pw.Widget> _heads = <pw.Widget>{};
@@ -79,7 +81,7 @@ class StoryReport {
     ReportOptions? options,
     bool sample = false,
     String chosenName = '',
-    bool lite = false,
+    int lite = 0,
   }) {
     var base = options ?? ReportOptions(hindi: hindi, years: years);
     if (sample) base = base.copyWith(includeAngelNumbers: false);
@@ -429,17 +431,20 @@ class StoryReport {
 
     return pw.Inseparable(
       canSpan: false,
-      child: pw.Center(
-        child: pw.Column(
-          mainAxisSize: pw.MainAxisSize.min,
-          children: [
-            for (final row in LoShu.rows)
-              pw.Row(
-                mainAxisSize: pw.MainAxisSize.min,
-                children: [for (final n in row) cell(n)],
-              ),
-          ],
-        ),
+      child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.center,
+        children: [
+          pw.Column(
+            mainAxisSize: pw.MainAxisSize.min,
+            children: [
+              for (final row in LoShu.rows)
+                pw.Row(
+                  mainAxisSize: pw.MainAxisSize.min,
+                  children: [for (final n in row) cell(n)],
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -534,7 +539,7 @@ class StoryReport {
       }
     }
 
-    if (lite) {
+    if (lite > 0) {
       out.add(await _h1(ReportSummary.linesTitle.t(h)));
       if (lines.isEmpty) {
         out.add(await _p(ReportSummary.noLines.t(h)));
@@ -950,13 +955,15 @@ class StoryReport {
     ));
 
     // 2b. One page summary with the Lo Shu grid
-    final sumG = _glue(await _summaryWidgets(name, dob, psychic, destiny, pp));
-    doc.addPage(pw.MultiPage(
-      pageTheme: theme,
-      maxPages: 200,
-      footer: footer,
-      build: (_) => sumG,
-    ));
+    if (lite < 2) {
+      final sumG = _glue(await _summaryWidgets(name, dob, psychic, destiny, pp));
+      doc.addPage(pw.MultiPage(
+        pageTheme: theme,
+        maxPages: 200,
+        footer: footer,
+        build: (_) => sumG,
+      ));
+    }
 
     // 3. Notice, precautions and how to read (one flowing run of pages)
     final dis = await _secPage(
@@ -1026,7 +1033,7 @@ class StoryReport {
     }
 
     // Lo Shu
-    w.addAll(await _loShuSection(dob));
+    if (lite < 3) w.addAll(await _loShuSection(dob));
 
     // Name
     if (nameResult.total > 0) {
@@ -1040,7 +1047,7 @@ class StoryReport {
     }
 
     // Better spellings of the name
-    if (nameResult.total > 0 && !lite) {
+    if (nameResult.total > 0 && lite == 0) {
       w.addAll(await _nameSuggestionSection(name, dob));
     }
 
