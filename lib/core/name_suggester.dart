@@ -67,8 +67,8 @@ class NameSuggestions {
 /// Chaldean total, the traditional fortune of the compound number
 /// ([NameScore]) and how the root sits with Mulank and Bhagyank.
 class NameSuggester {
-  static const int maxResults = 10;
-  static const int _maxPerTotal = 3;
+  static const int maxResults = 20;
+  static const int _maxPerTotal = 4;
 
   /// A spelling this many points below the current one is not suggested.
   static const int similarMargin = 10;
@@ -78,7 +78,7 @@ class NameSuggester {
     ['ee', 'i'], ['i', 'ee'], ['oo', 'u'], ['u', 'oo'], ['aa', 'a'],
     ['a', 'aa'], ['ai', 'ay'], ['ay', 'ai'], ['ph', 'f'], ['f', 'ph'],
     ['k', 'c'], ['c', 'k'], ['v', 'w'], ['w', 'v'], ['y', 'i'],
-    ['i', 'y'], ['ie', 'y'], ['y', 'ie'], ['ck', 'k'], ['ee', 'ea'],
+    ['i', 'y'], ['i', 'ii'], ['ie', 'y'], ['y', 'ie'], ['ck', 'k'], ['ee', 'ea'],
   ];
 
   static const String _doubleable = 'nlmrtsdp';
@@ -133,9 +133,19 @@ class NameSuggester {
       }
     }
 
+    // One edit: add a middle initial (a new letter between first and last
+    // name). It does not change how the name sounds.
+    if (words.length >= 2) {
+      for (final ch in 'ABCDEFGHIJKLMNOPRSTUVY'.split('')) {
+        if (words.contains(ch)) continue;
+        final w = [words.first, ch, ...words.sublist(1)];
+        consider(w.join(' '), 1, ['+ middle initial $ch']);
+      }
+    }
+
     // Two edits: start from the best single edits only.
     final firstRound = [...pool]..sort((a, b) => b.points.compareTo(a.points));
-    for (final s in firstRound.take(25)) {
+    for (final s in firstRound.take(40)) {
       final ws = s.name.split(' ');
       for (var i = 0; i < ws.length; i++) {
         for (final v in _wordVariants(ws[i])) {
@@ -179,6 +189,33 @@ class NameSuggester {
       mulank: mulank,
       bhagyank: bhagyank,
       items: picked,
+    );
+  }
+
+  /// Judges one spelling typed by the customer, the same way as the
+  /// suggestions. Returns null if it has no English letters.
+  static NameSuggestion? judge(String alt, NameSuggestions all) {
+    final clean = _tidy(alt);
+    if (clean.isEmpty) return null;
+    final r = NumerologyEngine.name(clean);
+    final sc = NameScore.of(clean);
+    if (r.total == 0 || sc == null) return null;
+    final pts = _points(sc, r.root, all.mulank, all.bhagyank, 0);
+    return NameSuggestion(
+      name: clean,
+      total: r.total,
+      root: r.root,
+      score: sc,
+      relMulank: all.mulank == null
+          ? null
+          : NumerologyTools.relation(r.root, all.mulank!),
+      relBhagyank: all.bhagyank == null
+          ? null
+          : NumerologyTools.relation(r.root, all.bhagyank!),
+      edits: 0,
+      changes: const ['your own spelling'],
+      points: pts,
+      better: pts > all.originalPoints,
     );
   }
 
@@ -327,9 +364,11 @@ class NameSuggester {
         parts.add(hi ? 'यह आपके भाग्यांक के साथ कम मेल खाता है' : 'it fits your Bhagyank less');
       }
     }
-    parts.add(hi
-        ? '${s.edits} बदलाव करने पड़े'
-        : '${s.edits} spelling ${s.edits == 1 ? 'change' : 'changes'} needed');
+    if (s.edits > 0) {
+      parts.add(hi
+          ? '${s.edits} बदलाव करने पड़े'
+          : '${s.edits} spelling ${s.edits == 1 ? 'change' : 'changes'} needed');
+    }
     final head = hi ? 'इस क्रम का कारण: ' : 'Why it is ranked here: ';
     return '$head${parts.join(hi ? '; ' : '; ')}.';
   }

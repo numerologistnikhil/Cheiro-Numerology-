@@ -25,8 +25,8 @@ class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
   NameSuggestions? _result;
   bool _noLatin = false;
 
-  NumerologyResult? _cmpA;
-  NumerologyResult? _cmpB;
+  NameSuggestions? _cmpAll;
+  NameSuggestion? _cmpS;
   bool _cmpError = false;
 
   @override
@@ -65,17 +65,17 @@ class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
 
   void _compare() {
     FocusScope.of(context).unfocus();
-    final a = NumerologyEngine.name(_name.text.trim());
-    final b = NumerologyEngine.name(_alt.text.trim());
+    final all = NameSuggester.suggest(_name.text, dob: _dob);
+    final one = all == null ? null : NameSuggester.judge(_alt.text, all);
     setState(() {
-      if (a.total == 0 || b.total == 0) {
+      if (all == null || one == null) {
         _cmpError = true;
-        _cmpA = null;
-        _cmpB = null;
+        _cmpAll = null;
+        _cmpS = null;
       } else {
         _cmpError = false;
-        _cmpA = a;
-        _cmpB = b;
+        _cmpAll = all;
+        _cmpS = one;
       }
     });
   }
@@ -141,7 +141,8 @@ class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
     );
   }
 
-  Widget _tile(NameSuggestions all, int index, NameSuggestion s, bool hi) {
+  Widget _tile(NameSuggestions all, int index, NameSuggestion s, bool hi,
+      {bool showIndex = true}) {
     final chosen =
         UserProfile.instance.chosenName.toLowerCase() == s.name.toLowerCase();
     final tag = s.better ? NameTexts.better.t(hi) : NameTexts.similar.t(hi);
@@ -154,7 +155,7 @@ class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
         childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         title: Text(
-          '${index + 1}.  ${s.name}',
+          showIndex ? '${index + 1}.  ${s.name}' : s.name,
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
         ),
         subtitle: Text(
@@ -196,8 +197,8 @@ class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
   }
 
   Widget _compareResult(bool hi) {
-    final a = _cmpA;
-    final b = _cmpB;
+    final all = _cmpAll;
+    final one = _cmpS;
     if (_cmpError) {
       return Padding(
         padding: const EdgeInsets.only(top: 8),
@@ -205,25 +206,16 @@ class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
             style: const TextStyle(color: Colors.red)),
       );
     }
-    if (a == null || b == null) return const SizedBox.shrink();
+    if (all == null || one == null) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(top: 10),
-      child: GoldCard(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${_name.text.trim()}:  ${hi ? 'जोड़' : 'total'} ${a.total} → ${a.root}',
-              style: const TextStyle(fontSize: 14.5, height: 1.5),
-            ),
-            Text(
-              '${_alt.text.trim()}:  ${hi ? 'जोड़' : 'total'} ${b.total} → ${b.root}',
-              style: const TextStyle(
-                  fontSize: 14.5, height: 1.5, fontWeight: FontWeight.w800),
-            ),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _currentCard(all, hi),
+          const SizedBox(height: 8),
+          _tile(all, 0, one, hi, showIndex: false),
+        ],
       ),
     );
   }
@@ -237,8 +229,8 @@ class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
       title: hi ? 'नाम सुधार' : 'Name Correction',
       children: [
         Note(hi
-            ? 'ऐप आपका नाम और जन्म तिथि देखकर 10 तक बेहतर वर्तनी खुद सुझाती है। हर सुझाव को विस्तार से पढ़िए, फिर अपना नया नाम चुनिए।'
-            : 'The app looks at your name and date of birth and suggests up to 10 better spellings on its own. Read each one in detail, then choose your new name.'),
+            ? 'ऐप आपका नाम और जन्म तिथि देखकर 20 तक बेहतर वर्तनी खुद सुझाती है, जिनमें बीच का एक अक्षर या एक अतिरिक्त अक्षर जोड़ना भी शामिल है। हर सुझाव को विस्तार से पढ़िए, फिर अपना नया नाम चुनिए।'
+            : 'The app looks at your name and date of birth and suggests up to 20 better spellings, including a middle initial or an extra letter on its own. Read each one in detail, then choose your new name.'),
         const SizedBox(height: 12),
         const ProfileStrip(margin: EdgeInsets.only(bottom: 10)),
         ProfileHide(

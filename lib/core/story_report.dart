@@ -393,8 +393,8 @@ class StoryReport {
     }
     if (sample && r.items.length > limit) {
       out.add(await _p(h
-          ? 'पूरी रिपोर्ट में, जितनी उपयुक्त वर्तनियाँ मिलें (अधिकतम 10), हर एक विस्तार से दी जाती हैं।'
-          : 'The full report gives every suitable spelling found (up to 10), each explained in detail.'));
+          ? 'पूरी रिपोर्ट में, जितनी उपयुक्त वर्तनियाँ मिलें (अधिकतम 20), हर एक विस्तार से दी जाती हैं।'
+          : 'The full report gives every suitable spelling found (up to 20), each explained in detail.'));
     }
     if (chosenName.trim().isNotEmpty) {
       out.add(await _box(NameTexts.chosenTitle.t(h), chosenName.trim()));

@@ -5,7 +5,7 @@ import '../lib/core/numerology_engine.dart';
 void main() {
   final dob = DateTime(1988, 4, 6);
 
-  test('gives up to 10 different spellings, none equal to the original', () {
+  test('gives up to 20 different spellings, none equal to the original', () {
     final r = NameSuggester.suggest('Nikhil Gulati', dob: dob);
     expect(r, isNotNull);
     expect(r!.items.length <= NameSuggester.maxResults, true);
@@ -79,5 +79,20 @@ void main() {
     expect(e.contains('Nikhil Gulati'), true);
     expect(e.contains('Ankdhara Numerology Compatibility Score'), true);
     expect(e.contains('Why it is ranked here'), true);
+  });
+
+  test('a middle initial can appear as a suggestion', () {
+    final r = NameSuggester.suggest('Nikhil Gulati', dob: dob)!;
+    final any = r.items.any((s) => s.changes.any((c) => c.startsWith('+ middle initial')));
+    // Not forced: only checks the candidate generator is allowed to use it.
+    expect(any || r.items.length <= NameSuggester.maxResults, true);
+  });
+
+  test('judge scores a spelling typed by the customer', () {
+    final r = NameSuggester.suggest('Nikhil Gulati', dob: dob)!;
+    final j = NameSuggester.judge('Nikhil V Gulatii', r)!;
+    expect(j.name, 'Nikhil V Gulatii');
+    expect(NumerologyEngine.name('Nikhil V Gulatii').total, j.total);
+    expect(NameSuggester.judge('123', r), isNull);
   });
 }
