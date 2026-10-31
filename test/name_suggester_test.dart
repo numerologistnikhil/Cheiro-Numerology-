@@ -95,4 +95,11 @@ void main() {
     expect(NumerologyEngine.name('Nikhil V Gulatii').total, j.total);
     expect(NameSuggester.judge('123', r), isNull);
   });
+
+  test('k is never changed to c before h (Nikhil must not become Nichil)', () {
+    final r = NameSuggester.suggest('Nikhil Gulati', dob: dob)!;
+    for (final x in r.items) {
+      expect(x.name.toLowerCase().contains('nichil'), false, reason: x.name);
+    }
+  });
 }

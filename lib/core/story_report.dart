@@ -384,14 +384,33 @@ class StoryReport {
           : '${r.original}: total ${r.originalTotal}, root ${r.originalRoot}. Traditional reading: ${sc.label.of(false)} (money ${sc.wealth}/100, luck ${sc.luck}/100). ${NameSuggester.scoreLine(r.originalPoints, false)}.',
     ));
     if (!r.anyBetter) out.add(await _p(NameTexts.noneBetter.t(h)));
-    final limit = sample ? 3 : r.items.length;
-    for (var i = 0; i < r.items.length && i < limit; i++) {
-      final s = r.items[i];
-      final tag = s.better ? NameTexts.better.t(h) : NameTexts.similar.t(h);
-      out.add(await _box('${i + 1}.  ${s.name}  ($tag)', NameSuggester.explain(r, s, h)));
-      out.add(await _facts(NameSuggester.details(s, h)));
+    // Spellings with the same total read exactly the same, so they are
+    // grouped and explained once.
+    final groups = <int, List<NameSuggestion>>{};
+    for (final x in r.items) {
+      groups.putIfAbsent(x.total, () => <NameSuggestion>[]).add(x);
     }
-    if (sample && r.items.length > limit) {
+    final limit = sample ? 3 : groups.length;
+    var gi = 0;
+    for (final list in groups.values) {
+      if (gi >= limit) break;
+      final s = list.first;
+      final tag = s.better ? NameTexts.better.t(h) : NameTexts.similar.t(h);
+      out.add(await _box(
+          '${gi + 1}.  ${list.map((x) => x.name).join('   /   ')}  ($tag)',
+          NameSuggester.explain(r, s, h)));
+      final rows = NameSuggester.details(s, h);
+      if (list.length > 1 && rows.isNotEmpty) {
+        rows[0] = MapEntry(
+            rows[0].key,
+            list
+                .map((x) => '${x.name}: ${x.changes.join(', ')}')
+                .join('\n'));
+      }
+      out.add(await _facts(rows));
+      gi++;
+    }
+    if (sample && groups.length > limit) {
       out.add(await _p(h
           ? 'पूरी रिपोर्ट में, जितनी उपयुक्त वर्तनियाँ मिलें (अधिकतम 20), हर एक विस्तार से दी जाती हैं।'
           : 'The full report gives every suitable spelling found (up to 20), each explained in detail.'));
@@ -601,8 +620,8 @@ class StoryReport {
         final r = LoShuMore.remedy[n];
         if (r == null) continue;
         out.add(await _facts([
-          MapEntry('${ReportSummary.number.t(h)} $n  -  ${LoShuMore.planetLabel.t(h)}',
-              r.planet.t(h)),
+          MapEntry('${ReportSummary.number.t(h)} $n',
+              '${LoShuMore.planetLabel.t(h)}: ${r.planet.t(h)}'),
           MapEntry(LoShuMore.dayLabel.t(h), r.day.t(h)),
           MapEntry(LoShuMore.colourLabel.t(h), r.colour.t(h)),
           MapEntry(LoShuMore.habitLabel.t(h), r.habit.t(h)),

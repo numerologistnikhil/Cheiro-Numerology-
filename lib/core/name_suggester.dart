@@ -264,8 +264,8 @@ class NameSuggester {
         from = i + 1;
         // Do not change the first letter.
         if (i == 0) continue;
-        // 'k' -> 'c' changes the sound before e, i or y (Ken -> Cen).
-        if (sw[0] == 'k' && sw[1] == 'c' && i + 1 < w.length && 'eiy'.contains(w[i + 1])) {
+        // 'k' -> 'c' changes the sound before e, i, y or h (Ken -> Cen, Nikhil -> Nichil).
+        if (sw[0] == 'k' && sw[1] == 'c' && i + 1 < w.length && 'eiyh'.contains(w[i + 1])) {
           continue;
         }
         final v = w.substring(0, i) + sw[1] + w.substring(i + sw[0].length);
