@@ -8,6 +8,8 @@ import '../core/numerology_engine.dart';
 import '../core/pricing.dart';
 import '../core/report_options.dart';
 import '../core/report_options_store.dart';
+import '../core/app_settings.dart';
+import '../core/rate_app.dart';
 import '../core/report_share.dart';
 import '../core/story_report.dart';
 import 'report_options_screen.dart';
@@ -365,6 +367,15 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
               onPressed: () => _share(whatsapp: true),
               icon: const Icon(Icons.chat_outlined),
               label: const Text('Send on WhatsApp (optional)'),
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: TextButton.icon(
+              onPressed: RateApp.open,
+              icon: const Icon(Icons.star_outline),
+              label: Text(AppLang.of(context).t(RateApp.button)),
             ),
           ),
         ],

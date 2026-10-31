@@ -1131,7 +1131,17 @@ class StoryReport {
         MapEntry(ReportText.doLabel.t(h), ys.doThis.t(h)),
         MapEntry(ReportText.takeCareLabel.t(h), ys.avoid.t(h)),
       ]));
-      if (!sample || y == first) {
+      if (y >= first + 2 && !sample) {
+        // Later years: a short 12-month view only (no repeated long texts).
+        w.add(await _h1('$y  -  ${ReportText.monthsTitle.t(h)}'));
+        final mc = <pw.Widget>[];
+        for (var m = 1; m <= 12; m++) {
+          final pm = NumerologyTools.personalMonth(dob, y, m);
+          mc.add(await _cell(mn[m - 1], pm, ReportText.monthWord[pm]?.t(h) ?? ''));
+        }
+        w.add(pw.Wrap(spacing: 6, runSpacing: 6, children: mc));
+        w.add(pw.SizedBox(height: 10));
+      } else if (!sample || y == first) {
         w.add(await _h1('$y  -  ${ReportPages.monthByMonth.t(h)}'));
         w.add(await _p(ReportPages.monthByMonthIntro.t(h)));
         for (var m = 1; m <= 12; m++) {

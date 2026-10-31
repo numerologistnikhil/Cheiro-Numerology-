@@ -232,7 +232,6 @@ class _NameCorrectionScreenState extends State<NameCorrectionScreen> {
             ? 'ऐप आपका नाम और जन्म तिथि देखकर 20 तक बेहतर वर्तनी खुद सुझाती है, जिनमें बीच का एक अक्षर या एक अतिरिक्त अक्षर जोड़ना भी शामिल है। हर सुझाव को विस्तार से पढ़िए, फिर अपना नया नाम चुनिए।'
             : 'The app looks at your name and date of birth and suggests up to 20 better spellings, including a middle initial or an extra letter on its own. Read each one in detail, then choose your new name.'),
         const SizedBox(height: 12),
-        const ProfileStrip(margin: EdgeInsets.only(bottom: 10)),
         ProfileHide(
           child: TextField(
             controller: _name,

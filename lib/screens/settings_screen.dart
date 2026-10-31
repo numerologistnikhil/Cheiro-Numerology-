@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import '../core/app_settings.dart';
 import '../core/pricing.dart';
+import '../core/rate_app.dart';
 import '../core/root_profiles.dart' show L;
 import 'extras_screens.dart';
 
@@ -115,6 +116,9 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           _title(s.t(const L('MORE', 'और'))),
+          _tile(Icons.star_outline, s.t(RateApp.button), s.t(RateApp.sub),
+              RateApp.open),
+          const SizedBox(height: 10),
           _tile(
             Icons.card_giftcard,
             s.t(const L('Invite a friend', 'दोस्त को बुलाइए')),
