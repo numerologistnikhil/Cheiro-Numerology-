@@ -17,7 +17,9 @@ import 'lo_shu_more.dart';
 import 'lo_shu_text.dart';
 import 'lucky_kit.dart';
 import 'numerology_engine.dart';
-import 'numerology_tools.dart';
+// numerology_tools.dart also has a NameSuggestion class (baby names); the report
+// uses the one from name_suggester.dart.
+import 'numerology_tools.dart' hide NameSuggestion;
 import 'pricing.dart';
 import 'report_border.dart';
 import 'report_options.dart';
