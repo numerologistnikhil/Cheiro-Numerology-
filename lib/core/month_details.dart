@@ -42,8 +42,8 @@ class MonthDetails {
         "घर में अपनी बात साफ़ और नरमी से कहिए। अहं या जीतने की ज़िद को छोटी बात बहस में मत बदलने दीजिए।",
       ),
       health: PBi(
-        "Energy is good, so use it in a walk or light exercise. Watch out for headaches and rushing, and sleep on time.",
-        "ऊर्जा अच्छी रहती है, इसे सैर या हल्की कसरत में लगाइए। सिरदर्द और जल्दबाज़ी से बचिए और समय पर सोइए।",
+        "Energy is good, so use it in a walk or light exercise. Avoid rushing and sleep on time.",
+        "ऊर्जा अच्छी रहती है, इसे सैर या हल्की कसरत में लगाइए। जल्दबाज़ी से बचिए और समय पर सोइए।",
       ),
       tip: PBi(
         "On the first day, write down one goal for the month and take one small step towards it every week.",
@@ -65,8 +65,8 @@ class MonthDetails {
         "भावनाएँ इस महीने नाज़ुक रहती हैं। बोलने से ज़्यादा सुनिए और छोटे-छोटे इशारों से परवाह जताइए।",
       ),
       health: PBi(
-        "Stress can settle in the stomach and in sleep. Keep meals regular and give yourself some quiet time.",
-        "तनाव पेट और नींद पर असर डाल सकता है। खाना नियमित रखिए और खुद को शांत समय दीजिए।",
+        "Stress can affect your sleep and appetite. Keep meals regular and give yourself some quiet time.",
+        "तनाव नींद और भूख पर असर डाल सकता है। खाना नियमित रखिए और खुद को शांत समय दीजिए।",
       ),
       tip: PBi(
         "Settle one old misunderstanding with a calm conversation.",
@@ -88,8 +88,8 @@ class MonthDetails {
         "दोस्तों और परिवार के साथ अच्छा समय रहता है, कोई खुशी का मौका भी बन सकता है। लापरवाह बातों और गपशप से बचिए।",
       ),
       health: PBi(
-        "Mood is high, but late nights, outside food and too much talking can tire you. Look after the throat.",
-        "मन खुश रहता है, पर देर रात जागना, बाहर का खाना और बहुत ज़्यादा बोलना थका सकता है। गले का ध्यान रखिए।",
+        "Mood is high, but late nights, outside food and too much talking can tire you. Balance social plans with rest.",
+        "मन खुश रहता है, पर देर रात जागना, बाहर का खाना और बहुत ज़्यादा बोलना थका सकता है। मेल-मिलाप के साथ आराम का भी संतुलन रखिए।",
       ),
       tip: PBi(
         "Spend a little on something you enjoy, but keep a limit.",
@@ -111,8 +111,8 @@ class MonthDetails {
         "परिवार के लिए भरोसेमंद बनिए। ज़्यादा सख़्त मत बनिए और प्यार जताना मत भूलिए।",
       ),
       health: PBi(
-        "Back, joints and tiredness need care. Take short breaks and stretch a little every day.",
-        "पीठ, जोड़ों और थकान का ख़याल रखिए। बीच-बीच में आराम कीजिए और रोज़ थोड़ा स्ट्रेच कीजिए।",
+        "Long working hours can leave you tired and stiff. Take short breaks and stretch a little every day.",
+        "लंबे काम के घंटे थकान और अकड़न दे सकते हैं। बीच-बीच में आराम कीजिए और रोज़ थोड़ा स्ट्रेच कीजिए।",
       ),
       tip: PBi(
         "Make a simple written plan with dates and tick it off every day.",
@@ -134,8 +134,8 @@ class MonthDetails {
         "मेल-मिलाप और रोमांच रहता है, पर बेचैनी से गलतफ़हमियाँ हो सकती हैं। अपनी बात निभाइए और योजना बदलने पर लोगों को बताइए।",
       ),
       health: PBi(
-        "Nerves and sleep can be unsettled. Drive carefully, avoid overeating and keep a routine even while travelling.",
-        "नसों और नींद पर असर पड़ सकता है। गाड़ी सावधानी से चलाइए, ज़्यादा खाने से बचिए और सफ़र में भी दिनचर्या रखिए।",
+        "Sleep can be unsettled. Drive carefully, avoid overeating and keep a routine even while travelling.",
+        "नींद बिगड़ सकती है। गाड़ी सावधानी से चलाइए, ज़्यादा खाने से बचिए और सफ़र में भी दिनचर्या रखिए।",
       ),
       tip: PBi(
         "Keep one fixed hour each day for yourself so the changes do not scatter you.",
@@ -157,8 +157,8 @@ class MonthDetails {
         "रिश्तों, विवाह की बातों और पारिवारिक आयोजनों के लिए मज़बूत महीना। ज़रूरत से ज़्यादा देने और बदले में वही उम्मीद रखने से बचिए।",
       ),
       health: PBi(
-        "Take care of the heart, the throat and your diet. Simple home-cooked food suits you best.",
-        "दिल, गले और खान-पान का ध्यान रखिए। घर का सादा खाना आपको सबसे ज़्यादा सूट करता है।",
+        "Look after your diet and your daily comfort. Simple home-cooked food suits you best.",
+        "अपने खान-पान और रोज़ के आराम का ध्यान रखिए। घर का सादा खाना आपको सबसे ज़्यादा सूट करता है।",
       ),
       tip: PBi(
         "Make time for one family meal or outing without phones.",
@@ -203,8 +203,8 @@ class MonthDetails {
         "काम परिवार के समय को खा सकता है। घर पर मौजूद रहने की कोशिश कीजिए, क्योंकि घर का सम्मान भी सफलता जितना ज़रूरी है।",
       ),
       health: PBi(
-        "Stress, blood pressure and tiredness from overwork need watching. Fix a time to stop working.",
-        "तनाव, रक्तचाप और ज़्यादा काम की थकान पर नज़र रखिए। काम बंद करने का एक समय तय कीजिए।",
+        "Stress and tiredness from overwork need watching. Fix a time to stop working.",
+        "तनाव और ज़्यादा काम की थकान पर नज़र रखिए। काम बंद करने का एक समय तय कीजिए।",
       ),
       tip: PBi(
         "Save or invest a fixed part of any income this month before you spend.",
@@ -226,8 +226,8 @@ class MonthDetails {
         "भावनाएँ तेज़ हो सकती हैं। पुरानी चोटों को माफ़ कीजिए और जो बात ख़त्म हो चुकी है उसे पकड़कर मत रखिए।",
       ),
       health: PBi(
-        "Cleanse gently, rest well and do not push the body. Cut down habits that drain you.",
-        "शरीर को हल्के से साफ़ कीजिए, अच्छी तरह आराम कीजिए और शरीर पर ज़ोर मत डालिए। जो आदतें थकाती हैं उन्हें कम कीजिए।",
+        "Slow down, rest well and do not push yourself. Cut down habits that drain you.",
+        "रफ़्तार धीमी कीजिए, अच्छी तरह आराम कीजिए और खुद पर ज़ोर मत डालिए। जो आदतें थकाती हैं उन्हें कम कीजिए।",
       ),
       tip: PBi(
         "Give or donate something useful and clear one cupboard or drawer of old things.",

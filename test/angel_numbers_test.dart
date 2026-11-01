@@ -12,7 +12,9 @@ void main() {
 
   test('digit count in DOB', () {
     expect(AngelNumbers.digitCountInDob(dob, 8), 2);
-    expect(AngelNumbers.digitCountInDob(dob, 0), 2);
+    // 06-04-1988 is read as 6, 4, 1988: no real zero in it.
+    expect(AngelNumbers.digitCountInDob(dob, 0), 0);
+    expect(AngelNumbers.digitCountInDob(DateTime(2000, 10, 10), 0), 5);
     expect(AngelNumbers.digitCountInDob(dob, 5), 0);
   });
 

@@ -17,8 +17,8 @@ class YearDetails {
 
   static const Map<int, YearExtra> extra = {
     1: YearExtra(
-      PBi('Energy is high, so you may push too hard. Keep a fixed sleep time, exercise regularly and watch for headaches and stress from overwork.',
-          'ऊर्जा ज़्यादा रहती है, इसलिए आप खुद को ज़रूरत से ज़्यादा धक्का दे सकते हैं। सोने का समय तय रखिए, नियमित कसरत कीजिए और सिरदर्द तथा ज़्यादा काम के तनाव पर नज़र रखिए।'),
+      PBi('Energy is high, so you may push too hard. Keep a fixed sleep time, exercise regularly and do not let overwork build up.',
+          'ऊर्जा ज़्यादा रहती है, इसलिए आप खुद को ज़रूरत से ज़्यादा धक्का दे सकते हैं। सोने का समय तय रखिए, नियमित कसरत कीजिए और ज़्यादा काम का बोझ जमा मत होने दीजिए।'),
       PBi('You may want more independence at home. Explain your plans to the family early so that they feel included and not left behind.',
           'घर में आपको ज़्यादा आज़ादी चाहिए हो सकती है। अपनी योजनाएँ परिवार को पहले से समझाइए ताकि वे खुद को शामिल महसूस करें, पीछे छूटा हुआ नहीं।'),
       PBi('A good year to start a new course, a new skill or a new subject. Choose one thing and stay with it for the full year.',
@@ -27,8 +27,8 @@ class YearDetails {
           'हर सुबह पाँच मिनट मौन या प्रार्थना जैसा कोई छोटा रोज़ का अभ्यास शुरू कीजिए। मन की नई शुरुआत जीवन की नई शुरुआत को सहारा देती है।'),
     ),
     2: YearExtra(
-      PBi('The body is sensitive this year, especially digestion, sleep and emotions. Eat on time, drink enough water and avoid holding feelings inside.',
-          'इस साल शरीर संवेदनशील रहता है, खासकर पाचन, नींद और भावनाएँ। समय पर खाइए, पर्याप्त पानी पीजिए और भावनाओं को अंदर दबाकर मत रखिए।'),
+      PBi('You feel things more deeply this year, so sleep, meals and emotions need attention. Eat on time, drink enough water and avoid holding feelings inside.',
+          'इस साल आप चीज़ों को ज़्यादा गहराई से महसूस करते हैं, इसलिए नींद, खाना और भावनाओं पर ध्यान दीजिए। समय पर खाइए, पर्याप्त पानी पीजिए और भावनाओं को अंदर दबाकर मत रखिए।'),
       PBi('Relationships ask for patience. Listen more than you speak, and try to settle old misunderstandings gently.',
           'रिश्ते धैर्य माँगते हैं। बोलने से ज़्यादा सुनिए और पुरानी गलतफ़हमियों को नरमी से सुलझाने की कोशिश कीजिए।'),
       PBi('Learning is better in a group or with a partner. Join a class or study with a friend for steadier progress.',
@@ -37,8 +37,8 @@ class YearDetails {
           'शांत साँसों और आभार का अभ्यास कीजिए। यह भरोसा रखना कि हर चीज़ अपनी गति से खुलेगी, इस साल की सीख है।'),
     ),
     3: YearExtra(
-      PBi('Mood, throat, shoulders and nerves need care. Do not skip meals for social plans or work, and give yourself time to laugh and rest.',
-          'मूड, गला, कंधे और नसों का ध्यान रखिए। मेल-मिलाप या काम के लिए खाना मत छोड़िए, और खुद को हँसने और आराम करने का समय दीजिए।'),
+      PBi('Mood and energy can swing with a busy social life. Do not skip meals for social plans or work, and give yourself time to laugh and rest.',
+          'व्यस्त मेल-मिलाप से मूड और ऊर्जा ऊपर-नीचे हो सकती है। मेल-मिलाप या काम के लिए खाना मत छोड़िए, और खुद को हँसने और आराम करने का समय दीजिए।'),
       PBi('A lively year with gatherings, celebrations and new friends. Keep your words kind because careless jokes can hurt someone close.',
           'मेल-मिलाप, उत्सव और नए दोस्तों वाला जीवंत साल। अपने शब्द मीठे रखिए, क्योंकि लापरवाही का मज़ाक किसी करीबी को चोट पहुँचा सकता है।'),
       PBi('Creative learning such as writing, speaking, music, design or languages brings good results. Share what you learn with others.',
@@ -47,8 +47,8 @@ class YearDetails {
           'गाकर, लिखकर या मीठे शब्दों से अपना आभार जताइए। इस साल खुशी खुद एक आध्यात्मिक अभ्यास है।'),
     ),
     4: YearExtra(
-      PBi('Hard work can tire the back, bones and joints. Take short breaks, improve your sitting posture and keep a regular routine for food and sleep.',
-          'कड़ी मेहनत से पीठ, हड्डियाँ और जोड़ थक सकते हैं। छोटे ब्रेक लीजिए, बैठने का तरीका सुधारिए और खाने-सोने की नियमित दिनचर्या रखिए।'),
+      PBi('Hard work can leave you tired and stiff. Take short breaks, improve your sitting posture and keep a regular routine for food and sleep.',
+          'कड़ी मेहनत से थकान और अकड़न हो सकती है। छोटे ब्रेक लीजिए, बैठने का तरीका सुधारिए और खाने-सोने की नियमित दिनचर्या रखिए।'),
       PBi('The home needs repairs, planning or organisation. Be steady and dependable, but do not become too strict with loved ones.',
           'घर को मरम्मत, योजना या व्यवस्था की ज़रूरत हो सकती है। स्थिर और भरोसेमंद रहिए, पर अपनों के साथ बहुत सख़्त मत हो जाइए।'),
       PBi('Good for exams, certificates, accounts and technical learning. Make a timetable and follow it every day.',
@@ -57,8 +57,8 @@ class YearDetails {
           'इस साल अनुशासन ही आपकी प्रार्थना है। अभ्यास के लिए तय समय और जगह एक मज़बूत अंदरूनी नींव बनाती है।'),
     ),
     5: YearExtra(
-      PBi('Travel, irregular food and restless nights can disturb health. Keep a light routine even when plans change and avoid careless habits.',
-          'यात्रा, बेतरतीब खाना और बेचैन रातें सेहत बिगाड़ सकती हैं। योजनाएँ बदलें तब भी हल्की दिनचर्या बनाए रखिए और लापरवाह आदतों से बचिए।'),
+      PBi('Travel, irregular food and restless nights can upset your routine. Keep a light routine even when plans change and avoid careless habits.',
+          'यात्रा, बेतरतीब खाना और बेचैन रातें दिनचर्या बिगाड़ सकती हैं। योजनाएँ बदलें तब भी हल्की दिनचर्या बनाए रखिए और लापरवाह आदतों से बचिए।'),
       PBi('Change at home, a move, travel or a new member may come. Stay flexible and keep communication open.',
           'घर में बदलाव, जगह बदलना, यात्रा या कोई नया सदस्य आ सकता है। लचीले रहिए और बातचीत का रास्ता खुला रखिए।'),
       PBi('Short courses, travel learning, languages and sales or media skills suit this year. Try new ways of learning.',
@@ -67,8 +67,8 @@ class YearDetails {
           'बदलाव का डर छोड़िए। कोई छोटी तीर्थ यात्रा या प्रकृति में शांत सैर आपके मन को तरोताज़ा कर सकती है।'),
     ),
     6: YearExtra(
-      PBi('You may take on everyone\'s burden. Look after the heart, throat and weight, and make time for your own check-ups and rest.',
-          'आप सबका बोझ अपने ऊपर ले सकते हैं। दिल, गले और वज़न का ध्यान रखिए, और अपनी जाँच तथा आराम के लिए भी समय निकालिए।'),
+      PBi('You may take on everyone\'s burden. Look after your diet and your weight routine, and make time for your own rest.',
+          'आप सबका बोझ अपने ऊपर ले सकते हैं। अपने खान-पान और दिनचर्या का ध्यान रखिए, और अपने आराम के लिए भी समय निकालिए।'),
       PBi('Home, marriage, children and parents come to the front. Love and responsibility both grow, so share the load and do not carry everything alone.',
           'घर, विवाह, बच्चे और माता-पिता आगे आते हैं। प्रेम और ज़िम्मेदारी दोनों बढ़ते हैं, इसलिए बोझ बाँटिए और सब कुछ अकेले मत उठाइए।'),
       PBi('Good for learning healing, teaching, cooking, art, beauty or home-related skills. Learning for the benefit of the family feels natural.',
@@ -87,8 +87,8 @@ class YearDetails {
           'ध्यान, मौन और प्रार्थना अब सच्चे जवाब देते हैं। अपनी अंतरात्मा पर भरोसा कीजिए, पर बड़े कदम से पहले तथ्य जाँच लीजिए।'),
     ),
     8: YearExtra(
-      PBi('Pressure from work and money can affect blood pressure, stress levels and sleep. Walk daily, limit caffeine and take proper rest even when busy.',
-          'काम और पैसे का दबाव रक्तचाप, तनाव और नींद पर असर डाल सकता है। रोज़ टहलिए, कैफ़ीन सीमित रखिए और व्यस्त हों तब भी ठीक से आराम कीजिए।'),
+      PBi('Pressure from work and money can raise stress and disturb sleep. Walk daily, limit caffeine and take proper rest even when busy.',
+          'काम और पैसे का दबाव तनाव बढ़ा सकता है और नींद बिगाड़ सकता है। रोज़ टहलिए, कैफ़ीन सीमित रखिए और व्यस्त हों तब भी ठीक से आराम कीजिए।'),
       PBi('Most of your time may go to work and results. Give the family fixed time slots so that success does not cost you closeness.',
           'आपका ज़्यादातर समय काम और नतीजों में जा सकता है। परिवार को तय समय दीजिए ताकि सफलता की कीमत नज़दीकी न बने।'),
       PBi('Good for management, finance, law, business and leadership learning. Study how money and people work.',
@@ -97,8 +97,8 @@ class YearDetails {
           'निष्पक्ष व्यवहार और ईमानदार कमाई आपका अभ्यास है। अपनी आमदनी का एक हिस्सा किसी अच्छे काम में दीजिए।'),
     ),
     9: YearExtra(
-      PBi('A year to clean up. Finish pending medical checks, release old stress and avoid starting extreme diets or heavy new routines.',
-          'यह सफ़ाई का साल है। बाकी स्वास्थ्य जाँचें पूरी कीजिए, पुराना तनाव छोड़िए और कोई अति वाली डाइट या भारी नई दिनचर्या शुरू करने से बचिए।'),
+      PBi('A year to clean up. Release old stress, slow down, and avoid starting extreme diets or heavy new routines. For any health concern, please see a doctor.',
+          'यह सफ़ाई का साल है। पुराना तनाव छोड़िए, रफ़्तार धीमी कीजिए और कोई अति वाली डाइट या भारी नई दिनचर्या शुरू करने से बचिए। सेहत की कोई भी चिंता हो तो डॉक्टर को दिखाइए।'),
       PBi('Old relationships may end or change shape. Forgive, thank the people who helped you and make room for new ones.',
           'पुराने रिश्ते खत्म या बदल सकते हैं। माफ़ कीजिए, जिन्होंने आपकी मदद की उन्हें धन्यवाद दीजिए और नए रिश्तों के लिए जगह बनाइए।'),
       PBi('Good for completing courses, teaching others and learning about service, humanity or healing. Finish what is half done.',

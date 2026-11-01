@@ -94,8 +94,8 @@ class RootProfiles {
         "आप वफ़ादार और रक्षा करने वाले होते हैं, पर कभी-कभी रौबदार लग सकते हैं। रिश्ते तब निखरते हैं जब आप नरमी दिखाएँ और फैसले से पहले साथी की राय पूछें।",
       ),
       health: L(
-        "Traditionally linked with the heart, spine, eyes and general vitality. Stress and overwork are the usual triggers; regular rest and exercise help. Use this only as a reminder to look after yourself, and see a doctor for any real concern.",
-        "परंपरा में इसे हृदय, रीढ़, आँखों और सामान्य ऊर्जा से जोड़ा जाता है। तनाव और ज़्यादा काम आम कारण होते हैं; नियमित आराम और व्यायाम मदद करते हैं। इसे सिर्फ़ ख़्याल रखने की याद समझें और कोई समस्या हो तो डॉक्टर को दिखाएँ।",
+        "Your energy is best when your routine is steady. Overwork and skipped rest are the usual triggers; regular rest, light exercise and morning sunlight help. This is a general reminder, not medical advice. For any health concern, please see a doctor.",
+        "आपकी ऊर्जा तब सबसे अच्छी रहती है जब दिनचर्या स्थिर हो। ज़्यादा काम और छूटा हुआ आराम आम कारण हैं; नियमित आराम, हल्की कसरत और सुबह की धूप मदद करती हैं। यह एक सामान्य सुझाव है, चिकित्सा सलाह नहीं। सेहत की कोई भी चिंता हो तो डॉक्टर को दिखाइए।",
       ),
       advice: L(
         "Lead with service, not ego. Start early in the day, keep one clear goal, and let your confidence be quiet and steady.",
@@ -138,8 +138,8 @@ class RootProfiles {
         "आप स्नेही, रोमांटिक और वफ़ादार होते हैं। रिश्तों में बहुत कुछ देते हैं, इसलिए अपनी ज़रूरतें भी साफ़ बोलें, साथी के अंदाज़े पर न छोड़ें।",
       ),
       health: L(
-        "Traditionally linked with emotions, sleep, digestion and fluid balance. Calm routines, enough sleep and time near water or nature are supportive. See a doctor for any real health concern.",
-        "परंपरा में इसे भावनाओं, नींद, पाचन और शरीर में तरल संतुलन से जोड़ा जाता है। शांत दिनचर्या, पूरी नींद और प्रकृति या पानी के पास समय बिताना सहायक है। कोई समस्या हो तो डॉक्टर को दिखाएँ।",
+        "Your mood and your rest go together. Calm routines, enough sleep and time near water or nature keep you balanced. Feelings held inside tire you more than work does. This is a general reminder, not medical advice. For any health concern, please see a doctor.",
+        "आपका मन और आराम साथ चलते हैं। शांत दिनचर्या, पूरी नींद और पानी या प्रकृति के पास समय आपको संतुलित रखते हैं। भावनाएँ दबाकर रखना काम से ज़्यादा थकाता है। यह एक सामान्य सुझाव है, चिकित्सा सलाह नहीं। सेहत की कोई भी चिंता हो तो डॉक्टर को दिखाइए।",
       ),
       advice: L(
         "Trust your intuition, but back it with facts. Protect your peace, keep a regular routine and speak up early instead of keeping hurt inside.",
@@ -182,8 +182,8 @@ class RootProfiles {
         "आप गर्मजोशी वाले, उदार और सम्मान देने वाले होते हैं। आपको ऐसा साथी चाहिए जिससे घंटों बात हो सके। नज़दीकी रिश्तों में भाषण देने से बचें; सलाह से ज़्यादा सुनना भरोसा बनाता है।",
       ),
       health: L(
-        "Traditionally linked with liver, weight, thighs and blood sugar balance. Moderation in food and sweets is the usual reminder. See a doctor for any real health concern.",
-        "परंपरा में इसे लिवर, वज़न, जाँघों और शुगर संतुलन से जोड़ा जाता है। खाने और मिठाई में संयम आम सलाह है। कोई समस्या हो तो डॉक्टर को दिखाएँ।",
+        "Your energy rises and falls with how busy and social you are. Regular meals, moderation with sweets and rich food, and a steady daily walk keep you comfortable. This is a general reminder, not medical advice. For any health concern, please see a doctor.",
+        "आपकी ऊर्जा इस पर निर्भर करती है कि आप कितने व्यस्त और मेल-मिलाप में हैं। नियमित खाना, मिठाई और भारी खाने में संयम और रोज़ की सैर आपको सहज रखती है। यह एक सामान्य सुझाव है, चिकित्सा सलाह नहीं। सेहत की कोई भी चिंता हो तो डॉक्टर को दिखाइए।",
       ),
       advice: L(
         "Keep learning, and practise what you teach. Choose depth over variety and give your good ideas a fixed schedule.",
@@ -226,8 +226,8 @@ class RootProfiles {
         "आप वफ़ादार और भरोसेमंद होते हैं, पर हमेशा जताते नहीं। स्नेह के शब्द बोलकर कहें और छोटे सरप्राइज़ प्लान करें; साथी इन्हें बहुत मानेगा।",
       ),
       health: L(
-        "Traditionally linked with nerves, joints, posture and stress-related tension. Regular movement, stretching and enough sleep help. See a doctor for any real health concern.",
-        "परंपरा में इसे नसों, जोड़ों, बैठने-उठने की मुद्रा और तनाव से जुड़े खिंचाव से जोड़ा जाता है। नियमित चलना-फिरना, स्ट्रेचिंग और पूरी नींद मदद करती है। कोई समस्या हो तो डॉक्टर को दिखाएँ।",
+        "Hard work and long sitting can leave you tired and stiff. Regular movement, stretching, short breaks and enough sleep help. This is a general reminder, not medical advice. For any health concern, please see a doctor.",
+        "कड़ी मेहनत और लंबे समय तक बैठने से थकान और अकड़न हो सकती है। नियमित चलना-फिरना, स्ट्रेचिंग, छोटे ब्रेक और पूरी नींद मदद करते हैं। यह एक सामान्य सुझाव है, चिकित्सा सलाह नहीं। सेहत की कोई भी चिंता हो तो डॉक्टर को दिखाइए।",
       ),
       advice: L(
         "Build step by step, keep your records clean and avoid shortcuts. Stay open to new methods, and do not let worry decide for you.",
@@ -270,8 +270,8 @@ class RootProfiles {
         "आप खिलंदड़, जीवंत और आकर्षक होते हैं, पर आपको आज़ादी और मज़ा चाहिए। अपनी प्रतिबद्धताओं के बारे में साफ़ रहें और कभी-कभी साथी को पूरा ध्यान दें।",
       ),
       health: L(
-        "Traditionally linked with the nervous system, skin, throat and lungs. Calm breathing, regular sleep and less screen time are supportive. See a doctor for any real health concern.",
-        "परंपरा में इसे नर्वस सिस्टम, त्वचा, गले और फेफड़ों से जोड़ा जाता है। शांत साँसें, नियमित नींद और कम स्क्रीन टाइम सहायक हैं। कोई समस्या हो तो डॉक्टर को दिखाएँ।",
+        "Your mind moves fast and rest can get skipped. Calm breathing, regular sleep and less screen time keep you fresh. This is a general reminder, not medical advice. For any health concern, please see a doctor.",
+        "आपका मन तेज़ चलता है और आराम छूट जाता है। शांत साँसें, नियमित नींद और कम स्क्रीन-समय आपको तरोताज़ा रखते हैं। यह एक सामान्य सुझाव है, चिकित्सा सलाह नहीं। सेहत की कोई भी चिंता हो तो डॉक्टर को दिखाइए।",
       ),
       advice: L(
         "Use your speed for good decisions, not hasty ones. Travel, learn and talk, but come home to a steady base.",
@@ -314,8 +314,8 @@ class RootProfiles {
         "आप समर्पित और रोमांटिक होते हैं; रिश्ते आपके जीवन का केंद्र हैं। अधिकार जताने से और हर किसी से उतने ही देने की उम्मीद रखने से बचें।",
       ),
       health: L(
-        "Traditionally linked with throat, kidneys, skin and the reproductive system. Balanced food, hydration and relaxation are supportive. See a doctor for any real health concern.",
-        "परंपरा में इसे गले, गुर्दों, त्वचा और प्रजनन तंत्र से जोड़ा जाता है। संतुलित भोजन, पर्याप्त पानी और विश्राम सहायक हैं। कोई समस्या हो तो डॉक्टर को दिखाएँ।",
+        "Comfort and food can turn into over-indulgence. Balanced meals, enough water and relaxation keep you well. This is a general reminder, not medical advice. For any health concern, please see a doctor.",
+        "आराम और खाना ज़रूरत से ज़्यादा हो सकता है। संतुलित भोजन, पर्याप्त पानी और विश्राम आपको ठीक रखते हैं। यह एक सामान्य सुझाव है, चिकित्सा सलाह नहीं। सेहत की कोई भी चिंता हो तो डॉक्टर को दिखाइए।",
       ),
       advice: L(
         "Give with love, but keep clear limits. Make beauty and order part of your day, and look after your own needs first at times.",
@@ -358,8 +358,8 @@ class RootProfiles {
         "आप वफ़ादार पर संकोची होते हैं। ऐसा साथी जो आपकी चुप्पी का सम्मान करे और आपकी जिज्ञासा साझा करे, आपके लिए अच्छा है। जो महसूस करते हैं उसे कहें, बिना शब्दों के समझे जाने की उम्मीद न रखें।",
       ),
       health: L(
-        "Traditionally linked with nerves, sleep, digestion and the mind. Quiet time, meditation, a walk in nature and a regular sleep schedule are supportive. See a doctor for any real health concern.",
-        "परंपरा में इसे नसों, नींद, पाचन और मन से जोड़ा जाता है। शांत समय, ध्यान, प्रकृति में सैर और नियमित नींद सहायक हैं। कोई समस्या हो तो डॉक्टर को दिखाएँ।",
+        "Your mind is busy and needs quiet. Quiet time, meditation, a walk in nature and a regular sleep schedule help. This is a general reminder, not medical advice. For any health concern, please see a doctor.",
+        "आपका मन व्यस्त रहता है और उसे शांति चाहिए। शांत समय, ध्यान, प्रकृति में सैर और नियमित नींद मदद करते हैं। यह एक सामान्य सुझाव है, चिकित्सा सलाह नहीं। सेहत की कोई भी चिंता हो तो डॉक्टर को दिखाइए।",
       ),
       advice: L(
         "Protect your quiet time but stay connected. Study deeply, trust your intuition, and balance thinking with simple action each day.",
@@ -402,8 +402,8 @@ class RootProfiles {
         "आप प्रतिबद्ध और रक्षक होते हैं, पर बहुत जताते नहीं। अपनी परवाह सिर्फ़ ज़रूरतें पूरी करके नहीं, छोटे रोज़ के कामों और मीठे शब्दों से भी दिखाएँ।",
       ),
       health: L(
-        "Traditionally linked with bones, joints, teeth, knees and tiredness from overwork. Rest, warmth, calcium-rich food and gentle exercise are supportive. See a doctor for any real health concern.",
-        "परंपरा में इसे हड्डियों, जोड़ों, दाँतों, घुटनों और ज़्यादा काम की थकान से जोड़ा जाता है। आराम, गर्माहट, कैल्शियम वाला भोजन और हल्का व्यायाम सहायक हैं। कोई समस्या हो तो डॉक्टर को दिखाएँ।",
+        "Long hours and responsibility can leave you tired. Rest, warmth, simple nourishing food and gentle exercise help, and you do not have to carry everything alone. This is a general reminder, not medical advice. For any health concern, please see a doctor.",
+        "लंबे घंटे और ज़िम्मेदारियाँ थका सकती हैं। आराम, गर्माहट, सादा पौष्टिक खाना और हल्की कसरत मदद करते हैं, और सब कुछ अकेले उठाना ज़रूरी नहीं। यह एक सामान्य सुझाव है, चिकित्सा सलाह नहीं। सेहत की कोई भी चिंता हो तो डॉक्टर को दिखाइए।",
       ),
       advice: L(
         "Stay patient, honest and consistent. Serve others with your strength, and remember that rest and warmth are also part of discipline.",
@@ -446,8 +446,8 @@ class RootProfiles {
         "आप जोशीले, रक्षक और वफ़ादार होते हैं। मतभेद भड़क सकते हैं, इसलिए सुनने और जल्दी माफ़ी माँगने का अभ्यास करें। नज़दीकी रिश्तों में आपकी गर्मजोशी ही आपकी ताक़त है।",
       ),
       health: L(
-        "Traditionally linked with blood pressure, heat in the body, injuries and headaches. Regular exercise, cooling food and anger management are supportive. See a doctor for any real health concern.",
-        "परंपरा में इसे ब्लड प्रेशर, शरीर की गर्मी, चोटों और सिरदर्द से जोड़ा जाता है। नियमित व्यायाम, ठंडक वाला भोजन और ग़ुस्से पर नियंत्रण सहायक हैं। कोई समस्या हो तो डॉक्टर को दिखाएँ।",
+        "You have plenty of energy and can run hot when angry or rushed. Regular exercise, light cooling food and a pause before reacting help. This is a general reminder, not medical advice. For any health concern, please see a doctor.",
+        "आपके पास बहुत ऊर्जा है और गुस्से या जल्दबाज़ी में आप गरम हो सकते हैं। नियमित कसरत, हल्का ठंडा खाना और प्रतिक्रिया से पहले एक ठहराव मदद करते हैं। यह एक सामान्य सुझाव है, चिकित्सा सलाह नहीं। सेहत की कोई भी चिंता हो तो डॉक्टर को दिखाइए।",
       ),
       advice: L(
         "Turn your fire into service. Exercise daily, pause before speaking in anger, and finish old chapters so you can start fresh ones.",

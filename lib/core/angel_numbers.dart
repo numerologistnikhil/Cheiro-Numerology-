@@ -186,11 +186,12 @@ class AngelNumbers {
   static int personalYear(DateTime dob, int year) =>
       reduce(_digitSum(dob.day) + _digitSum(dob.month) + _digitSum(year));
 
-  /// DOB me digit kitni baar aaya (jaise 06-04-1988 me 8 do baar).
+  /// How many times a digit appears in the date of birth (06-04-1988 is read
+  /// as 6, 4, 1988: the digit 8 appears twice and 0 does not appear).
   static int digitCountInDob(DateTime dob, int digit) {
-    final s = dob.day.toString().padLeft(2, '0') +
-        dob.month.toString().padLeft(2, '0') +
-        dob.year.toString();
+    // Written without padding (6, not 06), exactly like the Lo Shu grid, so a
+    // zero is counted only when the day, month or year really contains one.
+    final s = dob.day.toString() + dob.month.toString() + dob.year.toString();
     return s.split('').where((c) => c == digit.toString()).length;
   }
 
