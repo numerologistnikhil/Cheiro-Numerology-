@@ -29,7 +29,8 @@ class ReportBuilderScreen extends StatefulWidget {
 class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
   final TextEditingController _name = ProfileController.name();
   final TextEditingController _mobile = ProfileController.mobile();
-  final TextEditingController _house = TextEditingController();
+  final TextEditingController _house = ProfileController.house();
+  final TextEditingController _vehicle = ProfileController.vehicle();
   DateTime? _dob;
   bool _busy = false;
   ReportOptions _opts = const ReportOptions();
@@ -56,6 +57,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
     _name.dispose();
     _mobile.dispose();
     _house.dispose();
+    _vehicle.dispose();
     super.dispose();
   }
 
@@ -171,6 +173,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
           dob: dob,
           mobile: _mobile.text,
           house: _house.text,
+          vehicle: _vehicle.text,
           logo: logo,
           options: _opts,
           sample: access == ReportAccess.freeFirst && Pricing.freeReportIsSample,
@@ -298,13 +301,32 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
             prefixIcon: Icon(Icons.phone_android),
           ),
         )),
-        const SizedBox(height: 12),
-        TextField(
-          controller: _house,
-          textCapitalization: TextCapitalization.characters,
-          decoration: const InputDecoration(
-            labelText: 'House / flat number (optional)',
-            prefixIcon: Icon(Icons.home_outlined),
+        ProfileHide(
+          house: true,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: TextField(
+              controller: _house,
+              textCapitalization: TextCapitalization.characters,
+              decoration: const InputDecoration(
+                labelText: 'House / flat number (optional)',
+                prefixIcon: Icon(Icons.home_outlined),
+              ),
+            ),
+          ),
+        ),
+        ProfileHide(
+          vehicle: true,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: TextField(
+              controller: _vehicle,
+              textCapitalization: TextCapitalization.characters,
+              decoration: const InputDecoration(
+                labelText: 'Vehicle number (optional)',
+                prefixIcon: Icon(Icons.directions_car_outlined),
+              ),
+            ),
           ),
         ),
         const SectionLabel('PDF options'),

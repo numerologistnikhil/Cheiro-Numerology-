@@ -36,6 +36,8 @@ class ReportPages {
   static const PBi labelDob = PBi('Date of birth', 'जन्म तिथि');
   static const PBi labelDay = PBi('Day of birth', 'जन्म का वार');
   static const PBi labelMobile = PBi('Mobile number', 'मोबाइल नंबर');
+  static const PBi labelHouse = PBi('House / flat number', 'मकान / फ़्लैट नंबर');
+  static const PBi labelVehicle = PBi('Vehicle number', 'गाड़ी का नंबर');
   static const PBi labelMulank = PBi('Birth number (Mulank)', 'मूलांक');
   static const PBi labelBhagyank = PBi('Destiny number (Bhagyank)', 'भाग्यांक');
   static const PBi labelPlanet = PBi('Ruling planet of Mulank', 'मूलांक का स्वामी ग्रह');

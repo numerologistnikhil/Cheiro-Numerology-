@@ -53,6 +53,7 @@ class StoryReport {
   /// The spelling the customer chose in Name Correction (may be empty).
   String chosenName = '';
   String house = '';
+  String vehicle = '';
 
   /// Safe mode: leaves out the name-suggestion section and the extra Lo Shu
   /// parts, used only when the full report could not be made.
@@ -85,6 +86,7 @@ class StoryReport {
     String chosenName = '',
     int lite = 0,
     String house = '',
+    String vehicle = '',
   }) {
     var base = options ?? ReportOptions(hindi: hindi, years: years);
     if (sample) base = base.copyWith(includeAngelNumbers: false);
@@ -95,6 +97,7 @@ class StoryReport {
     return (StoryReport._(base.copyWith(years: n), sample)
           ..chosenName = chosenName
           ..house = house
+          ..vehicle = vehicle
           ..lite = lite)
         ._build(name, dob, mobile, logo);
   }
@@ -111,6 +114,7 @@ class StoryReport {
     bool sample = false,
     String chosenName = '',
     String house = '',
+    String vehicle = '',
   }) async {
     final doc = await build(
       name: name,
@@ -123,6 +127,7 @@ class StoryReport {
       sample: sample,
       chosenName: chosenName,
       house: house,
+      vehicle: vehicle,
     );
     await Printing.layoutPdf(onLayout: (_) => doc.save());
   }
@@ -139,6 +144,7 @@ class StoryReport {
     bool sample = false,
     String chosenName = '',
     String house = '',
+    String vehicle = '',
   }) async {
     final doc = await build(
       name: name,
@@ -151,6 +157,7 @@ class StoryReport {
       sample: sample,
       chosenName: chosenName,
       house: house,
+      vehicle: vehicle,
     );
     return doc.save();
   }
@@ -813,6 +820,10 @@ class StoryReport {
           (h ? ReportPages.weekHi : ReportPages.weekEn)[dob.weekday - 1]),
       MapEntry(ReportPages.labelMobile.t(h),
           mobile.trim().isEmpty ? ReportPages.notGiven.t(h) : mobile.trim()),
+      if (house.trim().isNotEmpty)
+        MapEntry(ReportPages.labelHouse.t(h), house.trim()),
+      if (vehicle.trim().isNotEmpty)
+        MapEntry(ReportPages.labelVehicle.t(h), vehicle.trim()),
       MapEntry(ReportPages.labelMulank.t(h), '$psychic'),
       MapEntry(ReportPages.labelBhagyank.t(h), '$destiny'),
       if (planet.isNotEmpty) MapEntry(ReportPages.labelPlanet.t(h), planet),
@@ -1143,6 +1154,18 @@ class StoryReport {
         r: mobileResult,
         psychic: psychic,
         subject: h ? 'आपके मोबाइल नंबर' : 'Your mobile number',
+      ));
+    }
+
+    // Vehicle
+    final vehicleResult = NumerologyEngine.vehicle(vehicle);
+    if (vehicleResult.total > 0) {
+      w.addAll(await _numberSection(
+        title: ReportText.vehicleTitle.t(h),
+        intro: ReportText.vehicleIntro.t(h),
+        r: vehicleResult,
+        psychic: psychic,
+        subject: h ? 'आपकी गाड़ी का नंबर' : 'Your vehicle number',
       ));
     }
 

@@ -16,7 +16,7 @@ class LuckyKitScreen extends StatefulWidget {
 }
 
 class _LuckyKitScreenState extends State<LuckyKitScreen> {
-  final TextEditingController _house = TextEditingController();
+  final TextEditingController _house = ProfileController.house();
   DateTime? _dob;
   bool _checked = false;
 

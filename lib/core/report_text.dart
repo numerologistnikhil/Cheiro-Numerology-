@@ -118,6 +118,13 @@ class ReportText {
     "आप फ़ोन रोज़ इस्तेमाल करते हैं, इसलिए उसका नंबर चुपचाप आपके साथ रहता "
         "है। देखिए यह आपके मूलांक के साथ कैसा बैठता है।",
   );
+  static const L vehicleTitle = L("Your vehicle number", "आपकी गाड़ी का नंबर");
+  static const L vehicleIntro = L(
+    "A vehicle goes with you every day, so its number is part of your daily "
+        "surroundings. Here is how it sits with your birth number.",
+    "गाड़ी रोज़ आपके साथ चलती है, इसलिए उसका नंबर आपके रोज़ के माहौल का "
+        "हिस्सा है। देखिए यह आपके मूलांक के साथ कैसा बैठता है।",
+  );
   static const L compoundTitle =
       L("What this total number says", "इस कुल अंक का मतलब");
 

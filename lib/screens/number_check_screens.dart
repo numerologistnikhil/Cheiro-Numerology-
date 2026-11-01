@@ -4,6 +4,7 @@ import '../core/extra_insights.dart'
     show NumberPatterns, PatternReport, PatternFinding;
 import '../core/numerology_engine.dart';
 import '../core/root_profiles.dart' show L;
+import '../core/user_profile.dart';
 import 'ui_kit.dart';
 
 /// Mobile number numerology.
@@ -24,6 +25,7 @@ class MobileNumberScreen extends StatelessWidget {
             'मतलब दिखेगा।',
       ),
       calc: NumerologyEngine.mobile,
+      fromProfile: (p) => p.mobile,
     );
   }
 }
@@ -46,6 +48,7 @@ class VehicleNumberScreen extends StatelessWidget {
             'मूलांक और मतलब दिखेगा।',
       ),
       calc: NumerologyEngine.vehicle,
+      fromProfile: (p) => p.vehicle,
     );
   }
 }
@@ -65,7 +68,11 @@ class _NumberCheck extends StatefulWidget {
     required this.intro,
     required this.keyboard,
     required this.calc,
+    this.fromProfile,
   });
+
+  /// Picks the saved profile detail to fill the box with (may be null).
+  final String Function(UserProfile)? fromProfile;
 
   @override
   State<_NumberCheck> createState() => _NumberCheckState();
@@ -76,6 +83,19 @@ class _NumberCheckState extends State<_NumberCheck> {
   NumerologyResult? _result;
   PatternReport? _patterns;
   L? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    final pick = widget.fromProfile;
+    if (pick != null) {
+      UserProfile.instance.ensureLoaded().then((_) {
+        if (!mounted || _c.text.isNotEmpty) return;
+        final v = pick(UserProfile.instance);
+        if (v.isNotEmpty) setState(() => _c.text = v);
+      });
+    }
+  }
 
   @override
   void dispose() {

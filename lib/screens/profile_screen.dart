@@ -40,6 +40,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _mobile = TextEditingController();
+  final TextEditingController _house = TextEditingController();
+  final TextEditingController _vehicle = TextEditingController();
   DateTime? _dob;
   bool _ready = false;
 
@@ -52,6 +54,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _name.text = p.name;
         _mobile.text = p.mobile;
+        _house.text = p.house;
+        _vehicle.text = p.vehicle;
         _dob = p.dob;
         _ready = true;
       });
@@ -62,6 +66,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     _name.dispose();
     _mobile.dispose();
+    _house.dispose();
+    _vehicle.dispose();
     super.dispose();
   }
 
@@ -70,6 +76,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       name: _name.text,
       dob: _dob,
       mobile: _mobile.text,
+      house: _house.text,
+      vehicle: _vehicle.text,
     );
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -86,6 +94,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _name.clear();
       _mobile.clear();
+      _house.clear();
+      _vehicle.clear();
       _dob = null;
     });
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -130,6 +140,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
           decoration: InputDecoration(
             labelText: hi ? 'मोबाइल नंबर (ज़रूरी नहीं)' : 'Mobile number (optional)',
             prefixIcon: const Icon(Icons.phone_android),
+          ),
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _house,
+          textCapitalization: TextCapitalization.characters,
+          enabled: _ready,
+          decoration: InputDecoration(
+            labelText: hi
+                ? 'मकान / फ़्लैट नंबर (ज़रूरी नहीं)'
+                : 'House / flat number (optional)',
+            prefixIcon: const Icon(Icons.home_outlined),
+          ),
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _vehicle,
+          textCapitalization: TextCapitalization.characters,
+          enabled: _ready,
+          decoration: InputDecoration(
+            labelText: hi
+                ? 'गाड़ी का नंबर (ज़रूरी नहीं)'
+                : 'Vehicle number (optional)',
+            prefixIcon: const Icon(Icons.directions_car_outlined),
           ),
         ),
         if (dob != null) ...[
@@ -195,6 +229,8 @@ class _ProfileStripState extends State<ProfileStrip> {
         final parts = <String>[
           if (p.dob != null) _dobText(p.dob!),
           if (p.mobile.isNotEmpty) p.mobile,
+          if (p.house.isNotEmpty) (hi ? 'मकान ${p.house}' : 'Flat ${p.house}'),
+          if (p.vehicle.isNotEmpty) p.vehicle,
         ];
         final sub = empty
             ? (hi
@@ -261,9 +297,17 @@ class _ProfileStripState extends State<ProfileStrip> {
 /// Hides a name or mobile box once the profile already holds that detail
 /// (and a date of birth), so the same thing is never asked twice.
 class ProfileHide extends StatelessWidget {
-  const ProfileHide({super.key, this.mobile = false, required this.child});
+  const ProfileHide({
+    super.key,
+    this.mobile = false,
+    this.house = false,
+    this.vehicle = false,
+    required this.child,
+  });
 
   final bool mobile;
+  final bool house;
+  final bool vehicle;
   final Widget child;
 
   @override
@@ -272,7 +316,13 @@ class ProfileHide extends StatelessWidget {
       animation: UserProfile.instance,
       builder: (context, _) {
         final p = UserProfile.instance;
-        final v = mobile ? p.mobile : p.name;
+        final v = mobile
+            ? p.mobile
+            : house
+                ? p.house
+                : vehicle
+                    ? p.vehicle
+                    : p.name;
         if (p.dob != null && v.trim().isNotEmpty) return const SizedBox.shrink();
         return child;
       },

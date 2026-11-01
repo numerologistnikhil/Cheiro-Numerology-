@@ -11,10 +11,14 @@ class UserProfile extends ChangeNotifier {
   static const String _kDob = 'profile_dob';
   static const String _kMobile = 'profile_mobile';
   static const String _kChosen = 'profile_chosen_name';
+  static const String _kHouse = 'profile_house';
+  static const String _kVehicle = 'profile_vehicle';
 
   String name = '';
   DateTime? dob;
   String mobile = '';
+  String house = '';
+  String vehicle = '';
 
   /// The spelling the customer chose in Name Correction (may be empty).
   String chosenName = '';
@@ -24,7 +28,11 @@ class UserProfile extends ChangeNotifier {
 
   bool get loaded => _loaded;
   bool get isEmpty =>
-      name.trim().isEmpty && dob == null && mobile.trim().isEmpty;
+      name.trim().isEmpty &&
+      dob == null &&
+      mobile.trim().isEmpty &&
+      house.trim().isEmpty &&
+      vehicle.trim().isEmpty;
 
   /// Loads the saved profile once. Safe to call many times.
   Future<void> ensureLoaded() => _loading ??= _load();
@@ -34,6 +42,8 @@ class UserProfile extends ChangeNotifier {
       final p = await SharedPreferences.getInstance();
       name = p.getString(_kName) ?? '';
       mobile = p.getString(_kMobile) ?? '';
+      house = p.getString(_kHouse) ?? '';
+      vehicle = p.getString(_kVehicle) ?? '';
       chosenName = p.getString(_kChosen) ?? '';
       final d = p.getString(_kDob);
       dob = d == null ? null : DateTime.tryParse(d);
@@ -48,7 +58,11 @@ class UserProfile extends ChangeNotifier {
     required String name,
     required DateTime? dob,
     required String mobile,
+    String? house,
+    String? vehicle,
   }) async {
+    this.house = (house ?? this.house).trim();
+    this.vehicle = (vehicle ?? this.vehicle).trim();
     this.name = name.trim();
     this.dob = dob;
     this.mobile = mobile.trim();
@@ -59,6 +73,8 @@ class UserProfile extends ChangeNotifier {
       final p = await SharedPreferences.getInstance();
       await p.setString(_kName, this.name);
       await p.setString(_kMobile, this.mobile);
+      await p.setString(_kHouse, this.house);
+      await p.setString(_kVehicle, this.vehicle);
       if (dob == null) {
         await p.remove(_kDob);
       } else {
@@ -83,30 +99,37 @@ class UserProfile extends ChangeNotifier {
   }
 
   Future<void> clear() async {
-    await save(name: '', dob: null, mobile: '');
+    await save(name: '', dob: null, mobile: '', house: '', vehicle: '');
     await setChosenName('');
   }
 }
 
-/// A text box controller that starts with the saved name or mobile number.
-/// It only fills the box if the box is still empty.
+/// A text box controller that starts with a saved detail (name, mobile,
+/// house or vehicle number). It only fills the box if the box is still empty.
 class ProfileController extends TextEditingController {
-  ProfileController.name() : _mobile = false {
+  ProfileController.name() : _pick = ((p) => p.name) {
     _init();
   }
 
-  ProfileController.mobile() : _mobile = true {
+  ProfileController.mobile() : _pick = ((p) => p.mobile) {
     _init();
   }
 
-  final bool _mobile;
+  ProfileController.house() : _pick = ((p) => p.house) {
+    _init();
+  }
+
+  ProfileController.vehicle() : _pick = ((p) => p.vehicle) {
+    _init();
+  }
+
+  final String Function(UserProfile) _pick;
   bool _gone = false;
 
   void _init() {
     UserProfile.instance.ensureLoaded().then((_) {
       if (_gone || text.isNotEmpty) return;
-      final p = UserProfile.instance;
-      final v = _mobile ? p.mobile : p.name;
+      final v = _pick(UserProfile.instance);
       if (v.isNotEmpty) text = v;
     });
   }
