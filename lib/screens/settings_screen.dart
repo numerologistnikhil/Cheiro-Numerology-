@@ -7,6 +7,8 @@ import '../core/root_profiles.dart' show L;
 import '../core/feedback_texts.dart';
 import 'extras_screens.dart';
 import 'feedback_screen.dart';
+import 'theme_picker.dart';
+import '../core/feedback_config.dart';
 
 const Color _gold = Color(0xFFB8860B);
 const Color _cream = Color(0xFFFFFFFF);
@@ -99,6 +101,8 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
           ),
+          _title(s.t(const L('COLOUR THEME', 'ऐप का रंग'))),
+          const ThemePicker(),
           _title(s.t(const L('YOUR PLAN', 'आपका प्लान'))),
           _box(
             Padding(
@@ -118,15 +122,17 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           _title(s.t(const L('MORE', 'और'))),
-          _tile(
-            Icons.lightbulb_outline,
-            s.t(FeedbackTexts.title),
-            s.t(FeedbackTexts.subtitle),
-            () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const FeedbackScreen()),
+          if (FeedbackConfig.connected) ...[
+            _tile(
+              Icons.lightbulb_outline,
+              s.t(FeedbackTexts.title),
+              s.t(FeedbackTexts.subtitle),
+              () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const FeedbackScreen()),
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
+            const SizedBox(height: 10),
+          ],
           _tile(Icons.star_outline, s.t(RateApp.button), s.t(RateApp.sub),
               RateApp.open),
           const SizedBox(height: 10),

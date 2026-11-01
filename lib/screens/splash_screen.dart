@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'premium_home.dart';
+import '../core/app_theme.dart';
 
 /// Animated Ank Dhara splash:
 /// 1) logo fade + zoom in, 2) golden shimmer, 3) logo shrinks, floats up and
@@ -90,10 +91,12 @@ class _SplashScreenState extends State<SplashScreen>
                         ],
                         stops: const [0.30, 0.5, 0.70],
                       ).createShader(rect),
-                      child: Image.asset(
-                        'assets/images/ankdhara_logo.png',
-                        width: logoWidth,
-                        fit: BoxFit.contain,
+                      child: ThemeGuard(
+                        child: Image.asset(
+                          'assets/images/ankdhara_logo.png',
+                          width: logoWidth,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ),

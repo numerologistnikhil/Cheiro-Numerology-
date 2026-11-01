@@ -3,6 +3,7 @@ import 'profile_screen.dart';
 import '../core/user_profile.dart';
 import 'package:flutter/material.dart';
 import '../core/app.dart';
+import '../core/app_theme.dart';
 import '../core/numerology_engine.dart';
 import 'analysis_card.dart';
 import 'ai_numerologist_screen.dart';
@@ -183,11 +184,13 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              'assets/images/ankdhara_logo.png',
-              height: 32,
-              errorBuilder: (context, error, stackTrace) =>
-                  const SizedBox.shrink(),
+            ThemeGuard(
+              child: Image.asset(
+                'assets/images/ankdhara_logo.png',
+                height: 32,
+                errorBuilder: (context, error, stackTrace) =>
+                    const SizedBox.shrink(),
+              ),
             ),
             const SizedBox(width: 8),
             const Text('Ank Dhara'),
