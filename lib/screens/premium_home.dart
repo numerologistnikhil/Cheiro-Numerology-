@@ -18,6 +18,7 @@ import 'home_screen.dart';
 import 'learn_screen.dart';
 import 'profile_screen.dart';
 import 'lo_shu_screen.dart';
+import 'lucky_kit_screen.dart';
 import 'name_correction_screen.dart';
 import 'number_check_screens.dart';
 import 'predictions_screen.dart';
@@ -83,6 +84,8 @@ const _steps = <_Step>[
           L('Is your number lucky?', 'क्या आपका नंबर शुभ है?'), Icons.phone_android),
       _F('vehicle', L('Vehicle', 'वाहन'),
           L('Check a vehicle number', 'वाहन नंबर जाँचिए'), Icons.directions_car_outlined),
+      _F('luckykit', L('Lucky Kit', 'शुभ अंक किट'),
+          L('House number, jersey number', 'मकान नंबर, जर्सी नंबर'), Icons.home_outlined),
       _F('business', L('Business', 'व्यापार'),
           L('Business name and number', 'व्यापार का नाम और अंक'), Icons.storefront_outlined),
       _F('compatibility', L('Match', 'मिलान'),
@@ -185,6 +188,9 @@ class _PremiumHomeState extends State<PremiumHome> {
         break;
       case 'vehicle':
         _go(const VehicleNumberScreen());
+        break;
+      case 'luckykit':
+        _go(const LuckyKitScreen());
         break;
       case 'business':
         _go(const BusinessScreen());

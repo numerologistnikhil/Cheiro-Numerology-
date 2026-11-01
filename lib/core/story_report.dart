@@ -15,6 +15,7 @@ import 'knowledge_pack.dart';
 import 'lo_shu.dart';
 import 'lo_shu_more.dart';
 import 'lo_shu_text.dart';
+import 'lucky_kit.dart';
 import 'numerology_engine.dart';
 import 'numerology_tools.dart';
 import 'pricing.dart';
@@ -51,6 +52,7 @@ class StoryReport {
 
   /// The spelling the customer chose in Name Correction (may be empty).
   String chosenName = '';
+  String house = '';
 
   /// Safe mode: leaves out the name-suggestion section and the extra Lo Shu
   /// parts, used only when the full report could not be made.
@@ -82,6 +84,7 @@ class StoryReport {
     bool sample = false,
     String chosenName = '',
     int lite = 0,
+    String house = '',
   }) {
     var base = options ?? ReportOptions(hindi: hindi, years: years);
     if (sample) base = base.copyWith(includeAngelNumbers: false);
@@ -91,6 +94,7 @@ class StoryReport {
     if (n > 50) n = 50;
     return (StoryReport._(base.copyWith(years: n), sample)
           ..chosenName = chosenName
+          ..house = house
           ..lite = lite)
         ._build(name, dob, mobile, logo);
   }
@@ -106,6 +110,7 @@ class StoryReport {
     ReportOptions? options,
     bool sample = false,
     String chosenName = '',
+    String house = '',
   }) async {
     final doc = await build(
       name: name,
@@ -117,6 +122,7 @@ class StoryReport {
       options: options,
       sample: sample,
       chosenName: chosenName,
+      house: house,
     );
     await Printing.layoutPdf(onLayout: (_) => doc.save());
   }
@@ -132,6 +138,7 @@ class StoryReport {
     ReportOptions? options,
     bool sample = false,
     String chosenName = '',
+    String house = '',
   }) async {
     final doc = await build(
       name: name,
@@ -143,6 +150,7 @@ class StoryReport {
       options: options,
       sample: sample,
       chosenName: chosenName,
+      house: house,
     );
     return doc.save();
   }
@@ -881,6 +889,63 @@ class StoryReport {
     return out;
   }
 
+  Future<List<pw.Widget>> _luckyKitSection(int psychic, int destiny) async {
+    final h = hindi;
+    final out = <pw.Widget>[];
+    out.add(await _h1(LuckyKitText.title.t(h)));
+    out.add(await _p(LuckyKitText.intro.t(h)));
+
+    final picks = LuckyKit.luckyNumbers(psychic, destiny, count: 5);
+    out.add(await _box(LuckyKitText.luckyTitle.t(h), LuckyKitText.luckyIntro.t(h)));
+    out.add(await _facts([
+      for (final k in picks)
+        MapEntry(h ? 'अंक ${k.number}' : 'Number ${k.number}', k.why.t(h)),
+    ]));
+    final avoid = LuckyKit.avoidRoots(psychic, destiny);
+    out.add(await _facts([
+      MapEntry(
+        LuckyKitText.avoidTitle.t(h),
+        avoid.isEmpty
+            ? LuckyKitText.avoidNone.t(h)
+            : (h
+                ? 'जिन नंबरों का जोड़ ${avoid.join(", ")} बनता है, उनसे बचना बेहतर माना जाता है।'
+                : 'Numbers that add up to ${avoid.join(", ")} are traditionally better avoided.'),
+      ),
+    ]));
+
+    final r = LuckyKit.house(house, psychic, destiny);
+    if (r != null) {
+      final info = LuckyKitText.home[r.root]!;
+      out.add(await _h1(LuckyKitText.houseSection.t(h)));
+      out.add(await _box(
+        h
+            ? 'आपका नंबर ${r.input}: कुल ${r.number.total}, मूलांक ${r.root}'
+            : 'Your number ${r.input}: total ${r.number.total}, root ${r.root}',
+        '${LuckyKitText.verdictTitle[r.verdict]!.t(h)}. '
+            '${LuckyKitText.verdictBody[r.verdict]!.t(h)}',
+      ));
+      out.add(await _facts([
+        MapEntry('${LuckyKitText.withMulank.t(h)} (${r.psychic})',
+            LuckyKit.relWord(r.withPsychic, h)),
+        MapEntry('${LuckyKitText.withBhagyank.t(h)} (${r.destiny})',
+            LuckyKit.relWord(r.withDestiny, h)),
+        MapEntry(LuckyKitText.homeNature.t(h), info.theme.t(h)),
+        MapEntry(LuckyKitText.suitsLabel.t(h), info.suits.t(h)),
+        MapEntry(LuckyKitText.watchLabel.t(h), info.watch.t(h)),
+        MapEntry(LuckyKitText.tipLabel.t(h), info.tip.t(h)),
+      ], labelW: 120));
+      if (!h && r.number.hasCheiroCompound) {
+        final e = KnowledgePack.compoundEntry(r.number.total);
+        if (e != null) out.add(await _box('Compound ${r.number.total}: ${e.title}', e.summary));
+      }
+      if (r.verdict != HouseVerdict.good) {
+        out.add(await _box(LuckyKitText.stepsTitle.t(h), LuckyKitText.steps.t(h)));
+      }
+    }
+    out.add(await _p(LuckyKitText.note.t(h)));
+    return out;
+  }
+
   // --------------------------------------------------------------- build
 
   Future<pw.Document> _build(
@@ -1172,6 +1237,11 @@ class StoryReport {
         MapEntry(ReportText.daanLabel.t(h), hab.daan.t(h)),
         MapEntry(ReportText.avoidLabel.t(h), hab.avoid.t(h)),
       ]));
+    }
+
+    // Lucky number kit and house number
+    if (lite < 2) {
+      w.addAll(await _luckyKitSection(psychic, destiny));
     }
 
     // Angel numbers
