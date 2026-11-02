@@ -36,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen>
   void _goHome() {
     if (_gone || !mounted) return;
     _gone = true;
+    AppThemeStore.instance.setSuspended(false);
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 600),

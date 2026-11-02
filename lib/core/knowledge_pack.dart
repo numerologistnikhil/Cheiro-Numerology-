@@ -402,11 +402,11 @@ class KnowledgePack {
       _e,
       'Modern guidance: expression (3) with change (5), reducing to 8, pointing to ambition and a talent for managing resources and people.',
       'Energy, persuasion and organising ability.',
-      'Overcommitment, impatience and chasing quick wins.',
+      'Overcommitment, impatience and chasing quick wins. Many numerologists also treat 35 as a heavy number that can bring delays and obstacles, so progress may need extra patience.',
       'Charismatic; give partners your full attention, not only your schedule.',
       'Entrepreneurship, management and business development suit you.',
       'Opportunities may come in bursts; budget for slow periods.',
-      'Channel drive into a clear plan with measurable steps.',
+      'Channel drive into a clear plan with measurable steps. If this is your name total, consider a spelling with a lighter total.',
     ),
     36: CompoundEntry(
       36,

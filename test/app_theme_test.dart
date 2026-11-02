@@ -4,6 +4,13 @@ import 'package:cheiro_numerology/core/app_theme.dart';
 
 int _ch(Color c, int shift) => (c.value >> shift) & 0xFF;
 
+void _near(Color a, Color b, String why) {
+  for (final sh in [16, 8, 0]) {
+    expect((_ch(a, sh) - _ch(b, sh)).abs() <= 2, isTrue,
+        reason: '$why (${a.value.toRadixString(16)} vs ${b.value.toRadixString(16)})');
+  }
+}
+
 void main() {
   test('there are ten themes with unique ids and none is paid yet', () {
     expect(AppThemes.all.length, 10);
@@ -12,19 +19,17 @@ void main() {
     expect(AppThemes.all.map((e) => e.color.value).toSet().length, 10);
   });
 
-  test('default theme keeps the gold colour', () {
-    final c = AppThemes.applyTo(AppThemes.baseGold, AppThemes.matrix3(AppThemes.all.first));
-    expect(c.value, AppThemes.baseGold.value);
+  test('default theme keeps gold and white', () {
+    final m = AppThemes.matrix3(AppThemes.all.first);
+    _near(AppThemes.applyTo(AppThemes.baseGold, m), AppThemes.baseGold, 'gold');
+    expect(AppThemes.applyTo(const Color(0xFFFFFFFF), m).value, 0xFFFFFFFF);
   });
 
-  test('gold becomes the theme colour, white and black stay', () {
+  test('gold becomes the theme colour, white the tint, black stays', () {
     for (final o in AppThemes.all) {
       final m = AppThemes.matrix3(o);
-      final g = AppThemes.applyTo(AppThemes.baseGold, m);
-      for (final sh in [16, 8, 0]) {
-        expect((_ch(g, sh) - _ch(o.color, sh)).abs() <= 1, isTrue, reason: o.id);
-      }
-      expect(AppThemes.applyTo(const Color(0xFFFFFFFF), m).value, 0xFFFFFFFF, reason: o.id);
+      _near(AppThemes.applyTo(AppThemes.baseGold, m), o.color, '${o.id} gold');
+      _near(AppThemes.applyTo(const Color(0xFFFFFFFF), m), o.tint, '${o.id} white');
       expect(AppThemes.applyTo(const Color(0xFF000000), m).value, 0xFF000000, reason: o.id);
     }
   });

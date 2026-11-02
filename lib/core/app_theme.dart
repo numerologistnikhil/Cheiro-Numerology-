@@ -8,12 +8,14 @@ class AppThemeOption {
   final String id;
   final L name;
   final Color color; // the colour that replaces the app's main gold
+  final Color tint; // the very light colour that replaces white backgrounds
   final bool premiumOnly; // false for now: every theme is free
 
   const AppThemeOption(
     this.id,
     this.name,
-    this.color, {
+    this.color,
+    this.tint, {
     this.premiumOnly = false,
   });
 }
@@ -24,16 +26,16 @@ class AppThemes {
   static const Color baseGold = Color(0xFFB8860B);
 
   static const List<AppThemeOption> all = [
-    AppThemeOption('pearl_gold', L('Pearl Gold', 'पर्ल गोल्ड'), Color(0xFFB8860B)),
-    AppThemeOption('royal_blue', L('Royal Blue', 'रॉयल ब्लू'), Color(0xFF1F4FA3)),
-    AppThemeOption('emerald', L('Emerald', 'एमरल्ड'), Color(0xFF0B7A5A)),
-    AppThemeOption('burgundy', L('Royal Burgundy', 'रॉयल बरगंडी'), Color(0xFF7B1E3A)),
-    AppThemeOption('platinum', L('Platinum', 'प्लैटिनम'), Color(0xFF6B7480)),
-    AppThemeOption('lavender', L('Lavender', 'लैवेंडर'), Color(0xFF7E5BB5)),
-    AppThemeOption('turquoise', L('Turquoise', 'फ़िरोज़ी'), Color(0xFF0E8C8C)),
-    AppThemeOption('rose_gold', L('Rose Gold', 'रोज़ गोल्ड'), Color(0xFFB76E79)),
-    AppThemeOption('ivory_bronze', L('Ivory Bronze', 'आइवरी ब्रॉन्ज़'), Color(0xFF8C5A2B)),
-    AppThemeOption('midnight_indigo', L('Midnight Indigo', 'मिडनाइट इंडिगो'), Color(0xFF2E3A87)),
+    AppThemeOption('pearl_gold', L('Pearl Gold', 'पर्ल गोल्ड'), Color(0xFFB8860B), Color(0xFFFFFFFF)),
+    AppThemeOption('royal_blue', L('Royal Blue', 'रॉयल ब्लू'), Color(0xFF1F4FA3), Color(0xFFEAF1FF)),
+    AppThemeOption('emerald', L('Emerald', 'एमरल्ड'), Color(0xFF0B7A5A), Color(0xFFE9F7F0)),
+    AppThemeOption('burgundy', L('Royal Burgundy', 'रॉयल बरगंडी'), Color(0xFF7B1E3A), Color(0xFFFCEFF3)),
+    AppThemeOption('platinum', L('Platinum', 'प्लैटिनम'), Color(0xFF5F6B7A), Color(0xFFEFF1F5)),
+    AppThemeOption('lavender', L('Lavender', 'लैवेंडर'), Color(0xFF7E5BB5), Color(0xFFF3EEFC)),
+    AppThemeOption('turquoise', L('Turquoise', 'फ़िरोज़ी'), Color(0xFF0E8C8C), Color(0xFFE6F8F8)),
+    AppThemeOption('rose_gold', L('Rose Gold', 'रोज़ गोल्ड'), Color(0xFFB76E79), Color(0xFFFDEFF0)),
+    AppThemeOption('ivory_bronze', L('Ivory Bronze', 'आइवरी ब्रॉन्ज़'), Color(0xFF8C5A2B), Color(0xFFFBF9F4)),
+    AppThemeOption('midnight_indigo', L('Midnight Indigo', 'मिडनाइट इंडिगो'), Color(0xFF2E3A87), Color(0xFFECEEFB)),
   ];
 
   static AppThemeOption byId(String? id) {
@@ -48,11 +50,19 @@ class AppThemes {
   static double _b(Color c) => (c.value & 0xFF).toDouble();
 
   /// 3x3 colour matrix (row by row) for a theme. It turns the app's gold into
-  /// the theme colour and leaves white, black and every grey unchanged.
-  /// Built as: identity + (target - gold) * w, where w ignores greys.
+  /// the theme colour, white backgrounds into the theme's light tint, and
+  /// leaves black as it is.
+  /// Built in two steps: (1) identity + (target - gold) * w, where w ignores
+  /// greys, so white and black are kept; (2) every channel is scaled so that
+  /// white becomes the tint. Step 1 aims slightly higher so that after step 2
+  /// the gold lands exactly on the theme colour.
   static List<double> matrix3(AppThemeOption o) {
     final g = [_r(baseGold), _g(baseGold), _b(baseGold)];
-    final t = [_r(o.color), _g(o.color), _b(o.color)];
+    final acc = [_r(o.color), _g(o.color), _b(o.color)];
+    final tn = [_r(o.tint) / 255, _g(o.tint) / 255, _b(o.tint) / 255];
+    final t = [
+      for (var i = 0; i < 3; i++) (acc[i] / tn[i]).clamp(0.0, 255.0).toDouble(),
+    ];
     final mean = (g[0] + g[1] + g[2]) / 3;
     final c0 = [g[0] - mean, g[1] - mean, g[2] - mean];
     final n = c0[0] * c0[0] + c0[1] * c0[1] + c0[2] * c0[2];
@@ -61,7 +71,7 @@ class AppThemes {
     final m = List<double>.filled(9, 0);
     for (var i = 0; i < 3; i++) {
       for (var j = 0; j < 3; j++) {
-        m[i * 3 + j] = (i == j ? 1.0 : 0.0) + d[i] * w[j];
+        m[i * 3 + j] = tn[i] * ((i == j ? 1.0 : 0.0) + d[i] * w[j]);
       }
     }
     return m;
@@ -136,9 +146,23 @@ class AppThemeStore extends ChangeNotifier {
   late ColorFilter _filter = _build(_current, false);
   late ColorFilter _inverse = _build(_current, true);
 
+  static final ColorFilter _identity = ColorFilter.matrix(
+    AppThemes.filterMatrix(const [1, 0, 0, 0, 1, 0, 0, 0, 1]),
+  );
+
+  /// While true (the opening logo screen) the app is drawn in its original
+  /// colours, so the logo never changes colour.
+  bool _suspended = true;
+
   AppThemeOption get current => _current;
-  ColorFilter get filter => _filter;
-  ColorFilter get inverseFilter => _inverse;
+  ColorFilter get filter => _suspended ? _identity : _filter;
+  ColorFilter get inverseFilter => _suspended ? _identity : _inverse;
+
+  void setSuspended(bool v) {
+    if (v == _suspended) return;
+    _suspended = v;
+    notifyListeners();
+  }
 
   static ColorFilter _build(AppThemeOption o, bool inverse) {
     final m = AppThemes.matrix3(o);

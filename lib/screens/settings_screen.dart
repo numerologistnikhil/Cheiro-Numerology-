@@ -76,16 +76,29 @@ class SettingsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: SegmentedButton<bool>(
-                      segments: const [
-                        ButtonSegment<bool>(value: false, label: Text('English')),
-                        ButtonSegment<bool>(value: true, label: Text('हिन्दी')),
-                      ],
-                      selected: {s.hindi},
-                      onSelectionChanged: (v) => s.setHindi(v.first),
+                  for (final lang in AppLanguages.all)
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      leading: Icon(
+                        lang.hindi == s.hindi
+                            ? Icons.radio_button_checked
+                            : Icons.radio_button_off,
+                        color: _gold,
+                      ),
+                      title: Text(lang.native,
+                          style: const TextStyle(fontWeight: FontWeight.w700)),
+                      subtitle: lang.native == lang.english
+                          ? null
+                          : Text(lang.english),
+                      onTap: () => s.setHindi(lang.hindi),
                     ),
+                  const SizedBox(height: 4),
+                  Text(
+                    s.t(const L('More languages will be added soon.',
+                        'और भाषाएँ जल्द जोड़ी जाएँगी।')),
+                    style: const TextStyle(
+                        fontSize: 12.5, fontStyle: FontStyle.italic),
                   ),
                   const SizedBox(height: 8),
                   Text(

@@ -15,6 +15,7 @@ import 'knowledge_pack.dart';
 import 'lo_shu.dart';
 import 'lo_shu_more.dart';
 import 'lo_shu_text.dart';
+import 'heavy_numbers.dart';
 import 'lucky_kit.dart';
 import 'numerology_engine.dart';
 // numerology_tools.dart also has a NameSuggestion class (baby names); the report
@@ -692,7 +693,22 @@ class StoryReport {
     final totalLine = h
         ? '$subject का कुल अंक ${r.total} है, जो घटकर ${r.root} बनता है।'
         : 'The total for $subject is ${r.total}, which reduces to ${r.root}.';
-    out.add(await _box(totalLine, _relationLine(r.root, psychic, subject)));
+    final heavy = HeavyNumbers.isHeavy(r.total);
+    final relLine = _relationLine(r.root, psychic, subject);
+    out.add(await _box(
+      totalLine,
+      heavy
+          ? (h
+              ? 'मूलांक के हिसाब से: $relLine'
+              : 'By the root number: $relLine')
+          : relLine,
+    ));
+    if (heavy) {
+      out.add(await _box(
+        h ? 'भारी अंक की सावधानी' : 'A heavy number: please read this',
+        HeavyNumbers.note(r.total).t(h),
+      ));
+    }
     if (!h) {
       final e = KnowledgePack.compoundEntry(r.total);
       if (e != null) {

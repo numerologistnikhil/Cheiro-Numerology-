@@ -348,13 +348,6 @@ class _PremiumHomeState extends State<PremiumHome> {
                 ),
               ),
               PopupMenuItem(
-                value: s.hindi ? 'english' : 'hindi',
-                child: ListTile(
-                  leading: const Icon(Icons.translate),
-                  title: Text(s.hindi ? 'Switch to English' : 'हिन्दी में बदलें'),
-                ),
-              ),
-              PopupMenuItem(
                 value: 'referral',
                 child: ListTile(
                   leading: const Icon(Icons.card_giftcard),

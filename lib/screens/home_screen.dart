@@ -38,7 +38,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final nameController = ProfileController.name();
   final mobileController = ProfileController.mobile();
-  final vehicleController = TextEditingController();
+  final vehicleController = ProfileController.vehicle();
 
   DateTime? dob;
   NumerologyResult? nameResult;
@@ -228,12 +228,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 prefixIcon: Icon(Icons.phone_android),
               ),
             )),
-            const SizedBox(height: 12),
-            TextField(
-              controller: vehicleController,
-              decoration: const InputDecoration(
-                labelText: 'Vehicle Number',
-                prefixIcon: Icon(Icons.directions_car_outlined),
+            ProfileHide(
+              vehicle: true,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: TextField(
+                  controller: vehicleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Vehicle Number',
+                    prefixIcon: Icon(Icons.directions_car_outlined),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 18),

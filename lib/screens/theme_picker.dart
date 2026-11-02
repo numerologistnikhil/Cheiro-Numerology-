@@ -71,7 +71,12 @@ class ThemePicker extends StatelessWidget {
               width: 46,
               height: 46,
               decoration: BoxDecoration(
-                color: AppThemes.swatch(o),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [o.color, o.color, o.tint, o.tint],
+                  stops: const [0, 0.5, 0.5, 1],
+                ),
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: selected ? const Color(0xFF2B2418) : Colors.black26,
@@ -79,7 +84,9 @@ class ThemePicker extends StatelessWidget {
                 ),
               ),
               child: selected
-                  ? const Icon(Icons.check, color: Colors.white, size: 24)
+                  ? Icon(Icons.check,
+                      color: o.id == 'pearl_gold' ? o.color : Colors.white,
+                      size: 24)
                   : null,
             ),
             const SizedBox(height: 5),

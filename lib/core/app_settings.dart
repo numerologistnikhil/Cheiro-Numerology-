@@ -3,6 +3,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'root_profiles.dart';
 
+/// One language the customer can choose. New languages are added to
+/// [AppLanguages.all]; the settings list shows them automatically.
+class AppLanguage {
+  final String code;
+  final String english;
+  final String native;
+  final bool hindi; // today the app has two text sets: English and Hindi
+  const AppLanguage(this.code, this.english, this.native, this.hindi);
+}
+
+class AppLanguages {
+  static const List<AppLanguage> all = [
+    AppLanguage('en', 'English', 'English', false),
+    AppLanguage('hi', 'Hindi', 'हिन्दी', true),
+  ];
+}
+
 /// App-wide settings. For now: the app language (English or Hindi).
 class AppSettings extends ChangeNotifier {
   AppSettings._();

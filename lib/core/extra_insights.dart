@@ -5,6 +5,8 @@
 //
 // Every text has English (en) and Hindi (hi). Use .of(isHindi) to pick one.
 
+import 'heavy_numbers.dart';
+
 class Bi {
   final String en;
   final String hi;
@@ -344,6 +346,9 @@ class NameScore {
       wealth += 5;
     } else if (_warning.contains(compound)) {
       luck = 35;
+      wealth -= 10;
+    } else if (HeavyNumbers.isHeavy(compound)) {
+      luck = 40;
       wealth -= 10;
     }
     if (wealth > 100) wealth = 100;
