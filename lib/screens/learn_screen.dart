@@ -3,7 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/app.dart';
 import '../core/app_settings.dart';
 import '../core/learn_content.dart';
-import '../core/numerology_tools.dart';
+import '../core/quiz_content.dart';
+import '../core/root_profiles.dart' show L;
 import 'ui_kit.dart';
 
 class LearnScreen extends StatefulWidget {
@@ -117,7 +118,9 @@ class _LearnScreenState extends State<LearnScreen> {
             MaterialPageRoute(builder: (_) => const QuizScreen()),
           ),
           icon: const Icon(Icons.quiz_outlined),
-          label: Text('Start Quiz (${NumerologyTools.quiz.length} questions)'),
+          label: Text(s.hindi
+              ? 'क्विज़ शुरू करें (${QuizContent.questions.length} प्रश्न)'
+              : 'Start Quiz (${QuizContent.questions.length} questions)'),
         ),
       ),
     ]);
@@ -137,7 +140,7 @@ class _QuizScreenState extends State<QuizScreen> {
   int _score = 0;
   int? _picked;
 
-  List<QuizQuestion> get _qs => NumerologyTools.quiz;
+  List<QuizQ> get _qs => QuizContent.questions;
 
   void _pick(int i) {
     if (_picked != null) return;
@@ -162,50 +165,43 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
-  Widget _finished() {
+  Widget _finished(AppSettings s) {
     final total = _qs.length;
-    String msg;
-    if (_score >= total * 0.8) {
-      msg = 'Excellent. You know your basics well.';
-    } else if (_score >= total * 0.5) {
-      msg = 'Good effort. Revisit the lessons and try again.';
-    } else {
-      msg = 'A good start. Read the lessons once more and retry.';
-    }
+    final L msg = _score >= total * 0.8
+        ? QuizContent.great
+        : (_score >= total * 0.5 ? QuizContent.good : QuizContent.start);
     return PageShell(
-      title: 'Quiz Result',
+      title: s.t(QuizContent.resultTitle),
       children: [
         const SizedBox(height: 20),
         Center(child: NumberBadge(_score, size: 90)),
         const SizedBox(height: 16),
         Center(
           child: Text(
-            'You scored $_score out of $total',
+            s.hindi ? '$total में से $_score अंक' : 'You scored $_score out of $total',
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         const SizedBox(height: 8),
-        Center(child: Text(msg, textAlign: TextAlign.center)),
+        Center(child: Text(s.t(msg), textAlign: TextAlign.center)),
         const SizedBox(height: 24),
-        FilledButton(onPressed: _restart, child: const Text('Try Again')),
+        FilledButton(onPressed: _restart, child: Text(s.t(QuizContent.tryAgain))),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_index >= _qs.length) return _finished();
+    final s = AppLang.of(context);
+    if (_index >= _qs.length) return _finished(s);
     final q = _qs[_index];
     final picked = _picked;
     return PageShell(
-      title: 'Quiz',
+      title: s.t(QuizContent.title),
       children: [
         Text(
-          'Question ${_index + 1} of ${_qs.length}',
-          style: const TextStyle(
-            fontWeight: FontWeight.w800,
-            color: AnkdharaColors.gold,
-          ),
+          s.hindi ? 'प्रश्न ${_index + 1} / ${_qs.length}' : 'Question ${_index + 1} of ${_qs.length}',
+          style: const TextStyle(fontWeight: FontWeight.w800, color: AnkdharaColors.gold),
         ),
         const SizedBox(height: 10),
         LinearProgressIndicator(
@@ -215,7 +211,7 @@ class _QuizScreenState extends State<QuizScreen> {
           minHeight: 6,
         ),
         const SizedBox(height: 20),
-        Text(q.question, style: Theme.of(context).textTheme.titleLarge),
+        Text(s.t(q.question), style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 16),
         for (var i = 0; i < q.options.length; i++)
           Padding(
@@ -225,9 +221,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   ? Colors.white
                   : (i == q.answer
                       ? const Color(0xFFDDEFD9)
-                      : (i == picked
-                          ? const Color(0xFFF6D9D6)
-                          : Colors.white)),
+                      : (i == picked ? const Color(0xFFF6D9D6) : Colors.white)),
               borderRadius: BorderRadius.circular(16),
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
@@ -239,7 +233,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: AnkdharaColors.goldLine),
                   ),
-                  child: Text(q.options[i], style: const TextStyle(fontSize: 15.5)),
+                  child: Text(s.t(q.options[i]), style: const TextStyle(fontSize: 15.5)),
                 ),
               ),
             ),
@@ -247,13 +241,13 @@ class _QuizScreenState extends State<QuizScreen> {
         if (picked != null) ...[
           const SizedBox(height: 6),
           Text(
-            picked == q.answer ? 'Correct. ${q.explanation}' : 'Not quite. ${q.explanation}',
+            '${s.t(picked == q.answer ? QuizContent.correct : QuizContent.wrong)} ${s.t(q.explanation)}',
             style: const TextStyle(fontSize: 14, height: 1.5),
           ),
           const SizedBox(height: 16),
           FilledButton(
             onPressed: _next,
-            child: Text(_index == _qs.length - 1 ? 'See Result' : 'Next'),
+            child: Text(s.t(_index == _qs.length - 1 ? QuizContent.seeResult : QuizContent.next)),
           ),
         ],
       ],
