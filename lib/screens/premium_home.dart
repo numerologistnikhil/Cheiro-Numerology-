@@ -18,6 +18,7 @@ import 'home_screen.dart';
 import 'learn_screen.dart';
 import 'profile_screen.dart';
 import 'lo_shu_screen.dart';
+import 'gemstone_screen.dart';
 import 'lucky_kit_screen.dart';
 import 'name_correction_screen.dart';
 import 'number_check_screens.dart';
@@ -116,6 +117,8 @@ const _steps = <_Step>[
     [
       _F('remedies', L('Remedies', 'उपाय'),
           L('Colours, stones, habits', 'रंग, रत्न, आदतें'), Icons.diamond_outlined),
+      _F('gems', L('Gemstones', 'रत्न'),
+          L('Stone, finger, weight', 'रत्न, उँगली, वज़न'), Icons.diamond),
       _F('profession', L('Career', 'करियर'),
           L('Work that suits you', 'आपके लायक काम'), Icons.work_outline),
       _F('learn', L('Learn and Quiz', 'सीखिए और क्विज़'),
@@ -191,6 +194,9 @@ class _PremiumHomeState extends State<PremiumHome> {
         break;
       case 'luckykit':
         _go(const LuckyKitScreen());
+        break;
+      case 'gems':
+        _go(const GemstoneScreen());
         break;
       case 'business':
         _go(const BusinessScreen());

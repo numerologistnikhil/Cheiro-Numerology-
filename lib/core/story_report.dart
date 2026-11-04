@@ -15,6 +15,7 @@ import 'knowledge_pack.dart';
 import 'lo_shu.dart';
 import 'lo_shu_more.dart';
 import 'lo_shu_text.dart';
+import 'gemstone_guide.dart';
 import 'heavy_numbers.dart';
 import 'lucky_kit.dart';
 import 'numerology_engine.dart';
@@ -918,6 +919,50 @@ class StoryReport {
     return out;
   }
 
+  Future<List<pw.Widget>> _gemSection(int psychic, int destiny) async {
+    final h = hindi;
+    final out = <pw.Widget>[];
+    out.add(await _h1(GemstoneGuide.title.t(h)));
+    out.add(await _p(GemstoneGuide.intro.t(h)));
+
+    Future<void> stone(GemInfo g, String label) async {
+      out.add(await _box(
+        '$label: ${g.gem.t(h)}',
+        '${GemstoneGuide.planetLabel.t(h)}: ${g.planet.t(h)}',
+      ));
+      out.add(await _facts([
+        MapEntry(GemstoneGuide.substitute.t(h), g.alt.t(h)),
+        MapEntry(GemstoneGuide.fingerLabel.t(h),
+            GemstoneGuide.fingerNames[g.finger].t(h)),
+        MapEntry(GemstoneGuide.metalLabel.t(h), g.metal.t(h)),
+        MapEntry(GemstoneGuide.dayLabel.t(h), g.day.t(h)),
+        MapEntry(GemstoneGuide.weightLabel.t(h), g.weight.t(h)),
+        MapEntry(GemstoneGuide.mantraLabel.t(h), g.mantra.t(h)),
+        MapEntry(GemstoneGuide.cautionLabel.t(h), g.caution.t(h)),
+      ], labelW: 120));
+    }
+
+    final m = GemstoneGuide.gems[psychic];
+    final b = GemstoneGuide.gems[destiny];
+    if (m != null) await stone(m, GemstoneGuide.mainStone.t(h));
+    if (b != null && m != null && b.root != m.root) {
+      await stone(b, GemstoneGuide.secondStone.t(h));
+    }
+
+    out.add(await _box(GemstoneGuide.handTitle.t(h), GemstoneGuide.handBody.t(h)));
+    out.add(await _box(GemstoneGuide.weightTitle.t(h), GemstoneGuide.weightIntro.t(h)));
+    out.add(await _facts([
+      for (final row in GemstoneGuide.ageTable) MapEntry(row[0].t(h), row[1].t(h)),
+    ], labelW: 120));
+    out.add(await _box(
+      GemstoneGuide.stepsTitle.t(h),
+      GemstoneGuide.steps.map((e) => e.t(h)).join('\n'),
+    ));
+    out.add(await _box(GemstoneGuide.buyTitle.t(h), GemstoneGuide.buyBody.t(h)));
+    out.add(await _p(GemstoneGuide.safetyBody.t(h)));
+    return out;
+  }
+
   Future<List<pw.Widget>> _luckyKitSection(int psychic, int destiny) async {
     final h = hindi;
     final out = <pw.Widget>[];
@@ -1278,6 +1323,11 @@ class StoryReport {
         MapEntry(ReportText.daanLabel.t(h), hab.daan.t(h)),
         MapEntry(ReportText.avoidLabel.t(h), hab.avoid.t(h)),
       ]));
+    }
+
+    // Gemstone guide
+    if (lite < 2) {
+      w.addAll(await _gemSection(psychic, destiny));
     }
 
     // Lucky number kit and house number
