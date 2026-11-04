@@ -1,59 +1,127 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../core/app.dart';
+import '../core/app_settings.dart';
+import '../core/learn_content.dart';
 import '../core/numerology_tools.dart';
 import 'ui_kit.dart';
 
-class LearnScreen extends StatelessWidget {
+class LearnScreen extends StatefulWidget {
   const LearnScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return PageShell(
-      title: 'Learn Numerology',
-      children: [
-        const SectionLabel('Lessons'),
-        for (final l in NumerologyTools.lessons)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Card(
-              child: Theme(
-                data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                child: ExpansionTile(
-                  tilePadding: const EdgeInsets.symmetric(horizontal: 18),
-                  childrenPadding: const EdgeInsets.fromLTRB(18, 0, 18, 16),
-                  iconColor: AnkdharaColors.gold,
-                  collapsedIconColor: AnkdharaColors.gold,
-                  title: Text(
-                    l.title,
-                    style: const TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        l.body,
-                        style: const TextStyle(fontSize: 14.5, height: 1.6),
-                      ),
-                    ),
-                  ],
+  State<LearnScreen> createState() => _LearnScreenState();
+}
+
+class _LearnScreenState extends State<LearnScreen> {
+  static const _key = 'learn_read_ids';
+  final Set<String> _read = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      final ids = p.getStringList(_key) ?? const <String>[];
+      if (mounted) setState(() => _read.addAll(ids));
+    } catch (_) {}
+  }
+
+  Future<void> _toggle(String id) async {
+    setState(() {
+      if (!_read.remove(id)) _read.add(id);
+    });
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setStringList(_key, _read.toList());
+    } catch (_) {}
+  }
+
+  Widget _lesson(AppSettings s, int no, LearnLesson l) {
+    final done = _read.contains(l.id);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Card(
+        child: Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+            childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            expandedCrossAxisAlignment: CrossAxisAlignment.start,
+            iconColor: AnkdharaColors.gold,
+            collapsedIconColor: AnkdharaColors.gold,
+            leading: Icon(
+              done ? Icons.check_circle : Icons.menu_book_outlined,
+              color: AnkdharaColors.gold,
+            ),
+            title: Text('$no. ${s.t(l.title)}',
+                style: const TextStyle(fontWeight: FontWeight.w700)),
+            subtitle: Text(s.t(l.gist), style: const TextStyle(fontSize: 12.5)),
+            children: [
+              Text(s.t(l.body), style: const TextStyle(fontSize: 14.5, height: 1.6)),
+              const SizedBox(height: 12),
+              InfoRow(Icons.edit_note, s.t(LearnContent.tryLabel), s.t(l.tryIt)),
+              const SizedBox(height: 6),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: () => _toggle(l.id),
+                  icon: Icon(done ? Icons.check_circle : Icons.check_circle_outline),
+                  label: Text(s.t(done ? LearnContent.doneLabel : LearnContent.markRead)),
                 ),
               ),
-            ),
-          ),
-        const SectionLabel('Test yourself'),
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton.icon(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const QuizScreen()),
-            ),
-            icon: const Icon(Icons.quiz_outlined),
-            label: Text('Start Quiz (${NumerologyTools.quiz.length} questions)'),
+            ],
           ),
         ),
-      ],
+      ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = AppLang.of(context);
+    final all = LearnContent.lessons;
+    final done = all.where((l) => _read.contains(l.id)).length;
+    final kids = <Widget>[
+      Note(s.t(LearnContent.intro)),
+      const SizedBox(height: 10),
+      Text('$done / ${all.length} ${s.t(LearnContent.progress)}',
+          style: const TextStyle(fontWeight: FontWeight.w800, color: AnkdharaColors.gold)),
+      const SizedBox(height: 6),
+      LinearProgressIndicator(
+        value: all.isEmpty ? 0 : done / all.length,
+        color: AnkdharaColors.gold,
+        backgroundColor: AnkdharaColors.cream,
+        minHeight: 6,
+      ),
+    ];
+    var no = 0;
+    for (var lv = 1; lv <= 3; lv++) {
+      kids.add(SectionLabel(s.t(LearnContent.levelNames[lv - 1])));
+      for (final l in all.where((x) => x.level == lv)) {
+        no++;
+        kids.add(_lesson(s, no, l));
+      }
+    }
+    kids.addAll([
+      SectionLabel(s.t(LearnContent.quizLabel)),
+      SizedBox(
+        width: double.infinity,
+        child: FilledButton.icon(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const QuizScreen()),
+          ),
+          icon: const Icon(Icons.quiz_outlined),
+          label: Text('Start Quiz (${NumerologyTools.quiz.length} questions)'),
+        ),
+      ),
+    ]);
+    return PageShell(title: s.t(LearnContent.screenTitle), children: kids);
   }
 }
 
