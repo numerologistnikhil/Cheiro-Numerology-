@@ -29,6 +29,7 @@ import 'report_pages.dart';
 import 'report_summary.dart';
 import 'report_text.dart';
 import 'root_profiles.dart';
+import 'rudraksha_guide.dart';
 import 'year_details.dart';
 
 /// One picture of text (used for Hindi text and for the footer lines).
@@ -919,6 +920,44 @@ class StoryReport {
     return out;
   }
 
+  Future<List<pw.Widget>> _rudrakshaSection(int psychic, int destiny) async {
+    final h = hindi;
+    final out = <pw.Widget>[];
+    out.add(await _h1(RudrakshaGuide.title.t(h)));
+    out.add(await _p(RudrakshaGuide.intro.t(h)));
+
+    final shown = <int>{};
+    Future<void> add(int root, String label) async {
+      for (final m in RudrakshaGuide.forRoot[root] ?? const <int>[]) {
+        final r = RudrakshaGuide.mukhis[m];
+        if (r == null || !shown.add(m)) continue;
+        out.add(await _box('$label: ${r.mukhi} ${RudrakshaGuide.mukhiLabel.t(h)}',
+            '${RudrakshaGuide.deityLabel.t(h)}: ${r.deity.t(h)}'));
+        out.add(await _facts([
+          MapEntry(RudrakshaGuide.planetLabel.t(h), r.planet.t(h)),
+          MapEntry(RudrakshaGuide.mantraLabel.t(h), r.mantra.t(h)),
+          MapEntry(RudrakshaGuide.focusLabel.t(h), r.focus.t(h)),
+          MapEntry(RudrakshaGuide.noteLabel.t(h), r.note.t(h)),
+        ], labelW: 120));
+      }
+    }
+
+    await add(psychic, RudrakshaGuide.forYou.t(h));
+    await add(destiny, RudrakshaGuide.forYou2.t(h));
+    out.add(await _box(RudrakshaGuide.universal.t(h), RudrakshaGuide.universalBody.t(h)));
+    out.add(await _box(
+      RudrakshaGuide.energiseTitle.t(h),
+      RudrakshaGuide.energise.map((e) => e.t(h)).join('\n'),
+    ));
+    out.add(await _box(RudrakshaGuide.rulesTitle.t(h), RudrakshaGuide.rulesBody.t(h)));
+    out.add(await _box(
+      RudrakshaGuide.fakeTitle.t(h),
+      RudrakshaGuide.fake.map((e) => '- ${e.t(h)}').join('\n'),
+    ));
+    out.add(await _p(RudrakshaGuide.safetyBody.t(h)));
+    return out;
+  }
+
   Future<List<pw.Widget>> _gemSection(int psychic, int destiny) async {
     final h = hindi;
     final out = <pw.Widget>[];
@@ -1332,6 +1371,7 @@ class StoryReport {
 
     // Lucky number kit and house number
     if (lite < 2) {
+      w.addAll(await _rudrakshaSection(psychic, destiny));
       w.addAll(await _luckyKitSection(psychic, destiny));
     }
 

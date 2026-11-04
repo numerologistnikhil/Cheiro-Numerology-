@@ -25,6 +25,7 @@ import 'number_check_screens.dart';
 import 'predictions_screen.dart';
 import 'profession_screen.dart';
 import 'remedies_screen.dart';
+import 'rudraksha_screen.dart';
 import 'report_builder_screen.dart';
 import 'settings_screen.dart';
 
@@ -119,6 +120,8 @@ const _steps = <_Step>[
           L('Colours, stones, habits', 'रंग, रत्न, आदतें'), Icons.diamond_outlined),
       _F('gems', L('Gemstones', 'रत्न'),
           L('Stone, finger, weight', 'रत्न, उँगली, वज़न'), Icons.diamond),
+      _F('rudraksha', L('Rudraksha', 'रुद्राक्ष'),
+          L('Which bead, how to wear', 'कौन सा मनका, कैसे पहनें'), Icons.blur_circular),
       _F('profession', L('Career', 'करियर'),
           L('Work that suits you', 'आपके लायक काम'), Icons.work_outline),
       _F('learn', L('Learn and Quiz', 'सीखिए और क्विज़'),
@@ -197,6 +200,9 @@ class _PremiumHomeState extends State<PremiumHome> {
         break;
       case 'gems':
         _go(const GemstoneScreen());
+        break;
+      case 'rudraksha':
+        _go(const RudrakshaScreen());
         break;
       case 'business':
         _go(const BusinessScreen());
