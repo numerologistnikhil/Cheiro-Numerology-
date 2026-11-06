@@ -10,12 +10,14 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 import 'angel_numbers.dart';
+import 'app_style.dart';
 import 'extra_insights.dart' show NameScore;
 import 'knowledge_pack.dart';
 import 'lo_shu.dart';
 import 'lo_shu_more.dart';
 import 'lo_shu_text.dart';
 import 'gemstone_guide.dart';
+import 'health_guide.dart';
 import 'heavy_numbers.dart';
 import 'lucky_kit.dart';
 import 'numerology_engine.dart';
@@ -23,6 +25,9 @@ import 'numerology_engine.dart';
 // uses the one from name_suggester.dart.
 import 'numerology_tools.dart' hide NameSuggestion;
 import 'pricing.dart';
+import 'pythagorean.dart';
+import 'signature_image.dart' show SignatureStore;
+import 'signature_reading.dart';
 import 'report_border.dart';
 import 'report_options.dart';
 import 'report_pages.dart';
@@ -958,6 +963,127 @@ class StoryReport {
     return out;
   }
 
+  Future<List<pw.Widget>> _westernSection(String name, DateTime dob) async {
+    final h = hindi;
+    final c = Pythagorean.chart(dob, name);
+    final out = <pw.Widget>[];
+    out.add(await _h1(WesternText.title.t(h)));
+    out.add(await _p(WesternText.intro.t(h)));
+    String line(L lab, int n, L text, {int? raw}) {
+      final r = (raw != null && raw != n) ? '$raw/$n' : '$n';
+      return '${lab.t(h)}: $r. ${text.t(h)}';
+    }
+
+    final rows = <String>[
+      line(WesternText.lifePath, c.lifePath, WesternText.core[c.lifePath]!, raw: c.lifePathRaw),
+      line(WesternText.birthday, c.birthday, WesternText.core[c.birthday]!),
+    ];
+    if (c.expression != null) {
+      rows.add(line(WesternText.expression, c.expression!, WesternText.core[c.expression!]!,
+          raw: c.expressionRaw));
+      if (c.soulUrge != null) {
+        rows.add(line(WesternText.soul, c.soulUrge!, WesternText.inner[c.soulUrge!]!));
+      }
+      if (c.personality != null) {
+        rows.add(line(WesternText.personality, c.personality!, WesternText.outer[c.personality!]!));
+      }
+      if (c.maturity != null) {
+        rows.add(line(WesternText.maturity, c.maturity!, WesternText.core[c.maturity!]!));
+      }
+    }
+    for (final r in rows) {
+      out.add(await _p(r));
+    }
+    if (c.karmicDebts.isNotEmpty) {
+      out.add(await _box(
+        WesternText.karmicTitle.t(h),
+        c.karmicDebts.map((k) => WesternText.karmicText[k]!.t(h)).join('\n'),
+      ));
+    }
+    out.add(await _box(WesternText.eastWest.t(h), WesternText.eastWestBody.t(h)));
+    return out;
+  }
+
+  Future<List<pw.Widget>> _healthSection(int psychic, int destiny) async {
+    final h = hindi;
+    final out = <pw.Widget>[];
+    out.add(await _h1(HealthGuide.title.t(h)));
+    out.add(await _p(HealthGuide.intro.t(h)));
+    final shown = <int>{};
+    Future<void> add(int root, String head) async {
+      final i = HealthGuide.byRoot[root];
+      if (i == null || !shown.add(root)) return;
+      out.add(await _box('$head: $root (${i.planet.t(h)})', i.areas.t(h)));
+      out.add(await _facts([
+        MapEntry(HealthGuide.watchLabel.t(h), i.watch.t(h)),
+        MapEntry(HealthGuide.habitsLabel.t(h), i.habits.t(h)),
+        MapEntry(HealthGuide.checkLabel.t(h), i.checkup.t(h)),
+      ], labelW: 120));
+    }
+
+    await add(psychic, HealthGuide.mulankHead.t(h));
+    await add(destiny, HealthGuide.bhagyankHead.t(h));
+    out.add(await _box(HealthGuide.doctorTitle.t(h), HealthGuide.doctorBody.t(h)));
+    return out;
+  }
+
+  Future<List<pw.Widget>> _precautionsSection() async {
+    final h = hindi;
+    final out = <pw.Widget>[];
+    out.add(await _h1(HealthGuide.precTitle.t(h)));
+    out.add(await _p(HealthGuide.precIntro.t(h)));
+    out.add(await _box(
+      HealthGuide.precTitle.t(h),
+      HealthGuide.precautions.map((e) => '- ${e.t(h)}').join('\n'),
+    ));
+    return out;
+  }
+
+  Future<List<pw.Widget>> _signatureSection() async {
+    final h = hindi;
+    final photo = SignatureStore.photo;
+    final reading = SignatureStore.reading;
+    if (!SignatureStore.include || photo == null || reading is! SignatureReading) {
+      return const [];
+    }
+    final out = <pw.Widget>[];
+    out.add(await _h1(SignatureReading.pdfTitle.t(h)));
+    out.add(await _p(SignatureReading.intro.t(h)));
+    out.add(pw.Inseparable(
+      canSpan: false,
+      child: pw.Container(
+        margin: const pw.EdgeInsets.only(bottom: 10),
+        padding: const pw.EdgeInsets.all(8),
+        decoration: _boxDeco(),
+        child: pw.Column(children: [
+          await _text(SignatureReading.pdfPhoto.t(h) + (SignatureStore.name.isEmpty ? '' : ': ${SignatureStore.name}'),
+              size: 11, bold: true, color: _goldI, width: _boxWidth),
+          pw.SizedBox(height: 6),
+          pw.Center(child: pw.Image(pw.MemoryImage(photo), height: 120, fit: pw.BoxFit.contain)),
+        ]),
+      ),
+    ));
+    for (final f in reading.findings) {
+      out.add(await _box(
+        f.title.t(h),
+        '${SignatureReading.measuredLabel.t(h)}: ${f.measured}\n${f.reading.t(h)}\n${SignatureReading.tipLabel.t(h)}: ${f.tip.t(h)}',
+      ));
+    }
+    final n = reading.number;
+    if (n != null) {
+      out.add(await _box(
+        '${SignatureReading.numberHead.t(h)}: ${n.total}/${n.root}',
+        SignatureReading.relationLine(n).t(h),
+      ));
+    }
+    out.add(await _box(
+      SignatureReading.improveHead.t(h),
+      SignatureReading.improve.map((e) => '- ${e.t(h)}').join('\n'),
+    ));
+    out.add(await _p(SignatureReading.honest.t(h)));
+    return out;
+  }
+
   Future<List<pw.Widget>> _gemSection(int psychic, int destiny) async {
     final h = hindi;
     final out = <pw.Widget>[];
@@ -1362,6 +1488,22 @@ class StoryReport {
         MapEntry(ReportText.daanLabel.t(h), hab.daan.t(h)),
         MapEntry(ReportText.avoidLabel.t(h), hab.avoid.t(h)),
       ]));
+    }
+
+    // Signature analysis (only when the customer added it)
+    if (lite < 2) {
+      w.addAll(await _signatureSection());
+    }
+
+    // Health and precautions
+    if (lite < 2) {
+      w.addAll(await _healthSection(psychic, destiny));
+      w.addAll(await _precautionsSection());
+    }
+
+    // Western (Pythagorean) chart
+    if (lite < 2 && AppStyle.instance.showWestern) {
+      w.addAll(await _westernSection(name, dob));
     }
 
     // Gemstone guide

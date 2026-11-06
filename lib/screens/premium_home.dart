@@ -1,3 +1,4 @@
+import '../core/app_style.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -26,6 +27,11 @@ import 'predictions_screen.dart';
 import 'profession_screen.dart';
 import 'remedies_screen.dart';
 import 'rudraksha_screen.dart';
+import 'western_screen.dart';
+import 'health_screen.dart';
+import 'famous_screen.dart';
+import 'cheiro_timing_screen.dart';
+import 'signature_screen.dart';
 import 'report_builder_screen.dart';
 import 'settings_screen.dart';
 
@@ -92,6 +98,8 @@ const _steps = <_Step>[
           L('Business name and number', 'व्यापार का नाम और अंक'), Icons.storefront_outlined),
       _F('compatibility', L('Match', 'मिलान'),
           L('Two people together', 'दो लोगों का मेल'), Icons.favorite_border),
+      _F('western', L('Western Chart', 'पश्चिमी चार्ट'),
+          L('Life Path, Soul Urge, master numbers', 'लाइफ पाथ, सोल अर्ज, मास्टर अंक'), Icons.public),
       _F('loshu', L('Lo Shu Grid', 'लो शू ग्रिड'),
           L('Strong and missing numbers', 'मज़बूत और कमज़ोर अंक'), Icons.grid_view),
     ],
@@ -122,8 +130,16 @@ const _steps = <_Step>[
           L('Stone, finger, weight', 'रत्न, उँगली, वज़न'), Icons.diamond),
       _F('rudraksha', L('Rudraksha', 'रुद्राक्ष'),
           L('Which bead, how to wear', 'कौन सा मनका, कैसे पहनें'), Icons.blur_circular),
+      _F('signature', L('Signature', 'हस्ताक्षर'),
+          L('Upload and analyse your signature', 'हस्ताक्षर डालकर विश्लेषण'), Icons.draw_outlined),
+      _F('timing', L('Cheiro Timing', 'कीरो टाइमिंग'),
+          L('Year, month, day with every step', 'वर्ष, महीना, दिन - हर चरण के साथ'), Icons.schedule),
+      _F('health', L('Health Care', 'स्वास्थ्य'),
+          L('Care tips and precautions', 'देखभाल और सावधानियाँ'), Icons.health_and_safety_outlined),
       _F('profession', L('Career', 'करियर'),
           L('Work that suits you', 'आपके लायक काम'), Icons.work_outline),
+      _F('famous', L('Famous People', 'मशहूर हस्तियाँ'),
+          L('100 free sample profiles', '100 मुफ़्त सैंपल प्रोफ़ाइल'), Icons.groups_outlined),
       _F('learn', L('Learn and Quiz', 'सीखिए और क्विज़'),
           L('Understand numbers easily', 'अंकों को आसानी से समझिए'), Icons.school_outlined),
       _F('angel', L('Angel Numbers', 'एंजल नंबर'),
@@ -203,6 +219,21 @@ class _PremiumHomeState extends State<PremiumHome> {
         break;
       case 'rudraksha':
         _go(const RudrakshaScreen());
+        break;
+      case 'signature':
+        _go(const SignatureScreen());
+        break;
+      case 'timing':
+        _go(const CheiroTimingScreen());
+        break;
+      case 'famous':
+        _go(const FamousScreen());
+        break;
+      case 'health':
+        _go(const HealthScreen());
+        break;
+      case 'western':
+        _go(const WesternScreen());
         break;
       case 'business':
         _go(const BusinessScreen());
@@ -574,7 +605,8 @@ class _PremiumHomeState extends State<PremiumHome> {
               crossAxisSpacing: 4,
               childAspectRatio: 0.8,
               children: [
-                for (final it in step.items) _featureCard(s, it),
+                for (final it in step.items)
+                  if (AppStyle.instance.showsTile(it.key)) _featureCard(s, it),
               ],
             ),
           ],

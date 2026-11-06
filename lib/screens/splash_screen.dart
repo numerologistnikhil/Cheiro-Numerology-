@@ -1,3 +1,5 @@
+import '../core/app_style.dart';
+import 'setup_screen.dart';
 import 'package:flutter/material.dart';
 import 'premium_home.dart';
 import '../core/app_theme.dart';
@@ -40,7 +42,9 @@ class _SplashScreenState extends State<SplashScreen>
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 600),
-        pageBuilder: (context, animation, secondary) => const PremiumHome(),
+        pageBuilder: (context, animation, secondary) => AppStyle.instance.setupDone
+            ? const PremiumHome()
+            : const SetupScreen(),
         transitionsBuilder: (context, animation, secondary, child) =>
             FadeTransition(opacity: animation, child: child),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import '../core/app_settings.dart';
+import '../core/app_style.dart';
 import '../core/pricing.dart';
 import '../core/rate_app.dart';
 import '../core/root_profiles.dart' show L;
@@ -111,6 +112,36 @@ class SettingsScreen extends StatelessWidget {
                     style: const TextStyle(fontSize: 13, height: 1.4),
                   ),
                 ],
+              ),
+            ),
+          ),
+          _title(s.t(const L('NUMEROLOGY STYLE', 'अंकशास्त्र की पद्धति'))),
+          _box(
+            AnimatedBuilder(
+              animation: AppStyle.instance,
+              builder: (context, _) => Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final v in NumerologyStyle.values)
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        leading: Icon(
+                          v == AppStyle.instance.style
+                              ? Icons.radio_button_checked
+                              : Icons.radio_button_off,
+                          color: _gold,
+                        ),
+                        title: Text(s.t(StyleTexts.names[v]!),
+                            style: const TextStyle(fontWeight: FontWeight.w700)),
+                        subtitle: Text(s.t(StyleTexts.notes[v]!)),
+                        onTap: () => AppStyle.instance.setStyle(v),
+                      ),
+                    Text(s.t(StyleTexts.intro), style: const TextStyle(fontSize: 12.5)),
+                  ],
+                ),
               ),
             ),
           ),

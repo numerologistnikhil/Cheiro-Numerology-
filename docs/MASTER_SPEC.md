@@ -18,10 +18,13 @@ Customer records local-only by default. No customer cloud database. Production e
 ## PDF
 Page 1 premium cover/snapshot. Page 2 disclaimer + methodology. Subsequent pages are modular. YouTube page link for NikhilVGulatii. App WhatsApp number must not appear in PDF.
 
-## Commercial model (updated 17 Oct 2026 to the latest owner-approved prices)
-- Standard report: Rs 100 per PDF report.
-- Annual subscription: Rs 250 per year, covering all app features plus unlimited PDF creation, download and printing during the active year.
-- This replaces the earlier model (everything free, PDF Rs 50). Real payments are not implemented yet. When they are, they must use Google Play Billing with purchase verification, acknowledgement, restore and expiry handling; a client-side flag is never proof of payment.
+## Commercial model (owner-approved final plan, 1 Nov 2026)
+- All app features are free. The app shows limited, labelled ads (home banner, one labelled native ad, collapsible bottom banner). No floating ad over content.
+- First report: a free shorter sample.
+- Detailed PDF report: Rs 50 per report, with download, print and share included.
+- Ad-free subscription: Rs 250 per year (no ads for subscribers).
+- This replaces the earlier 17 Oct 2026 text (Rs 100 per report / Rs 250 per year with unlimited PDFs).
+- Neither payments nor ads are implemented yet. When they are, payments must use Google Play Billing with server-side purchase verification, acknowledgement, restore and expiry handling; a client-side flag is never proof of payment. Ads need Google AdMob with the UMP consent form.
 
 ## WhatsApp PDF Delivery
 After a valid purchase (or active subscription) and generation of the professional PDF, the app must provide a direct "Send on WhatsApp" option. The generated PDF should be prepared as a local file and handed to the Android/iOS share system so WhatsApp can open with the PDF attached. The user must explicitly confirm/send the message. The app must not silently send WhatsApp messages or upload customer data to a cloud server.
