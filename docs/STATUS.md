@@ -51,3 +51,9 @@ Legend: **Written** = code exists in a patch. **Pushed** = commit is on `main`. 
 10. Content: compound-number texts are marked "traditional paraphrase" or "modern guidance", not verified Cheiro text. The store description must not promise accurate predictions.
 11. Support contact decision (owner does not want to publish a personal email or number) and removing personal contact details from README if they should not be public.
 12. Pin the Flutter version in the workflow so builds are repeatable.
+
+## Update 7 Nov 2026 (fix34)
+- Package name decided: `com.ankdhara.numerology` (set in CI after `flutter create`). Not yet verified by a green build.
+- Upload key created (kept outside the repo by the owner). CI builds a signed AAB only when the 4 GitHub Secrets exist. Not yet verified.
+- Privacy policy draft: docs/PRIVACY_POLICY.md (needs a public URL and a support email).
+- Still open: Play Console account, AdMob, Billing, consent, encryption.

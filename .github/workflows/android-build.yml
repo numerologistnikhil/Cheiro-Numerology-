@@ -22,6 +22,14 @@ jobs:
       - name: Generate Android project
         run: flutter create --platforms=android .
 
+      - name: Set package name (com.ankdhara.numerology)
+        run: |
+          rm -rf android/app/src/main/kotlin
+          mkdir -p android/app/src/main/kotlin/com/ankdhara/numerology
+          printf 'package com.ankdhara.numerology\n\nimport io.flutter.embedding.android.FlutterActivity\n\nclass MainActivity : FlutterActivity()\n' > android/app/src/main/kotlin/com/ankdhara/numerology/MainActivity.kt
+          sed -i -E 's/(namespace[[:space:]]*=?[[:space:]]*)"[^"]*"/\1"com.ankdhara.numerology"/; s/(applicationId[[:space:]]*=?[[:space:]]*)"[^"]*"/\1"com.ankdhara.numerology"/' android/app/build.gradle*
+          grep -n 'namespace\|applicationId' android/app/build.gradle*
+
       - name: Use fixed signing key
         run: |
           mkdir -p ~/.android
@@ -66,3 +74,26 @@ jobs:
         run: |
           APKSIGNER=$(ls $ANDROID_HOME/build-tools/*/apksigner | tail -1)
           $APKSIGNER verify --print-certs build/app/outputs/flutter-apk/app-release.apk | grep -i "SHA-256" || true
+
+      - name: Build signed AAB for Play Store (only if secrets are set)
+        env:
+          KS_B64: ${{ secrets.ANKDHARA_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANKDHARA_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.ANKDHARA_KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.ANKDHARA_KEY_PASSWORD }}
+        run: |
+          if [ -z "$KS_B64" ]; then echo "Upload key secrets set nahi hain - AAB skip."; exit 0; fi
+          echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+          flutter build appbundle --release --build-number=${{ github.run_number }}
+          AAB=build/app/outputs/bundle/release/app-release.aab
+          jarsigner -keystore "$RUNNER_TEMP/upload.jks" -storepass "$KS_PASS" -keypass "$KEY_PASS" -sigalg SHA256withRSA -digestalg SHA-256 "$AAB" "$KS_ALIAS"
+          jarsigner -verify "$AAB" | head -2
+          mkdir -p aab-out && cp "$AAB" aab-out/ankdhara-release.aab
+          rm -f "$RUNNER_TEMP/upload.jks"
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: ankdhara-aab
+          path: aab-out/ankdhara-release.aab
+          if-no-files-found: ignore

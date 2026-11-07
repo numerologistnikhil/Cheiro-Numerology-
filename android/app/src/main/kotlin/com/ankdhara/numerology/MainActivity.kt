@@ -1,4 +1,4 @@
-package com.numerologistnikhil.cheironumerology
+package com.ankdhara.numerology
 
 import android.os.Bundle
 import android.view.WindowManager
