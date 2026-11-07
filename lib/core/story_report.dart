@@ -26,6 +26,7 @@ import 'numerology_engine.dart';
 import 'numerology_tools.dart' hide NameSuggestion;
 import 'pricing.dart';
 import 'pythagorean.dart';
+import 'year_month_blend.dart';
 import 'signature_image.dart' show SignatureStore;
 import 'signature_reading.dart';
 import 'report_border.dart';
@@ -1467,6 +1468,7 @@ class StoryReport {
               '${mn[m - 1]} $y  -  ${MonthDetails.personalMonth.t(h)} $pm  (${md.word.t(h)})',
               md.story.t(h)));
           w.add(await _facts([
+            MapEntry(YearMonthBlend.label.t(h), YearMonthBlend.line(py, pm).t(h)),
             MapEntry(MonthDetails.workLabel.t(h), md.work.t(h)),
             MapEntry(MonthDetails.loveLabel.t(h), md.love.t(h)),
             MapEntry(MonthDetails.healthLabel.t(h), md.health.t(h)),
