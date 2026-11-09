@@ -20,7 +20,6 @@ import 'learn_screen.dart';
 import 'profile_screen.dart';
 import 'lo_shu_screen.dart';
 import 'gemstone_screen.dart';
-import 'lucky_kit_screen.dart';
 import 'name_correction_screen.dart';
 import 'number_check_screens.dart';
 import 'predictions_screen.dart';
@@ -70,38 +69,36 @@ class _Step {
   const _Step(this.title, this.sub, this.items);
 }
 
-class _Banner {
-  final L small;
-  final L big;
-  final L button;
-  final String key;
-  const _Banner(this.small, this.big, this.button, this.key);
-}
+
+const _extra = <_F>[
+  _F('mynumbers', L('My Numbers', 'मेरे अंक'),
+      L('Birth and destiny number', 'मूलांक और भाग्यांक'), Icons.auto_awesome),
+  _F('reports', L('PDF Report', 'PDF रिपोर्ट'),
+      L('Download, print, share', 'डाउनलोड, प्रिंट, शेयर'), Icons.picture_as_pdf_outlined),
+  _F('vault', L('Client Vault', 'ग्राहक वॉल्ट'),
+      L('Private and safe', 'निजी और सुरक्षित'), Icons.lock_outline),
+];
 
 const _steps = <_Step>[
   _Step(
     L('Know your numbers', 'अपने अंक जानिए'),
-    L('Start here. Your birth date, name and phone number.',
-        'यहाँ से शुरू कीजिए। आपकी जन्म तिथि, नाम और फ़ोन नंबर।'),
+    L('Birth date, name, phone, vehicle and more.',
+        'जन्म तिथि, नाम, फ़ोन, वाहन और बहुत कुछ।'),
     [
-      _F('mynumbers', L('My Numbers', 'मेरे अंक'),
-          L('Birth and destiny number', 'मूलांक और भाग्यांक'), Icons.auto_awesome),
       _F('name', L('Name', 'नाम'),
-          L('Check and correct a name', 'नाम जाँचिए और सुधारिए'), Icons.spellcheck),
+          L('Check and correct', 'जाँचिए और सुधारिए'), Icons.spellcheck),
       _F('mobile', L('Mobile', 'मोबाइल'),
-          L('Is your number lucky?', 'क्या आपका नंबर शुभ है?'), Icons.phone_android),
+          L('Is it lucky?', 'क्या शुभ है?'), Icons.phone_android),
       _F('vehicle', L('Vehicle', 'वाहन'),
-          L('Check a vehicle number', 'वाहन नंबर जाँचिए'), Icons.directions_car_outlined),
-      _F('luckykit', L('Lucky Kit', 'शुभ अंक किट'),
-          L('House number, jersey number', 'मकान नंबर, जर्सी नंबर'), Icons.home_outlined),
+          L('Check a number', 'नंबर जाँचिए'), Icons.directions_car_outlined),
       _F('business', L('Business', 'व्यापार'),
-          L('Business name and number', 'व्यापार का नाम और अंक'), Icons.storefront_outlined),
+          L('Name and number', 'नाम और अंक'), Icons.storefront_outlined),
       _F('compatibility', L('Match', 'मिलान'),
-          L('Two people together', 'दो लोगों का मेल'), Icons.favorite_border),
-      _F('western', L('Western Chart', 'पश्चिमी चार्ट'),
-          L('Life Path, Soul Urge, master numbers', 'लाइफ पाथ, सोल अर्ज, मास्टर अंक'), Icons.public),
+          L('Two people', 'दो लोगों का मेल'), Icons.favorite_border),
       _F('loshu', L('Lo Shu Grid', 'लो शू ग्रिड'),
-          L('Strong and missing numbers', 'मज़बूत और कमज़ोर अंक'), Icons.grid_view),
+          L('Strong, missing', 'मज़बूत, कमज़ोर'), Icons.grid_view),
+      _F('western', L('Western Chart', 'पश्चिमी चार्ट'),
+          L('Life Path, Soul Urge', 'लाइफ पाथ, सोल अर्ज'), Icons.public),
     ],
   ),
   _Step(
@@ -111,68 +108,54 @@ const _steps = <_Step>[
     [
       _F('predictions', L('Years and Months', 'साल और महीने'),
           L('10 years and more', '10 साल या ज़्यादा'), Icons.calendar_month),
+      _F('timing', L('Cheiro Timing', 'कीरो टाइमिंग'),
+          L('Year, month, day', 'वर्ष, महीना, दिन'), Icons.schedule),
       _F('daily', L('Today', 'आज का दिन'),
-          L('Lucky number and colour', 'शुभ अंक और रंग'), Icons.wb_sunny_outlined),
+          L('Lucky number, colour', 'शुभ अंक, रंग'), Icons.wb_sunny_outlined),
       _F('dates', L('Good Dates', 'शुभ तारीख़ें'),
           L('Pick a lucky day', 'शुभ दिन चुनिए'), Icons.event_available_outlined),
       _F('baby', L('Baby Names', 'बच्चे का नाम'),
-          L('Lucky names for a baby', 'शुभ नाम के सुझाव'), Icons.child_care),
+          L('Lucky names', 'शुभ नाम'), Icons.child_care),
     ],
   ),
   _Step(
-    L('Get simple guidance', 'आसान सलाह पाइए'),
-    L('Easy things you can do, and a place to learn.',
-        'आसान उपाय जो आप कर सकते हैं, और सीखने की जगह।'),
+    L('Guidance for life', 'जीवन के लिए मार्गदर्शन'),
+    L('Stones, beads, career, health and easy remedies.',
+        'रत्न, रुद्राक्ष, करियर, सेहत और आसान उपाय।'),
     [
-      _F('remedies', L('Remedies', 'उपाय'),
-          L('Colours, stones, habits', 'रंग, रत्न, आदतें'), Icons.diamond_outlined),
       _F('gems', L('Gemstones', 'रत्न'),
           L('Stone, finger, weight', 'रत्न, उँगली, वज़न'), Icons.diamond),
       _F('rudraksha', L('Rudraksha', 'रुद्राक्ष'),
-          L('Which bead, how to wear', 'कौन सा मनका, कैसे पहनें'), Icons.blur_circular),
-      _F('signature', L('Signature', 'हस्ताक्षर'),
-          L('Upload and analyse your signature', 'हस्ताक्षर डालकर विश्लेषण'), Icons.draw_outlined),
-      _F('timing', L('Cheiro Timing', 'कीरो टाइमिंग'),
-          L('Year, month, day with every step', 'वर्ष, महीना, दिन - हर चरण के साथ'), Icons.schedule),
-      _F('health', L('Health Care', 'स्वास्थ्य'),
-          L('Care tips and precautions', 'देखभाल और सावधानियाँ'), Icons.health_and_safety_outlined),
+          L('Which bead to wear', 'कौन सा मनका'), Icons.blur_circular),
       _F('profession', L('Career', 'करियर'),
-          L('Work that suits you', 'आपके लायक काम'), Icons.work_outline),
-      _F('famous', L('Famous People', 'मशहूर हस्तियाँ'),
-          L('100 free sample profiles', '100 मुफ़्त सैंपल प्रोफ़ाइल'), Icons.groups_outlined),
-      _F('learn', L('Learn and Quiz', 'सीखिए और क्विज़'),
-          L('Understand numbers easily', 'अंकों को आसानी से समझिए'), Icons.school_outlined),
-      _F('angel', L('Angel Numbers', 'एंजल नंबर'),
-          L('What repeating numbers mean', 'दोहराए अंकों का मतलब'), Icons.stars_outlined),
-      _F('ask', L('Ask', 'पूछिए'),
-          L('Ask a question about numbers', 'अंकों के बारे में सवाल पूछिए'), Icons.chat_bubble_outline),
+          L('Work and business', 'काम और व्यापार'), Icons.work_outline),
+      _F('health', L('Health Care', 'स्वास्थ्य'),
+          L('Care and precautions', 'देखभाल, सावधानी'), Icons.health_and_safety_outlined),
+      _F('remedies', L('Colours and Habits', 'रंग और आदतें'),
+          L('Easy daily remedies', 'आसान रोज़ के उपाय'), Icons.palette_outlined),
+      _F('signature', L('Signature', 'हस्ताक्षर'),
+          L('Upload and analyse', 'डालकर विश्लेषण'), Icons.draw_outlined),
     ],
   ),
   _Step(
-    L('Your reports', 'आपकी रिपोर्ट'),
-    L('A full PDF report, and your saved clients.',
-        'पूरी PDF रिपोर्ट, और आपके सेव किए हुए ग्राहक।'),
+    L('Explore and learn', 'जानिए और सीखिए'),
+    L('Famous people, lessons and questions.',
+        'मशहूर हस्तियाँ, पाठ और सवाल।'),
     [
-      _F('reports', L('PDF Report', 'PDF रिपोर्ट'),
-          L('Download, print, share', 'डाउनलोड, प्रिंट, शेयर'), Icons.picture_as_pdf_outlined),
-      _F('vault', L('Client Vault', 'ग्राहक वॉल्ट'),
-          L('Private and safe', 'निजी और सुरक्षित'), Icons.lock_outline),
+      _F('famous', L('Famous People', 'मशहूर हस्तियाँ'),
+          L('100 free samples', '100 मुफ़्त सैंपल'), Icons.groups_outlined),
+      _F('learn', L('Learn and Quiz', 'सीखिए और क्विज़'),
+          L('Understand numbers', 'अंकों को समझिए'), Icons.school_outlined),
+      _F('angel', L('Angel Numbers', 'एंजल नंबर'),
+          L('Repeating numbers', 'दोहराए अंक'), Icons.stars_outlined),
+      _F('ask', L('Ask', 'पूछिए'),
+          L('Ask about numbers', 'अंकों पर सवाल'), Icons.chat_bubble_outline),
     ],
   ),
 ];
 
-const _banners = <_Banner>[
-  _Banner(L('Fix your name', 'अपना नाम सुधारिए'), L('Lucky spelling', 'शुभ वर्तनी'),
-      L('Open', 'खोलिए'), 'name'),
-  _Banner(L('Mobile and vehicle', 'मोबाइल और वाहन'), L('Lucky number', 'शुभ अंक'),
-      L('Check', 'जाँचिए'), 'mobile'),
-];
-
 class _PremiumHomeState extends State<PremiumHome> {
-  int _banner = 0;
   StreakInfo? _streak;
-  final PageController _pc = PageController(viewportFraction: 0.92);
-  Timer? _timer;
 
   @override
   void initState() {
@@ -184,8 +167,6 @@ class _PremiumHomeState extends State<PremiumHome> {
 
   @override
   void dispose() {
-    _timer?.cancel();
-    _pc.dispose();
     super.dispose();
   }
 
@@ -210,9 +191,6 @@ class _PremiumHomeState extends State<PremiumHome> {
         break;
       case 'vehicle':
         _go(const VehicleNumberScreen());
-        break;
-      case 'luckykit':
-        _go(const LuckyKitScreen());
         break;
       case 'gems':
         _go(const GemstoneScreen());
@@ -303,17 +281,17 @@ class _PremiumHomeState extends State<PremiumHome> {
   Widget build(BuildContext context) {
     final s = AppLang.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFFFCF5),
       body: SafeArea(
         child: Column(
           children: [
             _header(s),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.only(bottom: 24),
+                padding: const EdgeInsets.only(bottom: 28),
                 children: [
                   const ProfileStrip(),
-                  _streakStrip(s),
+                  _hero(s),
                   for (var i = 0; i < _steps.length; i++) _stepBlock(s, i),
                   _inviteStrip(s),
                 ],
@@ -326,28 +304,69 @@ class _PremiumHomeState extends State<PremiumHome> {
     );
   }
 
+  Widget _brandMark() {
+    return Image.asset(
+      'assets/images/ankdhara_logo.png',
+      height: 34,
+      width: 34,
+      errorBuilder: (context, error, stack) =>
+          const Icon(Icons.auto_awesome, color: _Gold.gold, size: 30),
+    );
+  }
+
   Widget _header(AppSettings s) {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFFFFFFFF), Color(0xFFFFFFFF)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFFFFF3CF), Color(0xFFFFFCF5)],
         ),
       ),
-      padding: const EdgeInsets.fromLTRB(12, 6, 2, 6),
-      child: Row(
+      padding: const EdgeInsets.fromLTRB(16, 8, 4, 6),
+      child: Column(
         children: [
-          Expanded(
+          Row(
+            children: [
+              _brandMark(),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(s.hindi ? 'अंक धारा' : 'Ank Dhara',
+                        style: const TextStyle(
+                            fontFamily: 'serif',
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.5,
+                            color: _Gold.goldDark)),
+                    Text(
+                        s.t(const L('Numerology, the Cheiro way',
+                            'कीरो पद्धति का अंक-ज्योतिष')),
+                        style: const TextStyle(fontSize: 11.5, color: _Gold.soft)),
+                  ],
+                ),
+              ),
+              _menu(s),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
             child: GestureDetector(
               onTap: _search,
               child: Container(
                 height: 42,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
-                  color: _Gold.pearl,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: _Gold.gold, width: 1),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(21),
+                  border: Border.all(color: _Gold.goldLight, width: 1.2),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Color(0x14000000), blurRadius: 8, offset: Offset(0, 2)),
+                  ],
                 ),
                 child: Row(
                   children: [
@@ -366,287 +385,272 @@ class _PremiumHomeState extends State<PremiumHome> {
               ),
             ),
           ),
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: _Gold.ink, size: 28),
-            onSelected: (v) {
-              if (v == 'english') {
-                s.setHindi(false);
-              } else if (v == 'hindi') {
-                s.setHindi(true);
-              } else if (v == 'share') {
-                Share.share(s.t(const L(
-                  'Try Ank Dhara, a simple numerology app in English and Hindi.',
-                  'अंक धारा आज़माइए, हिन्दी और अंग्रेज़ी में एक आसान अंक-ज्योतिष ऐप।',
-                )));
-              } else {
-                _open(v);
-              }
-            },
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                value: 'settings',
-                child: ListTile(
-                  leading: const Icon(Icons.settings_outlined),
-                  title: Text(s.t(const L('Settings', 'सेटिंग्स'))),
+        ],
+      ),
+    );
+  }
+
+  Widget _menu(AppSettings s) {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.more_vert, color: _Gold.ink, size: 26),
+      onSelected: (v) {
+        if (v == 'english') {
+          s.setHindi(false);
+        } else if (v == 'hindi') {
+          s.setHindi(true);
+        } else if (v == 'share') {
+          Share.share(s.t(const L(
+            'Try Ank Dhara, a simple numerology app in English and Hindi.',
+            'अंक धारा आज़माइए, हिन्दी और अंग्रेज़ी में एक आसान अंक-ज्योतिष ऐप।',
+          )));
+        } else {
+          _open(v);
+        }
+      },
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          value: 'settings',
+          child: ListTile(
+            leading: const Icon(Icons.settings_outlined),
+            title: Text(s.t(const L('Settings', 'सेटिंग्स'))),
+          ),
+        ),
+        PopupMenuItem(
+          value: 'referral',
+          child: ListTile(
+            leading: const Icon(Icons.card_giftcard),
+            title: Text(s.t(const L('Invite a friend', 'दोस्त को बुलाइए'))),
+          ),
+        ),
+        const PopupMenuItem(
+          value: 'pro',
+          child: ListTile(
+            leading: Icon(Icons.workspace_premium_outlined),
+            title: Text('Ank Dhara Pro'),
+          ),
+        ),
+        PopupMenuItem(
+          value: 'share',
+          child: ListTile(
+            leading: const Icon(Icons.share_outlined),
+            title: Text(s.t(const L('Share this app', 'यह ऐप शेयर करें'))),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Big card at the top: the PDF report is the main product.
+  Widget _hero(AppSettings s) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 2),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF4A3510), Color(0xFF8A6A1F), Color(0xFFC9A24A)],
+        ),
+        boxShadow: const [
+          BoxShadow(color: Color(0x33000000), blurRadius: 16, offset: Offset(0, 8)),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -18,
+            top: -18,
+            child: Icon(Icons.auto_awesome,
+                size: 130, color: Colors.white.withValues(alpha: 0.12)),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  s.t(const L('YOUR COMPLETE REPORT', 'आपकी पूरी रिपोर्ट')),
+                  style: const TextStyle(
+                      color: _Gold.goldLight,
+                      fontSize: 11.5,
+                      letterSpacing: 1.6,
+                      fontWeight: FontWeight.w800),
                 ),
-              ),
-              PopupMenuItem(
-                value: 'referral',
-                child: ListTile(
-                  leading: const Icon(Icons.card_giftcard),
-                  title: Text(s.t(const L('Invite a friend', 'दोस्त को बुलाइए'))),
+                const SizedBox(height: 6),
+                Text(
+                  s.t(const L('A beautiful PDF about your life numbers',
+                      'आपके जीवन के अंकों पर एक सुंदर PDF')),
+                  style: const TextStyle(
+                      fontFamily: 'serif',
+                      color: Colors.white,
+                      fontSize: 21,
+                      height: 1.25,
+                      fontWeight: FontWeight.w800),
                 ),
-              ),
-              const PopupMenuItem(
-                value: 'pro',
-                child: ListTile(
-                  leading: Icon(Icons.workspace_premium_outlined),
-                  title: Text('Ank Dhara Pro'),
+                const SizedBox(height: 6),
+                Text(
+                  s.t(const L(
+                      'Future years, gemstone, rudraksha, career, health and more, each on its own page.',
+                      'आने वाले साल, रत्न, रुद्राक्ष, करियर, सेहत और बहुत कुछ, हर विषय अलग पन्ने पर।')),
+                  style: const TextStyle(
+                      color: Color(0xE6FFFFFF), fontSize: 12.5, height: 1.4),
                 ),
-              ),
-              PopupMenuItem(
-                value: 'share',
-                child: ListTile(
-                  leading: const Icon(Icons.share_outlined),
-                  title: Text(s.t(const L('Share this app', 'यह ऐप शेयर करें'))),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FilledButton.icon(
+                        onPressed: () => _open('reports'),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: _Gold.goldDark,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14)),
+                        ),
+                        icon: const Icon(Icons.picture_as_pdf_outlined, size: 20),
+                        label: Text(s.t(const L('Create report', 'रिपोर्ट बनाइए')),
+                            style: const TextStyle(fontWeight: FontWeight.w800)),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _open('mynumbers'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: Color(0xAAFFFFFF)),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14)),
+                        ),
+                        icon: const Icon(Icons.auto_awesome, size: 18),
+                        label: Text(s.t(const L('My numbers', 'मेरे अंक')),
+                            style: const TextStyle(fontWeight: FontWeight.w700)),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _bannerCarousel(AppSettings s) {
-    return SizedBox(
-      height: 124,
-      child: PageView.builder(
-        controller: _pc,
-        onPageChanged: (i) => setState(() => _banner = i),
-        itemCount: _banners.length,
-        itemBuilder: (_, i) {
-          final b = _banners[i];
-          return Container(
-            margin: const EdgeInsets.fromLTRB(6, 8, 6, 2),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(22),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFFFF3CF), Color(0xFFE9C766)],
-              ),
-              border: Border.all(color: _Gold.gold, width: 1.5),
-            ),
+  Widget _stepBlock(AppSettings s, int index) {
+    final step = _steps[index];
+    final items = [
+      for (final it in step.items)
+        if (AppStyle.instance.showsTile(it.key)) it,
+    ];
+    if (items.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 18, 12, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
             child: Row(
               children: [
+                Container(
+                  width: 4,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: _Gold.gold,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(s.t(b.small),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                      Text(s.t(step.title),
                           style: const TextStyle(
-                              color: _Gold.goldDark,
-                              fontSize: 13.5,
-                              fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 2),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Text(s.t(b.big),
-                            style: const TextStyle(
-                                color: _Gold.ink,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w900)),
-                      ),
-                      const SizedBox(height: 6),
-                      GestureDetector(
-                        onTap: () => _open(b.key),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: _Gold.ink,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(s.t(b.button),
-                              style: const TextStyle(
-                                  color: _Gold.goldLight,
-                                  fontWeight: FontWeight.w700)),
-                        ),
-                      ),
+                              fontFamily: 'serif',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              color: _Gold.ink)),
+                      Text(s.t(step.sub),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 12, color: _Gold.soft)),
                     ],
                   ),
                 ),
-                const Icon(Icons.auto_awesome,
-                    size: 48, color: Color(0xAAFFFFFF)),
               ],
             ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _dots() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(_banners.length, (i) {
-        final sel = i == _banner;
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 4),
-          width: sel ? 18 : 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: sel ? _Gold.gold : const Color(0xFFE0D3B0),
-            borderRadius: BorderRadius.circular(4),
           ),
-        );
-      }),
-    );
-  }
-
-  Widget _streakStrip(AppSettings s) {
-    return const SizedBox.shrink();
-    final st = _streak;
-    if (st == null) return const SizedBox.shrink();
-    final text =
-        s.hindi ? '${st.current} दिन लगातार' : '${st.current}-day streak';
-    return GestureDetector(
-      onTap: () => _open('badges'),
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: _Gold.pearl,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: _Gold.goldLight),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.local_fire_department, color: _Gold.gold),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                text,
-                style: const TextStyle(
-                    color: _Gold.ink, fontWeight: FontWeight.w700),
-              ),
-            ),
-            Text(
-              s.t(const L('Badges', 'बैज')),
-              style: const TextStyle(
-                  color: _Gold.goldDark, fontWeight: FontWeight.w800),
-            ),
-            const Icon(Icons.chevron_right, color: _Gold.goldDark),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _stepBlock(AppSettings s, int index) {
-    final step = _steps[index];
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
-        decoration: BoxDecoration(
-          color: _Gold.pearl,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: _Gold.goldLight),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 24,
-                  height: 24,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _Gold.gold,
-                  ),
-                  child: Text('${index + 1}',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800)),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(s.t(step.title),
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: _Gold.ink)),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(32, 1, 0, 6),
-              child: Text(s.t(step.sub),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, color: _Gold.soft)),
-            ),
-            GridView.count(
-              crossAxisCount: 4,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 4,
-              crossAxisSpacing: 4,
-              childAspectRatio: 0.8,
-              children: [
-                for (final it in step.items)
-                  if (AppStyle.instance.showsTile(it.key)) _featureCard(s, it),
-              ],
-            ),
-          ],
-        ),
+          GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 0.98,
+            children: [for (final it in items) _featureCard(s, it)],
+          ),
+        ],
       ),
     );
   }
 
   Widget _featureCard(AppSettings s, _F it) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => _open(it.key),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _Gold.cream,
-                border: Border.all(color: _Gold.goldLight),
+    return Material(
+      color: Colors.white,
+      elevation: 2,
+      shadowColor: const Color(0x33C9A24A),
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: () => _open(it.key),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(8, 12, 8, 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: _Gold.goldLight, width: 1),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xFFFFF3CF), Color(0xFFE9C766)],
+                  ),
+                ),
+                child: Icon(it.icon, color: _Gold.goldDark, size: 24),
               ),
-              child: Icon(it.icon, color: _Gold.goldDark, size: 22),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              s.t(it.label),
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                  color: _Gold.ink,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 11.5,
-                  height: 1.2),
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                s.t(it.label),
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    color: _Gold.ink,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 12.5,
+                    height: 1.15),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                s.t(it.sub),
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: _Gold.soft, fontSize: 10.5, height: 1.2),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -734,7 +738,7 @@ class _FeatureSearch extends SearchDelegate<String?> {
 
   List<_F> _matches() {
     final q = query.trim().toLowerCase();
-    final all = [for (final st in _steps) ...st.items];
+    final all = [for (final st in _steps) ...st.items, ..._extra];
     if (q.isEmpty) return all;
     return all.where((f) {
       return f.label.en.toLowerCase().contains(q) ||

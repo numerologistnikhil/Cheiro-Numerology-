@@ -24,7 +24,9 @@ import 'numerology_engine.dart';
 // numerology_tools.dart also has a NameSuggestion class (baby names); the report
 // uses the one from name_suggester.dart.
 import 'numerology_tools.dart' hide NameSuggestion;
+import 'pdf_pictures.dart';
 import 'pricing.dart';
+import 'profession_guide.dart';
 import 'pythagorean.dart';
 import 'year_month_blend.dart';
 import 'signature_image.dart' show SignatureStore;
@@ -43,7 +45,11 @@ class _Img {
   final Uint8List png;
   final double w;
   final double h;
-  const _Img(this.png, this.w, this.h);
+  _Img(this.png, this.w, this.h);
+
+  /// One image object per picture: the PDF library then stores the picture
+  /// only once, even when the same text is used on many pages.
+  late final pw.MemoryImage mem = pw.MemoryImage(png);
 }
 
 /// Story style report in simple language. English or Hindi.
@@ -175,6 +181,10 @@ class StoryReport {
 
   // ---------------------------------------------------------------- text
 
+  /// Pictures of text already drawn in this report (same text, same style).
+  final Map<String, _Img> _imgCache = <String, _Img>{};
+  int _drawn = 0;
+
   Future<_Img> _renderImage(
     String s, {
     double size = 11.5,
@@ -183,6 +193,13 @@ class StoryReport {
     double width = _fullWidth,
     bool center = false,
   }) async {
+    final key = '$size|$bold|$color|$width|$center|$s';
+    final hit = _imgCache[key];
+    if (hit != null) return hit;
+    // Let the screen breathe now and then so the app never looks frozen.
+    if (++_drawn % 12 == 0) {
+      await Future<void>.delayed(const Duration(milliseconds: 1));
+    }
     const scale = 3.0;
     final tp = TextPainter(
       text: TextSpan(
@@ -213,7 +230,9 @@ class StoryReport {
     final img = await pic.toImage(w, h);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
     final png = data!.buffer.asUint8List();
-    return _Img(png, w / scale, h / scale);
+    final made = _Img(png, w / scale, h / scale);
+    _imgCache[key] = made;
+    return made;
   }
 
   Future<pw.Widget> _text(
@@ -238,7 +257,7 @@ class StoryReport {
     }
     final r = await _renderImage(s,
         size: size, bold: bold, color: color, width: width, center: center);
-    return pw.Image(pw.MemoryImage(r.png), width: r.w, height: r.h);
+    return pw.Image(r.mem, width: r.w, height: r.h);
   }
 
   Future<pw.Widget> _h1(String s) async {
@@ -910,6 +929,59 @@ class StoryReport {
     return out;
   }
 
+  /// A box with a picture on the left and a title and a line on the right.
+  Future<pw.Widget> _pictureCard(
+    Uint8List png,
+    String title,
+    String sub, {
+    double pic = 84,
+  }) async {
+    return pw.Inseparable(
+      canSpan: false,
+      child: pw.Container(
+        margin: const pw.EdgeInsets.only(bottom: 9),
+        padding: const pw.EdgeInsets.all(11),
+        decoration: _boxDeco(),
+        child: pw.Row(
+          crossAxisAlignment: pw.CrossAxisAlignment.center,
+          children: [
+            pw.Image(pw.MemoryImage(png), width: pic, height: pic),
+            pw.SizedBox(width: 14),
+            pw.Expanded(
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  await _text(title,
+                      size: 14, bold: true, color: _goldI, width: _boxWidth - pic - 30),
+                  pw.SizedBox(height: 4),
+                  await _text(sub, size: 11, width: _boxWidth - pic - 30),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// A row of small pictures with a short name under each.
+  Future<pw.Widget> _pictureStrip(List<MapEntry<Uint8List, String>> items) async {
+    final cells = <pw.Widget>[];
+    for (final it in items) {
+      cells.add(pw.Container(
+        width: 84,
+        child: pw.Column(
+          children: [
+            pw.Image(pw.MemoryImage(it.key), width: 46, height: 46),
+            pw.SizedBox(height: 3),
+            await _text(it.value, size: 9, center: true, width: 80),
+          ],
+        ),
+      ));
+    }
+    return pw.Wrap(spacing: 6, runSpacing: 8, children: cells);
+  }
+
   Future<List<pw.Widget>> _secPage(
     PBi title,
     PBi intro,
@@ -928,7 +1000,7 @@ class StoryReport {
 
   Future<List<pw.Widget>> _rudrakshaSection(int psychic, int destiny) async {
     final h = hindi;
-    final out = <pw.Widget>[];
+    final out = <pw.Widget>[pw.NewPage()];
     out.add(await _h1(RudrakshaGuide.title.t(h)));
     out.add(await _p(RudrakshaGuide.intro.t(h)));
 
@@ -937,8 +1009,12 @@ class StoryReport {
       for (final m in RudrakshaGuide.forRoot[root] ?? const <int>[]) {
         final r = RudrakshaGuide.mukhis[m];
         if (r == null || !shown.add(m)) continue;
-        out.add(await _box('$label: ${r.mukhi} ${RudrakshaGuide.mukhiLabel.t(h)}',
-            '${RudrakshaGuide.deityLabel.t(h)}: ${r.deity.t(h)}'));
+        out.add(await _pictureCard(
+          await PdfPictures.rudraksha(r.mukhi, size: 90),
+          '$label: ${r.mukhi} ${RudrakshaGuide.mukhiLabel.t(h)}',
+          '${RudrakshaGuide.deityLabel.t(h)}: ${r.deity.t(h)}',
+          pic: 90,
+        ));
         out.add(await _facts([
           MapEntry(RudrakshaGuide.planetLabel.t(h), r.planet.t(h)),
           MapEntry(RudrakshaGuide.mantraLabel.t(h), r.mantra.t(h)),
@@ -967,7 +1043,7 @@ class StoryReport {
   Future<List<pw.Widget>> _westernSection(String name, DateTime dob) async {
     final h = hindi;
     final c = Pythagorean.chart(dob, name);
-    final out = <pw.Widget>[];
+    final out = <pw.Widget>[pw.NewPage()];
     out.add(await _h1(WesternText.title.t(h)));
     out.add(await _p(WesternText.intro.t(h)));
     String line(L lab, int n, L text, {int? raw}) {
@@ -1007,14 +1083,18 @@ class StoryReport {
 
   Future<List<pw.Widget>> _healthSection(int psychic, int destiny) async {
     final h = hindi;
-    final out = <pw.Widget>[];
+    final out = <pw.Widget>[pw.NewPage()];
     out.add(await _h1(HealthGuide.title.t(h)));
     out.add(await _p(HealthGuide.intro.t(h)));
     final shown = <int>{};
     Future<void> add(int root, String head) async {
       final i = HealthGuide.byRoot[root];
       if (i == null || !shown.add(root)) return;
-      out.add(await _box('$head: $root (${i.planet.t(h)})', i.areas.t(h)));
+      out.add(await _pictureCard(
+        await PdfPictures.medallion(root, const Color(0xFF8FBF9F), size: 84),
+        '$head: $root (${i.planet.t(h)})',
+        i.areas.t(h),
+      ));
       out.add(await _facts([
         MapEntry(HealthGuide.watchLabel.t(h), i.watch.t(h)),
         MapEntry(HealthGuide.habitsLabel.t(h), i.habits.t(h)),
@@ -1087,14 +1167,16 @@ class StoryReport {
 
   Future<List<pw.Widget>> _gemSection(int psychic, int destiny) async {
     final h = hindi;
-    final out = <pw.Widget>[];
+    final out = <pw.Widget>[pw.NewPage()];
     out.add(await _h1(GemstoneGuide.title.t(h)));
     out.add(await _p(GemstoneGuide.intro.t(h)));
 
     Future<void> stone(GemInfo g, String label) async {
-      out.add(await _box(
+      out.add(await _pictureCard(
+        await PdfPictures.gem(g, size: 90),
         '$label: ${g.gem.t(h)}',
         '${GemstoneGuide.planetLabel.t(h)}: ${g.planet.t(h)}',
+        pic: 90,
       ));
       out.add(await _facts([
         MapEntry(GemstoneGuide.substitute.t(h), g.alt.t(h)),
@@ -1115,6 +1197,15 @@ class StoryReport {
       await stone(b, GemstoneGuide.secondStone.t(h));
     }
 
+    out.add(await _h1(GemstoneGuide.allStones.t(h)));
+    out.add(await _pictureStrip([
+      for (var r = 1; r <= 9; r++)
+        if (GemstoneGuide.gems[r] != null)
+          MapEntry(await PdfPictures.gem(GemstoneGuide.gems[r]!, size: 46),
+              '$r - ${GemstoneGuide.gems[r]!.gem.t(h)}'),
+    ]));
+    out.add(pw.SizedBox(height: 10));
+
     out.add(await _box(GemstoneGuide.handTitle.t(h), GemstoneGuide.handBody.t(h)));
     out.add(await _box(GemstoneGuide.weightTitle.t(h), GemstoneGuide.weightIntro.t(h)));
     out.add(await _facts([
@@ -1126,6 +1217,36 @@ class StoryReport {
     ));
     out.add(await _box(GemstoneGuide.buyTitle.t(h), GemstoneGuide.buyBody.t(h)));
     out.add(await _p(GemstoneGuide.safetyBody.t(h)));
+    return out;
+  }
+
+  /// Career and business page: real fields with examples for each number.
+  Future<List<pw.Widget>> _professionSection(int psychic, int destiny) async {
+    final h = hindi;
+    final out = <pw.Widget>[pw.NewPage()];
+    out.add(await _h1(ProfessionGuide.title.t(h)));
+    out.add(await _p(ProfessionGuide.intro.t(h)));
+    final shown = <int>{};
+    Future<void> add(int root, String label) async {
+      final i = ProfessionGuide.byRoot[root];
+      if (i == null || !shown.add(root)) return;
+      out.add(await _pictureCard(
+        await PdfPictures.medallion(root, const Color(0xFFC9A24A), size: 84),
+        '$label: $root (${i.planet.t(h)})',
+        i.strength.t(h),
+      ));
+      for (final f in i.fields) {
+        out.add(await _box(f.name.t(h), f.examples.t(h), size: 11, gap: 6));
+      }
+      out.add(await _facts([
+        MapEntry(ProfessionGuide.styleLabel.t(h), i.style.t(h)),
+        MapEntry(ProfessionGuide.avoidLabel.t(h), i.avoid.t(h)),
+      ], labelW: 120));
+    }
+
+    await add(psychic, ProfessionGuide.forMulank.t(h));
+    await add(destiny, ProfessionGuide.forBhagyank.t(h));
+    out.add(await _p(ProfessionGuide.note.t(h)));
     return out;
   }
 
@@ -1239,7 +1360,7 @@ class StoryReport {
               pw.Padding(
                 padding: const pw.EdgeInsets.only(top: 2),
                 child: it is _Img
-                    ? pw.Image(pw.MemoryImage(it.png), width: it.w, height: it.h)
+                    ? pw.Image(it.mem, width: it.w, height: it.h)
                     : pw.Text(
                         it as String,
                         style: pw.TextStyle(
@@ -1436,7 +1557,19 @@ class StoryReport {
       final ys = ReportText.years[py] ?? ReportText.years[1]!;
       final ar = ReportText.yearAreas[py] ?? ReportText.yearAreas[1]!;
       final ex = YearDetails.extra[py] ?? YearDetails.extra[1]!;
+      if (y % 5 == 0) await Future<void>.delayed(const Duration(milliseconds: 1));
       w.add(await _box('$y  -  ${ys.title.t(h)}', ys.story.t(h)));
+      // With many years, later years use a shorter set of lines.
+      final compact = years > 10 && y >= first + 10;
+      if (compact) {
+        w.add(await _facts([
+          MapEntry(ReportText.careerTitle.t(h), ar.work.t(h)),
+          MapEntry(ReportText.moneyTitle.t(h), ar.money.t(h)),
+          MapEntry(ReportPages.healthLabel.t(h), ex.health.t(h)),
+          MapEntry(ReportText.doLabel.t(h), ys.doThis.t(h)),
+          MapEntry(ReportText.takeCareLabel.t(h), ys.avoid.t(h)),
+        ]));
+      } else {
       w.add(await _facts([
         MapEntry(ReportText.careerTitle.t(h), ar.work.t(h)),
         MapEntry(ReportText.moneyTitle.t(h), ar.money.t(h)),
@@ -1448,6 +1581,7 @@ class StoryReport {
         MapEntry(ReportText.doLabel.t(h), ys.doThis.t(h)),
         MapEntry(ReportText.takeCareLabel.t(h), ys.avoid.t(h)),
       ]));
+      }
       if (y >= first + 2 && !sample) {
         // Later years: a short 12-month view only (no repeated long texts).
         w.add(await _h1('$y  -  ${ReportText.monthsTitle.t(h)}'));
@@ -1508,14 +1642,23 @@ class StoryReport {
       w.addAll(await _westernSection(name, dob));
     }
 
-    // Gemstone guide
+    // Career and business (own page)
+    if (lite < 2) {
+      w.addAll(await _professionSection(psychic, destiny));
+    }
+
+    // Gemstone guide (own page, with pictures)
     if (lite < 2) {
       w.addAll(await _gemSection(psychic, destiny));
     }
 
-    // Lucky number kit and house number
+    // Rudraksha guide (own page, with pictures)
     if (lite < 2) {
       w.addAll(await _rudrakshaSection(psychic, destiny));
+    }
+
+    // House number reading, only when the customer typed a house number
+    if (lite < 2 && house.trim().isNotEmpty) {
       w.addAll(await _luckyKitSection(psychic, destiny));
     }
 
