@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../core/app_settings.dart';
@@ -7,50 +9,148 @@ import '../core/rudraksha_guide.dart';
 import '../core/user_profile.dart';
 import 'ui_kit.dart';
 
-/// Draws a simple picture of a rudraksha bead with its natural lines.
+/// Draws a 3D-style rudraksha bead: rough brown surface with small pits,
+/// deep natural grooves (mukhi lines) from pole to pole, a dark hole at the
+/// top, soft light from the upper left and a shadow below.
 class RudrakshaPainter extends CustomPainter {
   final int mukhi;
   const RudrakshaPainter(this.mukhi);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final c = size.center(Offset.zero);
-    final r = size.shortestSide / 2 * 0.9;
-    final rect = Rect.fromCircle(center: c, radius: r);
-    canvas.drawCircle(
-      c,
-      r,
+    final w = size.shortestSide;
+    canvas.save();
+    canvas.translate((size.width - w) / 2, (size.height - w) / 2);
+    canvas.scale(w);
+    _draw(canvas);
+    canvas.restore();
+  }
+
+  void _draw(Canvas canvas) {
+    const c = Offset(0.5, 0.47);
+    const rx = 0.37; // slightly narrower than tall, like a real bead
+    const ry = 0.40;
+    final body = Rect.fromCenter(center: c, width: rx * 2, height: ry * 2);
+
+    // Shadow on the table.
+    canvas.drawOval(
+      Rect.fromCenter(center: const Offset(0.5, 0.93), width: 0.58, height: 0.07),
+      Paint()
+        ..color = const Color(0x66000000)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 0.03),
+    );
+
+    // Round body with light from the upper left.
+    canvas.drawOval(
+      body,
       Paint()
         ..shader = const RadialGradient(
-          center: Alignment(-0.3, -0.35),
-          colors: [Color(0xFFB07A4A), Color(0xFF7A4A24), Color(0xFF4A2A12)],
-          stops: [0.0, 0.6, 1.0],
-        ).createShader(rect),
+          center: Alignment(-0.38, -0.45),
+          radius: 1.0,
+          colors: [Color(0xFFD99B62), Color(0xFFA0602F), Color(0xFF5E3112), Color(0xFF2E1608)],
+          stops: [0.0, 0.38, 0.78, 1.0],
+        ).createShader(body),
     );
-    final line = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.4
-      ..color = const Color(0xCC2E1A0A);
-    final n = mukhi < 1 ? 1 : (mukhi > 14 ? 14 : mukhi);
-    // Lines run from the top to the bottom of the bead.
-    for (var k = 0; k < n; k++) {
-      final t = (k + 0.5) / n; // 0..1 across the bead
-      final x = (t * 2 - 1) * r * 0.78;
-      final bulge = x.abs() * 0.0 + r * 0.0;
-      final path = Path()
-        ..moveTo(c.dx + x * 0.25, c.dy - r * 0.95)
-        ..quadraticBezierTo(c.dx + x * 1.45 + bulge, c.dy, c.dx + x * 0.25,
-            c.dy + r * 0.95);
-      canvas.drawPath(path, line);
+
+    canvas.save();
+    canvas.clipPath(Path()..addOval(body));
+
+    // Rough skin: many small pits and bumps, always the same for one bead.
+    final rnd = math.Random(11 + mukhi * 7);
+    for (var i = 0; i < 260; i++) {
+      final a = rnd.nextDouble() * 2 * math.pi;
+      final d = math.sqrt(rnd.nextDouble());
+      final x = c.dx + math.cos(a) * d * rx;
+      final y = c.dy + math.sin(a) * d * ry;
+      final s = 0.006 + rnd.nextDouble() * 0.011;
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(x, y), width: s * 1.5, height: s),
+        Paint()..color = Color.fromARGB(70 + rnd.nextInt(60), 40, 18, 6),
+      );
+      // A tiny light edge under each pit makes it look pressed in.
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(x + s * 0.35, y + s * 0.55), width: s * 1.2, height: s * 0.5),
+        Paint()..color = Color.fromARGB(40 + rnd.nextInt(30), 240, 190, 130),
+      );
     }
-    canvas.drawCircle(Offset(c.dx, c.dy - r * 0.92), r * 0.06,
-        Paint()..color = const Color(0xFF2E1A0A));
+
+    // Grooves: lines that run from the top hole to the bottom, curved like the
+    // sides of a ball. Only the ones facing us are seen.
+    final n = mukhi < 1 ? 1 : (mukhi > 14 ? 14 : mukhi);
+    final turn = n == 1 ? 0.0 : math.pi / n * 0.5;
+    for (var k = 0; k < n; k++) {
+      final phi = (2 * math.pi * k / n) + turn;
+      final facing = math.cos(phi);
+      if (facing <= 0.08) continue;
+      final path = Path();
+      const steps = 26;
+      for (var j = 0; j <= steps; j++) {
+        final th = 0.10 + (math.pi - 0.20) * j / steps;
+        final x = c.dx + rx * math.sin(th) * math.sin(phi);
+        final y = c.dy - ry * math.cos(th);
+        if (j == 0) {
+          path.moveTo(x, y);
+        } else {
+          path.lineTo(x, y);
+        }
+      }
+      final width = 0.022 * facing + 0.004;
+      // Deep dark groove, with a lit lip on one side.
+      canvas.drawPath(
+        path.shift(const Offset(0.006, 0.002)),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = width * 0.8
+          ..strokeCap = StrokeCap.round
+          ..color = const Color(0x66F0B880),
+      );
+      canvas.drawPath(
+        path,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = width
+          ..strokeCap = StrokeCap.round
+          ..color = const Color(0xE61E0E04),
+      );
+    }
+
+    // Round the edges: dark rim and soft bright patch.
     canvas.drawOval(
-      Rect.fromCenter(
-          center: Offset(c.dx - r * 0.35, c.dy - r * 0.4),
-          width: r * 0.4,
-          height: r * 0.22),
-      Paint()..color = const Color(0x55FFFFFF),
+      body,
+      Paint()
+        ..shader = const RadialGradient(
+          center: Alignment(-0.1, -0.1),
+          radius: 1.0,
+          colors: [Color(0x00000000), Color(0x00000000), Color(0x66000000)],
+          stops: [0.0, 0.7, 1.0],
+        ).createShader(body),
+    );
+    canvas.drawOval(
+      Rect.fromCenter(center: const Offset(0.36, 0.30), width: 0.22, height: 0.12),
+      Paint()
+        ..color = const Color(0x55FFE2BE)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 0.025),
+    );
+    canvas.restore();
+
+    // The hole at the top where the thread goes.
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(c.dx, c.dy - ry + 0.025), width: 0.07, height: 0.035),
+      Paint()..color = const Color(0xFF1A0B03),
+    );
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(c.dx, c.dy - ry + 0.025), width: 0.09, height: 0.05),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.008
+        ..color = const Color(0x88E2A870),
+    );
+    canvas.drawOval(
+      body,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.008
+        ..color = const Color(0x55000000),
     );
   }
 
