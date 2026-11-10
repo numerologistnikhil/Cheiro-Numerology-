@@ -169,7 +169,20 @@ class RudrakshaBead extends StatelessWidget {
       child: SizedBox(
         width: size,
         height: size,
-        child: CustomPaint(painter: RudrakshaPainter(mukhi)),
+        // A real photo named assets/images/rudraksha_<mukhi>.jpg is shown if it
+        // exists, otherwise the drawn bead is used.
+        child: ClipOval(
+          child: Image.asset(
+            'assets/images/rudraksha_$mukhi.jpg',
+            width: size,
+            height: size,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stack) => CustomPaint(
+              size: Size(size, size),
+              painter: RudrakshaPainter(mukhi),
+            ),
+          ),
+        ),
       ),
     );
   }

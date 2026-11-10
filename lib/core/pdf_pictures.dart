@@ -1,7 +1,9 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 import '../screens/gem_widgets.dart' show GemPainter;
 import '../screens/rudraksha_screen.dart' show RudrakshaPainter;
@@ -71,11 +73,57 @@ class PdfPictures {
 
   static final Map<String, Uint8List> _cache = <String, Uint8List>{};
 
-  static Future<Uint8List> gem(GemInfo g, {double size = 100}) async =>
-      _cache['g${g.id}$size'] ??= await _png(GemPainter(g.color, g.shape), size);
+  /// A real photo from assets/images (if the owner added one), cut to a
+  /// round picture. Returns null when there is no such photo.
+  static Future<Uint8List?> _photo(String name, double size) async {
+    try {
+      final data = await rootBundle.load('assets/images/$name');
+      final px = (size * 3).round();
+      final codec = await ui.instantiateImageCodec(
+        data.buffer.asUint8List(),
+        targetWidth: px * 2,
+      );
+      final img = (await codec.getNextFrame()).image;
+      final side = math.min(img.width, img.height).toDouble();
+      final src = Rect.fromLTWH(
+          (img.width - side) / 2, (img.height - side) / 2, side, side);
+      final dst = Rect.fromLTWH(0, 0, px.toDouble(), px.toDouble());
+      final rec = ui.PictureRecorder();
+      final canvas = Canvas(rec);
+      canvas.save();
+      canvas.clipPath(Path()..addOval(dst));
+      canvas.drawImageRect(img, src, dst, Paint()..filterQuality = FilterQuality.high);
+      canvas.restore();
+      canvas.drawOval(
+        dst.deflate(px * 0.01),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = px * 0.02
+          ..color = const Color(0xFFC9A24A),
+      );
+      final out = await rec.endRecording().toImage(px, px);
+      final bytes = await out.toByteData(format: ui.ImageByteFormat.png);
+      return bytes!.buffer.asUint8List();
+    } catch (_) {
+      return null;
+    }
+  }
 
-  static Future<Uint8List> rudraksha(int mukhi, {double size = 100}) async =>
-      _cache['r$mukhi$size'] ??= await _png(RudrakshaPainter(mukhi), size);
+  static Future<Uint8List> gem(GemInfo g, {double size = 100}) async {
+    final key = 'g${g.id}$size';
+    final hit = _cache[key];
+    if (hit != null) return hit;
+    final photo = await _photo('gem_${g.id}.jpg', size);
+    return _cache[key] = photo ?? await _png(GemPainter(g.color, g.shape), size);
+  }
+
+  static Future<Uint8List> rudraksha(int mukhi, {double size = 100}) async {
+    final key = 'r$mukhi$size';
+    final hit = _cache[key];
+    if (hit != null) return hit;
+    final photo = await _photo('rudraksha_$mukhi.jpg', size);
+    return _cache[key] = photo ?? await _png(RudrakshaPainter(mukhi), size);
+  }
 
   static Future<Uint8List> medallion(int n, Color c, {double size = 100}) async =>
       _cache['m$n${c.hashCode}$size'] ??= await _png(MedallionPainter(n, c), size);
