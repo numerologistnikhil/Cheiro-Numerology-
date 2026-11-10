@@ -584,14 +584,18 @@ class _PremiumHomeState extends State<PremiumHome> {
               ],
             ),
           ),
-          GridView.count(
-            crossAxisCount: 3,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 0.98,
-            children: [for (final it in items) _featureCard(s, it)],
+          // Keep the cards tidy even when the phone uses a very large font.
+          MediaQuery.withClampedTextScaling(
+            maxScaleFactor: 1.0,
+            child: GridView.count(
+              crossAxisCount: 3,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 0.80,
+              children: [for (final it in items) _featureCard(s, it)],
+            ),
           ),
         ],
       ),
