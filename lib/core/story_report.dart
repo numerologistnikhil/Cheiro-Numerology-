@@ -333,6 +333,7 @@ class StoryReport {
     return pw.Inseparable(
       canSpan: false,
       child: pw.Container(
+        width: _boxWidth + pad * 2,
         margin: pw.EdgeInsets.only(bottom: gap),
         padding: pw.EdgeInsets.all(pad),
         decoration: _boxDeco(),
