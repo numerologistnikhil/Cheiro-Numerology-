@@ -440,101 +440,71 @@ class _PremiumHomeState extends State<PremiumHome> {
     );
   }
 
-  /// Big card at the top: the PDF report is the main product.
+  /// Slim card at the top: the PDF report is the main product.
   Widget _hero(AppSettings s) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(12, 12, 12, 2),
+      margin: const EdgeInsets.fromLTRB(12, 10, 12, 0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(18),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF4A3510), Color(0xFF8A6A1F), Color(0xFFC9A24A)],
+          colors: [Color(0xFF5A430F), Color(0xFF9C7A22), Color(0xFFC9A24A)],
         ),
         boxShadow: const [
-          BoxShadow(color: Color(0x33000000), blurRadius: 16, offset: Offset(0, 8)),
+          BoxShadow(color: Color(0x26000000), blurRadius: 10, offset: Offset(0, 4)),
         ],
       ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: -18,
-            top: -18,
-            child: Icon(Icons.auto_awesome,
-                size: 130, color: Colors.white.withValues(alpha: 0.12)),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: () => _open('reports'),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(14, 10, 10, 10),
+            child: Row(
               children: [
-                Text(
-                  s.t(const L('YOUR COMPLETE REPORT', 'आपकी पूरी रिपोर्ट')),
-                  style: const TextStyle(
-                      color: _Gold.goldLight,
-                      fontSize: 11.5,
-                      letterSpacing: 1.6,
-                      fontWeight: FontWeight.w800),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  s.t(const L('A beautiful PDF about your life numbers',
-                      'आपके जीवन के अंकों पर एक सुंदर PDF')),
-                  style: const TextStyle(
-                      fontFamily: 'serif',
-                      color: Colors.white,
-                      fontSize: 21,
-                      height: 1.25,
-                      fontWeight: FontWeight.w800),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  s.t(const L(
-                      'Future years, gemstone, rudraksha, career, health and more, each on its own page.',
-                      'आने वाले साल, रत्न, रुद्राक्ष, करियर, सेहत और बहुत कुछ, हर विषय अलग पन्ने पर।')),
-                  style: const TextStyle(
-                      color: Color(0xE6FFFFFF), fontSize: 12.5, height: 1.4),
-                ),
-                const SizedBox(height: 14),
-                Row(
-                  children: [
-                    Expanded(
-                      child: FilledButton.icon(
-                        onPressed: () => _open('reports'),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: _Gold.goldDark,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14)),
-                        ),
-                        icon: const Icon(Icons.picture_as_pdf_outlined, size: 20),
-                        label: Text(s.t(const L('Create report', 'रिपोर्ट बनाइए')),
-                            style: const TextStyle(fontWeight: FontWeight.w800)),
+                const Icon(Icons.picture_as_pdf_outlined, color: Colors.white, size: 28),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        s.t(const L('Your PDF report', 'आपकी PDF रिपोर्ट')),
+                        style: const TextStyle(
+                            fontFamily: 'serif',
+                            color: Colors.white,
+                            fontSize: 16.5,
+                            fontWeight: FontWeight.w800),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => _open('mynumbers'),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          side: const BorderSide(color: Color(0xAAFFFFFF)),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14)),
-                        ),
-                        icon: const Icon(Icons.auto_awesome, size: 18),
-                        label: Text(s.t(const L('My numbers', 'मेरे अंक')),
-                            style: const TextStyle(fontWeight: FontWeight.w700)),
+                      Text(
+                        s.t(const L('Years, gemstone, rudraksha, career, health',
+                            'साल, रत्न, रुद्राक्ष, करियर, सेहत')),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Color(0xE6FFFFFF), fontSize: 11.5),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    s.t(const L('Create', 'बनाइए')),
+                    style: const TextStyle(
+                        color: _Gold.goldDark, fontWeight: FontWeight.w800, fontSize: 13),
+                  ),
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
