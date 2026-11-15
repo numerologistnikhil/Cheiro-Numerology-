@@ -53,7 +53,13 @@ jobs:
         run: flutter test
 
       - name: Build APK
-        run: flutter build apk --release --build-number=${{ github.run_number }}
+        run: |
+          # GitHub sometimes times out while Gradle downloads files; try up to 3 times.
+          for i in 1 2 3; do
+            flutter build apk --release --build-number=${{ github.run_number }} && exit 0
+            echo "Build try $i failed, waiting and trying again..."; sleep 20
+          done
+          exit 1
 
       - name: Re-sign APK with the fixed key
         run: |
