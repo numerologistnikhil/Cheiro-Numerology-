@@ -10,10 +10,90 @@ class FamousPerson {
   final int category; // index into FamousPeople.categories
   const FamousPerson(this.name, this.year, this.month, this.day, this.category);
 
+  /// The name given at birth, where it differs from the name people use.
+  /// A title such as "Mahatma" is not part of the birth name.
+  String get reportName => FamousPeople.birthNames[name] ?? name;
+
+  /// Well-known events of this person's life, by year (may be empty).
+  List<LifeEvent> get events => FamousPeople.lifeEvents[name] ?? const [];
+
   DateTime get dob => DateTime(year, month, day);
 }
 
+/// One well-known event in a person's life.
+class LifeEvent {
+  final int year;
+  final L what;
+  const LifeEvent(this.year, this.what);
+}
+
 class FamousPeople {
+  static const Map<String, String> birthNames = {
+    'Mahatma Gandhi': 'Mohandas Karamchand Gandhi',
+    'Swami Vivekananda': 'Narendranath Datta',
+    'A. P. J. Abdul Kalam': 'Avul Pakir Jainulabdeen Abdul Kalam',
+  };
+
+  /// Only events whose year is well documented.
+  static const Map<String, List<LifeEvent>> lifeEvents = {
+    'Mahatma Gandhi': [
+      LifeEvent(1888, L('Sails to London to study law.', 'क़ानून पढ़ने के लिए लंदन रवाना हुए।')),
+      LifeEvent(1893, L('Goes to South Africa; faces racial insult on a train.', 'दक्षिण अफ़्रीका गए; ट्रेन में नस्लीय अपमान झेला।')),
+      LifeEvent(1915, L('Returns to India for good.', 'हमेशा के लिए भारत लौटे।')),
+      LifeEvent(1917, L('Champaran satyagraha, his first success in India.', 'चंपारण सत्याग्रह, भारत में पहली सफलता।')),
+      LifeEvent(1930, L('Salt March to Dandi.', 'दांडी तक नमक यात्रा।')),
+      LifeEvent(1942, L('Quit India movement; jailed.', 'भारत छोड़ो आंदोलन; जेल गए।')),
+      LifeEvent(1947, L('India becomes independent.', 'भारत आज़ाद हुआ।')),
+      LifeEvent(1948, L('Assassinated in January, aged 78.', 'जनवरी में 78 वर्ष की आयु में हत्या हुई।')),
+    ],
+    'Albert Einstein': [
+      LifeEvent(1905, L('His "miracle year": papers on special relativity and the photoelectric effect.', 'उनका "चमत्कार वर्ष": विशेष सापेक्षता और प्रकाश-विद्युत प्रभाव पर शोध-पत्र।')),
+      LifeEvent(1915, L('Completes the general theory of relativity.', 'सामान्य सापेक्षता का सिद्धांत पूरा किया।')),
+      LifeEvent(1921, L('Nobel Prize in Physics for the photoelectric effect (awarded in 1922).', 'प्रकाश-विद्युत प्रभाव के लिए भौतिकी का नोबेल पुरस्कार (1922 में दिया गया)।')),
+      LifeEvent(1933, L('Leaves Germany and settles in the USA.', 'जर्मनी छोड़कर अमेरिका में बस गए।')),
+      LifeEvent(1955, L('Dies at Princeton.', 'प्रिंसटन में निधन।')),
+    ],
+    'Nelson Mandela': [
+      LifeEvent(1944, L('Helps found the ANC Youth League.', 'एएनसी यूथ लीग की स्थापना में मदद की।')),
+      LifeEvent(1964, L('Sentenced to life in prison at the Rivonia trial.', 'रिवोनिया मुक़दमे में उम्रक़ैद की सज़ा मिली।')),
+      LifeEvent(1990, L('Released after 27 years in prison.', '27 साल जेल के बाद रिहा हुए।')),
+      LifeEvent(1993, L('Shares the Nobel Peace Prize.', 'नोबेल शांति पुरस्कार साझा किया।')),
+      LifeEvent(1994, L('Elected President of South Africa.', 'दक्षिण अफ़्रीका के राष्ट्रपति चुने गए।')),
+      LifeEvent(2013, L('Dies, aged 95.', '95 वर्ष की आयु में निधन।')),
+    ],
+    'Abraham Lincoln': [
+      LifeEvent(1846, L('Elected to the US House of Representatives.', 'अमेरिकी प्रतिनिधि सभा के लिए चुने गए।')),
+      LifeEvent(1860, L('Elected President of the United States.', 'अमेरिका के राष्ट्रपति चुने गए।')),
+      LifeEvent(1863, L('Issues the Emancipation Proclamation.', 'मुक्ति घोषणा जारी की।')),
+      LifeEvent(1865, L('Assassinated in April, just after the Civil War ended.', 'गृहयुद्ध ख़त्म होते ही अप्रैल में हत्या हुई।')),
+    ],
+    'Swami Vivekananda': [
+      LifeEvent(1886, L('His teacher Ramakrishna dies; he takes up the monk\'s path.', 'गुरु रामकृष्ण का देहांत; उन्होंने संन्यास का मार्ग अपनाया।')),
+      LifeEvent(1893, L('Speaks at the Parliament of the World\'s Religions in Chicago.', 'शिकागो की विश्व धर्म संसद में भाषण दिया।')),
+      LifeEvent(1897, L('Founds the Ramakrishna Mission.', 'रामकृष्ण मिशन की स्थापना की।')),
+      LifeEvent(1902, L('Dies at Belur Math, aged 39.', '39 वर्ष की आयु में बेलूर मठ में निधन।')),
+    ],
+    'A. P. J. Abdul Kalam': [
+      LifeEvent(1980, L('Leads the launch of SLV-3, India\'s first satellite launch vehicle to place a satellite in orbit.', 'एसएलवी-3 के प्रक्षेपण का नेतृत्व किया, जिसने भारत का उपग्रह कक्षा में पहुँचाया।')),
+      LifeEvent(1998, L('Pokhran-II nuclear tests, in which he played a leading role.', 'पोखरण-II परमाणु परीक्षण, जिनमें उनकी बड़ी भूमिका रही।')),
+      LifeEvent(2002, L('Elected the 11th President of India.', 'भारत के 11वें राष्ट्रपति चुने गए।')),
+      LifeEvent(2015, L('Dies while giving a lecture at IIM Shillong.', 'आईआईएम शिलांग में व्याख्यान देते समय निधन।')),
+    ],
+    'Steve Jobs': [
+      LifeEvent(1976, L('Co-founds Apple.', 'एप्पल की सह-स्थापना की।')),
+      LifeEvent(1985, L('Leaves Apple after a power struggle.', 'सत्ता संघर्ष के बाद एप्पल छोड़ी।')),
+      LifeEvent(1997, L('Returns to Apple.', 'एप्पल में वापसी की।')),
+      LifeEvent(2007, L('Introduces the iPhone.', 'आईफ़ोन पेश किया।')),
+      LifeEvent(2011, L('Dies in October.', 'अक्टूबर में निधन।')),
+    ],
+    'Sachin Tendulkar': [
+      LifeEvent(1989, L('Makes his Test debut against Pakistan, aged 16.', '16 साल की उम्र में पाकिस्तान के विरुद्ध टेस्ट पदार्पण।')),
+      LifeEvent(2010, L('First man to score an ODI double century.', 'वनडे में दोहरा शतक लगाने वाले पहले पुरुष खिलाड़ी।')),
+      LifeEvent(2011, L('India win the World Cup; his only title.', 'भारत विश्व कप जीता; यह उनका एकमात्र ख़िताब रहा।')),
+      LifeEvent(2013, L('Retires from Test cricket after his 200th Test.', '200वें टेस्ट के बाद टेस्ट क्रिकेट से संन्यास।')),
+    ],
+  };
+
   static const List<L> categories = [
     L('Leaders and freedom', 'नेता और स्वतंत्रता'),
     L('Spiritual', 'आध्यात्मिक'),

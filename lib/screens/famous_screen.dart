@@ -132,11 +132,14 @@ class _FamousDetailState extends State<FamousDetail> {
         logo = data.buffer.asUint8List();
       } catch (_) {}
       await StoryReport.preview(
-        name: widget.person.name,
+        name: widget.person.reportName,
         dob: widget.person.dob,
         logo: logo,
         hindi: s.hindi,
         sample: true,
+        lifeEvents: [
+          for (final e in widget.person.events) MapEntry(e.year, e.what.t(s.hindi)),
+        ],
       );
     } catch (_) {
       if (mounted) setState(() => _error = s.t(FamousPeople.failed));

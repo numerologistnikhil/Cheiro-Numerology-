@@ -72,6 +72,10 @@ class StoryReport {
   String house = '';
   String vehicle = '';
 
+  /// For a famous-person sample: real events of the person's life by year.
+  /// When given, the report shows a life timeline instead of future years.
+  List<MapEntry<int, String>> lifeEvents = const [];
+
   /// Safe mode: leaves out the name-suggestion section and the extra Lo Shu
   /// parts, used only when the full report could not be made.
   /// 0 = full report, 1 = no name suggestions or extra Lo Shu parts,
@@ -104,6 +108,7 @@ class StoryReport {
     int lite = 0,
     String house = '',
     String vehicle = '',
+    List<MapEntry<int, String>> lifeEvents = const [],
   }) {
     var base = options ?? ReportOptions(hindi: hindi, years: years);
     if (sample) base = base.copyWith(includeAngelNumbers: false);
@@ -115,6 +120,7 @@ class StoryReport {
           ..chosenName = chosenName
           ..house = house
           ..vehicle = vehicle
+          ..lifeEvents = lifeEvents
           ..lite = lite)
         ._build(name, dob, mobile, logo);
   }
@@ -132,6 +138,7 @@ class StoryReport {
     String chosenName = '',
     String house = '',
     String vehicle = '',
+    List<MapEntry<int, String>> lifeEvents = const [],
   }) async {
     final doc = await build(
       name: name,
@@ -145,6 +152,7 @@ class StoryReport {
       chosenName: chosenName,
       house: house,
       vehicle: vehicle,
+      lifeEvents: lifeEvents,
     );
     await Printing.layoutPdf(onLayout: (_) => doc.save());
   }
@@ -162,6 +170,7 @@ class StoryReport {
     String chosenName = '',
     String house = '',
     String vehicle = '',
+    List<MapEntry<int, String>> lifeEvents = const [],
   }) async {
     final doc = await build(
       name: name,
@@ -175,6 +184,7 @@ class StoryReport {
       chosenName: chosenName,
       house: house,
       vehicle: vehicle,
+      lifeEvents: lifeEvents,
     );
     return doc.save();
   }
@@ -913,13 +923,17 @@ class StoryReport {
             : 'Who you are: personality, strengths, work, money, love and health',
       h ? 'एक पन्ने में आपकी रिपोर्ट और लो शू ग्रिड' : 'Your report in one page and your Lo Shu grid',
       if (nameResult.total > 0) h ? 'आपके नाम का विश्लेषण' : 'Name analysis',
-      if (nameResult.total > 0)
+      if (nameResult.total > 0 && lifeEvents.isEmpty)
         h ? 'आपके नाम के बेहतर वर्तनी-सुझाव' : 'Better spellings for your name',
       if (mobileResult.total > 0) h ? 'आपके मोबाइल नंबर का विश्लेषण' : 'Mobile number analysis',
-      h
-          ? 'आपके अगले ${opts.years} साल: सेहत, परिवार, सीखना और महीने-दर-महीने मार्गदर्शन'
-          : 'Your next ${opts.years} years with health, family, learning and a month-by-month guide',
-      h ? 'इस साल के पर्सनल मंथ' : 'Personal months of this year',
+      if (lifeEvents.isNotEmpty)
+        h ? 'जीवन की समयरेखा: हर साल का अंक और असली घटनाएँ' : 'Life timeline: each year\'s number and real events'
+      else ...[
+        h
+            ? 'आपके अगले ${opts.years} साल: सेहत, परिवार, सीखना और महीने-दर-महीने मार्गदर्शन'
+            : 'Your next ${opts.years} years with health, family, learning and a month-by-month guide',
+        h ? 'इस साल के पर्सनल मंथ' : 'Personal months of this year',
+      ],
       h ? 'सरल उपाय' : 'Simple remedies',
       if (opts.includeAngelNumbers)
         h ? 'एंजल नंबर और आपकी जन्मतिथि' : 'Angel numbers and your date of birth',
@@ -985,6 +999,37 @@ class StoryReport {
       ));
     }
     return pw.Wrap(spacing: 6, runSpacing: 8, children: cells);
+  }
+
+  /// A famous person's life: for each known year, the personal year number
+  /// and the real event. Shown with an honest note that year numbers are a
+  /// broad mood, and some years fit while others do not.
+  Future<List<pw.Widget>> _lifeTimeline(DateTime dob) async {
+    final h = hindi;
+    final out = <pw.Widget>[];
+    out.add(await _h1(h ? 'जीवन की समयरेखा' : 'Life timeline'));
+    out.add(await _p(h
+        ? 'यहाँ इस व्यक्ति के जीवन के जाने-माने सालों को उस साल के पर्सनल ईयर अंक के साथ रखा गया है। देखिए कि कहाँ अंक की थीम घटना से मेल खाती है और कहाँ नहीं। यह ऐप का ईमानदार तरीक़ा है यह दिखाने का कि अंक कैसे पढ़े जाते हैं।'
+        : 'Here the well-known years of this person\'s life are placed next to the personal year number of that year. See where the theme of the number matches the event and where it does not. This is the honest way to show how the numbers are read.'));
+    final events = [...lifeEvents]..sort((a, b) => a.key.compareTo(b.key));
+    for (final e in events) {
+      final py = NumerologyTools.personalYear(dob, e.key);
+      final ys = ReportText.years[py] ?? ReportText.years[1]!;
+      final age = e.key - dob.year;
+      out.add(await _box(
+        h
+            ? '${e.key} (आयु $age) - पर्सनल ईयर $py: ${ys.title.t(h)}'
+            : '${e.key} (age $age) - Personal Year $py: ${ys.title.t(h)}',
+        e.value,
+      ));
+    }
+    out.add(await _box(
+      h ? 'इसे कैसे पढ़ें' : 'How to read this',
+      h
+          ? 'कुछ सालों में अंक की थीम घटना से अच्छी तरह मिलती है और कुछ में बिल्कुल नहीं। इसका कारण यह है कि साल का अंक एक बड़ा मोटा मूड बताता है, कोई ख़ास घटना नहीं। अंक-ज्योतिष किसी घटना का सही साल या दिन नहीं बता सकता, और इसका कोई वैज्ञानिक प्रमाण नहीं है। इसे अपने साल की योजना बनाने के लिए एक सोच-विचार का तरीक़ा मानिए, भविष्यवाणी नहीं।'
+          : 'In some years the theme of the number fits the event well, and in others it does not. That is because a year number gives only a broad mood, not a particular event. Numerology cannot name the exact year or day of an event, and there is no scientific proof for it. Use it as a way to think about planning your own years, not as a prediction.',
+    ));
+    return out;
   }
 
   Future<List<pw.Widget>> _secPage(
@@ -1497,7 +1542,7 @@ class StoryReport {
     }
 
     // Better spellings of the name
-    if (nameResult.total > 0 && lite == 0) {
+    if (nameResult.total > 0 && lite == 0 && lifeEvents.isEmpty) {
       w.addAll(await _nameSuggestionSection(name, dob));
     }
 
@@ -1524,7 +1569,10 @@ class StoryReport {
       ));
     }
 
-    // Future years
+    // Future years (or, for a famous person, a timeline of real events)
+    if (lifeEvents.isNotEmpty) {
+      w.addAll(await _lifeTimeline(dob));
+    } else {
     final years = opts.years;
     final first = now.year;
     final last = now.year + years - 1;
@@ -1615,6 +1663,8 @@ class StoryReport {
           ]));
         }
       }
+    }
+
     }
 
     // Simple remedies
