@@ -229,7 +229,10 @@ class StoryReport {
     final pic = rec.endRecording();
     final img = await pic.toImage(w, h);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    final png = data!.buffer.asUint8List();
+    // Copy the bytes: the PDF reads them later, and the engine may reuse
+    // the original memory by then (this made some pictures look broken).
+    final png = Uint8List.fromList(
+        data!.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
     final made = _Img(png, w / scale, h / scale);
     _imgCache[key] = made;
     return made;
@@ -783,7 +786,8 @@ class StoryReport {
       canvas.drawImage(img, ui.Offset.zero, paint);
       final out = await rec.endRecording().toImage(img.width, img.height);
       final data = await out.toByteData(format: ui.ImageByteFormat.png);
-      return data!.buffer.asUint8List();
+      return Uint8List.fromList(
+        data!.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
     } catch (_) {
       return png;
     }
@@ -1188,7 +1192,7 @@ class StoryReport {
         MapEntry(GemstoneGuide.weightLabel.t(h), g.weight.t(h)),
         MapEntry(GemstoneGuide.mantraLabel.t(h), g.mantra.t(h)),
         MapEntry(GemstoneGuide.cautionLabel.t(h), g.caution.t(h)),
-      ], labelW: 120));
+      ], labelW: 140));
     }
 
     final m = GemstoneGuide.gems[psychic];

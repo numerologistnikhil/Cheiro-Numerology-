@@ -68,7 +68,8 @@ class PdfPictures {
     p.paint(canvas, Size(px.toDouble(), px.toDouble()));
     final img = await rec.endRecording().toImage(px, px);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    return data!.buffer.asUint8List();
+    return Uint8List.fromList(
+        data!.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
   static final Map<String, Uint8List> _cache = <String, Uint8List>{};
@@ -103,7 +104,8 @@ class PdfPictures {
       );
       final out = await rec.endRecording().toImage(px, px);
       final bytes = await out.toByteData(format: ui.ImageByteFormat.png);
-      return bytes!.buffer.asUint8List();
+      return Uint8List.fromList(
+          bytes!.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
     } catch (_) {
       return null;
     }
