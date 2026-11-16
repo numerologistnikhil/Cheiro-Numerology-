@@ -145,6 +145,32 @@ class _ReportOptionsScreenState extends State<ReportOptionsScreen> {
     );
   }
 
+  Widget _ageRow(String label, int value, VoidCallback down, VoidCallback up,
+      {required bool canDown, required bool canUp}) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(label, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600)),
+        ),
+        IconButton(
+          onPressed: canDown ? down : null,
+          icon: const Icon(Icons.remove_circle_outline),
+        ),
+        SizedBox(
+          width: 44,
+          child: Center(
+            child: Text('$value',
+                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+          ),
+        ),
+        IconButton(
+          onPressed: canUp ? up : null,
+          icon: const Icon(Icons.add_circle_outline),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final hi = AppLang.of(context).hindi;
@@ -205,6 +231,75 @@ class _ReportOptionsScreenState extends State<ReportOptionsScreen> {
               ),
           ],
         ),
+        SectionLabel(s('Or choose by age (past years too)', 'या उम्र के हिसाब से चुनिए (बीते साल भी)')),
+        SizedBox(
+          width: double.infinity,
+          child: SegmentedButton<bool>(
+            segments: [
+              ButtonSegment<bool>(
+                value: false,
+                label: Text(s('Coming years', 'आगे के साल')),
+              ),
+              ButtonSegment<bool>(
+                value: true,
+                label: Text(s('From age to age', 'आयु से आयु तक')),
+              ),
+            ],
+            selected: {_o.byAge},
+            onSelectionChanged: (v) => setState(() {
+              _o = v.first
+                  ? _o.copyWith(ageFrom: 10, ageTo: 25)
+                  : _o.copyWith(ageFrom: 0, ageTo: 0);
+            }),
+          ),
+        ),
+        if (_o.byAge) ...[
+          const SizedBox(height: 8),
+          _ageRow(
+            s('From age', 'कितनी उम्र से'),
+            _o.ageFrom,
+            () => setState(() => _o = _o.copyWith(ageFrom: _o.ageFrom - 1)),
+            () => setState(() => _o = _o.copyWith(ageFrom: _o.ageFrom + 1)),
+            canDown: _o.ageFrom > 0,
+            canUp: _o.ageFrom < _o.ageTo,
+          ),
+          _ageRow(
+            s('To age', 'कितनी उम्र तक'),
+            _o.ageTo,
+            () => setState(() => _o = _o.copyWith(ageTo: _o.ageTo - 1)),
+            () => setState(() => _o = _o.copyWith(ageTo: _o.ageTo + 1)),
+            canDown: _o.ageTo > _o.ageFrom,
+            canUp: _o.ageTo < 100 && _o.ageTo - _o.ageFrom + 1 < 50,
+          ),
+          Wrap(
+            spacing: 8,
+            children: [
+              for (final r in const [
+                [0, 10],
+                [10, 25],
+                [25, 40],
+                [40, 60],
+                [60, 80],
+              ])
+                ChoiceChip(
+                  label: Text('${r[0]}-${r[1]}'),
+                  selected: _o.ageFrom == r[0] && _o.ageTo == r[1],
+                  onSelected: (_) =>
+                      setState(() => _o = _o.copyWith(ageFrom: r[0], ageTo: r[1])),
+                ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(
+              s(
+                '${_o.span} years will be in the report. The report uses the date of birth to find these years. Years that are already over are read as a look back.',
+                'रिपोर्ट में ${_o.span} साल होंगे। ये साल जन्म तिथि से निकाले जाते हैं। जो साल बीत चुके हैं, वे पीछे मुड़कर देखने के लिए पढ़े जाते हैं।',
+              ),
+              style: const TextStyle(fontSize: 12.5, height: 1.4),
+            ),
+          ),
+        ],
         SectionLabel(s('Printout type', 'प्रिंटआउट का प्रकार')),
         SizedBox(
           width: double.infinity,

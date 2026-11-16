@@ -76,7 +76,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
     final b = _opts.border.nameEn;
     final c = _opts.blackWhite ? 'Black & white' : _opts.palette.nameEn;
     final f = _opts.hasFooter ? 'footer set' : 'no footer line';
-    return '${_opts.hindi ? 'Hindi' : 'English'}  |  ${_opts.years} years  |  '
+    return '${_opts.hindi ? 'Hindi' : 'English'}  |  ${_opts.byAge ? 'age ${_opts.ageFrom}-${_opts.ageTo}' : '${_opts.years} years'}  |  '
         '$c  |  $b  |  $f';
   }
 
@@ -372,7 +372,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
                   )
                 : const Icon(Icons.picture_as_pdf_outlined),
             label: Text(_busy
-                ? (_opts.years > 10
+                ? (_opts.span > 10
                     ? 'Preparing, long reports take 1-2 minutes...'
                     : 'Preparing...')
                 : 'Create PDF Report'),

@@ -112,7 +112,7 @@ class StoryReport {
   }) {
     var base = options ?? ReportOptions(hindi: hindi, years: years);
     if (sample) base = base.copyWith(includeAngelNumbers: false);
-    var n = base.years;
+    var n = base.span;
     if (sample && n > Pricing.sampleYears) n = Pricing.sampleYears;
     if (n < 1) n = 1;
     if (n > 50) n = 50;
@@ -895,7 +895,8 @@ class StoryReport {
             '${mobileResult.total}  (${mobileResult.root})'),
       MapEntry(ReportPages.labelLang.t(h),
           h ? ReportPages.langHindi.t(h) : ReportPages.langEnglish.t(h)),
-      MapEntry(ReportPages.labelYears.t(h), '${opts.years}'),
+      MapEntry(ReportPages.labelYears.t(h),
+          opts.byAge ? '${opts.ageFrom} - ${opts.ageFrom + opts.years - 1} (${h ? 'आयु' : 'age'})' : '${opts.years}'),
       MapEntry(ReportPages.labelDate.t(h), _date(now)),
       MapEntry(ReportPages.labelBy.t(h), ReportPages.preparedByValue.t(h)),
     ];
@@ -929,10 +930,16 @@ class StoryReport {
       if (lifeEvents.isNotEmpty)
         h ? 'जीवन की समयरेखा: हर साल का अंक और असली घटनाएँ' : 'Life timeline: each year\'s number and real events'
       else ...[
-        h
-            ? 'आपके अगले ${opts.years} साल: सेहत, परिवार, सीखना और महीने-दर-महीने मार्गदर्शन'
-            : 'Your next ${opts.years} years with health, family, learning and a month-by-month guide',
-        h ? 'इस साल के पर्सनल मंथ' : 'Personal months of this year',
+        if (opts.byAge)
+          h
+              ? 'आयु ${opts.ageFrom} से ${opts.ageFrom + opts.years - 1} तक के साल: सेहत, परिवार, सीखना और महीने-दर-महीने मार्गदर्शन'
+              : 'Years from age ${opts.ageFrom} to ${opts.ageFrom + opts.years - 1} with health, family, learning and a month-by-month guide'
+        else ...[
+          h
+              ? 'आपके अगले ${opts.years} साल: सेहत, परिवार, सीखना और महीने-दर-महीने मार्गदर्शन'
+              : 'Your next ${opts.years} years with health, family, learning and a month-by-month guide',
+          h ? 'इस साल के पर्सनल मंथ' : 'Personal months of this year',
+        ],
       ],
       h ? 'सरल उपाय' : 'Simple remedies',
       if (opts.includeAngelNumbers)
@@ -1574,12 +1581,23 @@ class StoryReport {
       w.addAll(await _lifeTimeline(dob));
     } else {
     final years = opts.years;
-    final first = now.year;
-    final last = now.year + years - 1;
-    w.add(await _h1(h
-        ? 'आपके अगले $years साल ($first - $last)'
-        : 'Your next $years years ($first - $last)'));
-    w.add(await _p(ReportText.yearsIntro.t(h)));
+    final byAge = opts.byAge;
+    final first = byAge ? dob.year + opts.ageFrom : now.year;
+    final last = first + years - 1;
+    w.add(await _h1(byAge
+        ? (h
+            ? 'आपके जीवन के साल: आयु ${opts.ageFrom} से ${opts.ageFrom + years - 1} ($first - $last)'
+            : 'Years of your life: age ${opts.ageFrom} to ${opts.ageFrom + years - 1} ($first - $last)')
+        : (h
+            ? 'आपके अगले $years साल ($first - $last)'
+            : 'Your next $years years ($first - $last)')));
+    if (byAge && last < now.year) {
+      w.add(await _p(h
+          ? 'ये सभी साल बीत चुके हैं। हर साल को पढ़िए और अपनी याद से मिलाइए कि उस साल की थीम आपके अनुभव से कितनी मिलती है। यह अतीत को समझने का एक तरीक़ा है, घटनाओं की गारंटी नहीं।'
+          : 'All of these years are in the past. Read each year and compare its theme with what you remember. This is a way to look back and understand, not a guarantee of any event.'));
+    } else {
+      w.add(await _p(ReportText.yearsIntro.t(h)));
+    }
     if (years > 9) w.add(await _p(ReportText.cycleNote.t(h)));
 
     w.add(await _h1(ReportText.glanceTitle.t(h)));
@@ -1592,7 +1610,8 @@ class StoryReport {
     w.add(pw.Wrap(spacing: 6, runSpacing: 6, children: glance));
     w.add(pw.SizedBox(height: 10));
 
-    // Months of this year (quick view)
+    // Months of this year (quick view), when this year is in the range
+    if (!byAge || (now.year >= first && now.year <= last)) {
     w.add(await _h1(ReportText.monthsTitle.t(h)));
     w.add(await _p(ReportText.monthsIntro.t(h)));
     final months = <pw.Widget>[];
@@ -1603,6 +1622,7 @@ class StoryReport {
     }
     w.add(pw.Wrap(spacing: 6, runSpacing: 6, children: months));
     w.add(pw.SizedBox(height: 10));
+    }
 
 
     for (var y = first; y <= last; y++) {

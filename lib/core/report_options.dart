@@ -76,6 +76,12 @@ class ReportOptions {
   final String footerLine1;
   final String footerLine2;
   final int years; // kitne saal ki prediction (app me customer chunega)
+
+  /// By-age mode: when [ageTo] is above 0, the report covers the years from
+  /// age [ageFrom] to age [ageTo] (past, present or future) instead of the
+  /// coming [years].
+  final int ageFrom;
+  final int ageTo;
   final bool includeAngelNumbers;
 
   const ReportOptions({
@@ -86,6 +92,8 @@ class ReportOptions {
     this.footerLine1 = '',
     this.footerLine2 = '',
     this.years = 10,
+    this.ageFrom = 0,
+    this.ageTo = 0,
     this.includeAngelNumbers = true,
   });
 
@@ -104,6 +112,12 @@ class ReportOptions {
       ? blackWhitePalette
       : palettes.firstWhere((p) => p.id == paletteId, orElse: () => palettes[0]);
 
+  /// True when the customer chose a range of ages.
+  bool get byAge => ageTo > 0 && ageTo >= ageFrom;
+
+  /// Number of years in the report, whichever way it was chosen.
+  int get span => byAge ? (ageTo - ageFrom + 1).clamp(1, 50) : years;
+
   bool get hasFooter => footerLine1.trim().isNotEmpty || footerLine2.trim().isNotEmpty;
 
   List<String> get footerLines => [cleanFooter(footerLine1), cleanFooter(footerLine2)]
@@ -118,6 +132,8 @@ class ReportOptions {
     String? footerLine1,
     String? footerLine2,
     int? years,
+    int? ageFrom,
+    int? ageTo,
     bool? includeAngelNumbers,
   }) {
     return ReportOptions(
@@ -128,6 +144,8 @@ class ReportOptions {
       footerLine1: footerLine1 ?? this.footerLine1,
       footerLine2: footerLine2 ?? this.footerLine2,
       years: years ?? this.years,
+      ageFrom: ageFrom ?? this.ageFrom,
+      ageTo: ageTo ?? this.ageTo,
       includeAngelNumbers: includeAngelNumbers ?? this.includeAngelNumbers,
     );
   }
@@ -140,6 +158,8 @@ class ReportOptions {
         'footerLine1': footerLine1,
         'footerLine2': footerLine2,
         'years': years,
+        'ageFrom': ageFrom,
+        'ageTo': ageTo,
         'includeAngelNumbers': includeAngelNumbers,
       };
 
@@ -151,6 +171,8 @@ class ReportOptions {
         footerLine1: (j['footerLine1'] as String?) ?? '',
         footerLine2: (j['footerLine2'] as String?) ?? '',
         years: (j['years'] as int?) ?? 10,
+        ageFrom: (j['ageFrom'] as int?) ?? 0,
+        ageTo: (j['ageTo'] as int?) ?? 0,
         includeAngelNumbers: j['includeAngelNumbers'] != false,
       );
 }
