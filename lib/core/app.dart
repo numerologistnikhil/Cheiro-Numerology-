@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/splash_screen.dart';
 import 'app_settings.dart';
+import 'app_sound.dart';
 import 'app_theme.dart';
 
 class AnkdharaColors {
@@ -69,7 +70,8 @@ class CheiroApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Ank Dhara',
         debugShowCheckedModeBanner: false,
-        builder: (context, child) => AppThemeLayer(child: child),
+        builder: (context, child) =>
+            AppThemeLayer(child: TapSound(child: child)),
         theme: base.copyWith(
           textTheme: text,
           scaffoldBackgroundColor: AnkdharaColors.pearl,

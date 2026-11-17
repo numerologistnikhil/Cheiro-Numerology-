@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import '../core/app_settings.dart';
+import '../core/app_sound.dart';
 import '../core/app_style.dart';
 import '../core/pricing.dart';
 import '../core/rate_app.dart';
@@ -113,6 +114,25 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+          _title(s.t(const L('SOUND', 'आवाज़'))),
+          _box(
+            SwitchListTile(
+              activeColor: _gold,
+              title: Text(
+                s.t(const L('Sounds', 'आवाज़ें')),
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+              subtitle: Text(s.t(const L(
+                'A soft click when you tap. Turn off for silent use.',
+                'टैप करने पर हल्की आवाज़। चुप रखने के लिए बंद कर दें।',
+              ))),
+              value: s.sound,
+              onChanged: (v) {
+                s.setSound(v);
+                if (v) AppSound.tap();
+              },
             ),
           ),
           _title(s.t(const L('NUMEROLOGY STYLE', 'अंकशास्त्र की पद्धति'))),

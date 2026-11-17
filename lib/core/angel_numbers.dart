@@ -700,7 +700,310 @@ class AngelNumbers {
       actionHi:
           'यह करें: कोई एक प्रोजेक्ट चुनिए जो आपने शुरू करके छोड़ दिया था, और आज उसका अगला छोटा कदम उठाइए।',
     ),
+    AngelNumber(
+      number: '101',
+      keyDigits: [1, 0],
+      titleEn: 'A Fresh Start with Faith',
+      titleHi: 'विश्वास के साथ नई शुरुआत',
+      meaningEn:
+          '101 places the number 1 on both sides of a zero. The 1 stands for a new beginning and the 0 for the divine source, so the number is read as "begin, and you are held on both sides". It usually shows up when you are standing at the door of something new and feeling unsure.',
+      meaningHi:
+          '101 में अंक 1 शून्य के दोनों ओर खड़ा है। 1 नई शुरुआत है और 0 दिव्य स्रोत, इसलिए इसका मतलब माना जाता है: "शुरू कीजिए, आप दोनों ओर से सँभाले हुए हैं।" यह अक्सर तब दिखता है जब आप किसी नई चीज़ के दरवाज़े पर खड़े होकर घबरा रहे हों।',
+      messageEn:
+          'Do not wait until you feel completely ready. The message is that the first step matters more than the perfect plan, and that you will find the next step once you move. Your own thoughts are strong right now, so keep them kind and clear.',
+      messageHi:
+          'पूरी तरह तैयार महसूस होने का इंतज़ार मत कीजिए। संदेश यह है कि पहला कदम पूरी योजना से ज़्यादा ज़रूरी है, और चलते ही अगला कदम दिखने लगेगा। इस समय आपके विचार असरदार हैं, इसलिए उन्हें दयालु और साफ़ रखिए।',
+      loveEn:
+          'In love, it asks you to take the first honest step: a message, an apology or a simple "I care". It also suits people who are starting again after a hurt. Begin slowly and let trust grow, rather than expecting everything at once.',
+      loveHi:
+          'प्रेम में यह पहला सच्चा कदम उठाने को कहता है: एक संदेश, एक माफ़ी या सीधा सा "मुझे परवाह है"। चोट खाकर दोबारा शुरू करने वालों के लिए भी यह अच्छा है। सब कुछ एक साथ चाहने के बजाय धीरे शुरू कीजिए और भरोसा बढ़ने दीजिए।',
+      careerEn:
+          'At work it points to a new job, a new role, a new product or simply a new way of doing an old task. Take the lead on something small. Your confidence will grow with each step you finish.',
+      careerHi:
+          'काम में यह नई नौकरी, नई ज़िम्मेदारी, नए उत्पाद या पुराने काम को नए ढंग से करने का इशारा है। किसी छोटी चीज़ में अगुवाई कीजिए। हर पूरा किया कदम आपका आत्मविश्वास बढ़ाएगा।',
+      actionEn:
+          'Do this: write the one thing you keep postponing on a paper and do the first five minutes of it today.',
+      actionHi:
+          'यह करें: जो काम आप टालते आ रहे हैं उसे काग़ज़ पर लिखिए और आज उसके पहले पाँच मिनट कर डालिए।',
+    ),
+    AngelNumber(
+      number: '123',
+      keyDigits: [1, 2, 3],
+      titleEn: 'Simple Steps, One by One',
+      titleHi: 'एक-एक सीढ़ी, सरल कदम',
+      meaningEn:
+          '123 counts up in the most natural way: 1, then 2, then 3. It is read as a reminder that life does not need a huge jump, only the next simple step. It often appears when you are making things too complicated.',
+      meaningHi:
+          '123 सबसे स्वाभाविक ढंग से गिनता है: 1, फिर 2, फिर 3। इसे याद दिलाने वाला अंक माना जाता है कि ज़िंदगी को बड़ी छलाँग नहीं, बस अगला सरल कदम चाहिए। यह अक्सर तब दिखता है जब आप चीज़ों को ज़रूरत से ज़्यादा उलझा रहे हों।',
+      messageEn:
+          'Take it easy and keep it simple. Break your worry into three small parts and handle the first part only. Progress that is slow but steady is still progress, and it is the kind that lasts.',
+      messageHi:
+          'आराम से चलिए और बात को सरल रखिए। अपनी चिंता को तीन छोटे हिस्सों में बाँटिए और सिर्फ़ पहला हिस्सा सँभालिए। धीमी पर लगातार प्रगति भी प्रगति है, और वही टिकती है।',
+      loveEn:
+          'In love, it says to keep things light and easy. Do not over-think every message. Small, regular acts of care - a call, a shared meal, a kind word - build more than big promises.',
+      loveHi:
+          'प्रेम में यह बात को हल्का और सहज रखने को कहता है। हर संदेश पर ज़्यादा मत सोचिए। छोटे और नियमित परवाह भरे काम - एक फ़ोन, साथ खाना, मीठा बोल - बड़े वादों से ज़्यादा रिश्ता बनाते हैं।',
+      careerEn:
+          'At work, it supports learning step by step: a course, a new tool, a basic skill. Make a list of three tasks in order and finish them one after another. Order and rhythm will save you time.',
+      careerHi:
+          'काम में यह क्रम से सीखने का साथ देता है: कोई कोर्स, नया औज़ार या बुनियादी हुनर। क्रम से तीन काम लिखिए और एक के बाद एक पूरे कीजिए। क्रम और लय आपका समय बचाएगी।',
+      actionEn:
+          'Do this: write down three small steps for your biggest problem and finish step one before the day ends.',
+      actionHi:
+          'यह करें: अपनी सबसे बड़ी समस्या के तीन छोटे कदम लिखिए और दिन ख़त्म होने से पहले पहला पूरा कर लीजिए।',
+    ),
+    AngelNumber(
+      number: '321',
+      keyDigits: [1, 2, 3],
+      titleEn: 'Countdown to Take-off',
+      titleHi: 'उड़ान से पहले की उलटी गिनती',
+      meaningEn:
+          '321 counts down, like the moments before a launch. It is read as a sign that a period of preparation is about to end and that action is near. It often comes when you have thought and planned enough.',
+      meaningHi:
+          '321 उलटी गिनती है, जैसे किसी प्रक्षेपण से ठीक पहले। इसे संकेत माना जाता है कि तैयारी का दौर ख़त्म होने वाला है और काम का समय पास है। यह अक्सर तब आता है जब आप काफ़ी सोच और योजना बना चुके हों।',
+      messageEn:
+          'You have prepared enough. Stop collecting more advice and more tools. The message is to trust what you already know and to start, even if the start is small.',
+      messageHi:
+          'आप काफ़ी तैयारी कर चुके हैं। और सलाह और और साधन जोड़ना बंद कीजिए। संदेश है कि जो आप पहले से जानते हैं उस पर भरोसा कीजिए और शुरू कीजिए, चाहे शुरुआत छोटी ही हो।',
+      loveEn:
+          'In love, it can mean a conversation you have been preparing for is now due. Say what you feel in simple words. It can also mean the end of a waiting period and the start of clarity.',
+      loveHi:
+          'प्रेम में इसका मतलब हो सकता है कि जिस बातचीत की आप तैयारी कर रहे थे उसका समय आ गया है। जो महसूस करते हैं सरल शब्दों में कह दीजिए। यह इंतज़ार के दौर के अंत और साफ़ समझ की शुरुआत का भी संकेत हो सकता है।',
+      careerEn:
+          'At work, it supports launching: sending the application, opening the shop, publishing the work, asking for the raise. Fix a date, count down to it and go.',
+      careerHi:
+          'काम में यह शुरू कर देने का साथ देता है: आवेदन भेजना, दुकान खोलना, काम प्रकाशित करना, तनख़्वाह बढ़ाने की बात करना। एक तारीख़ तय कीजिए, उलटी गिनती कीजिए और चल पड़िए।',
+      actionEn:
+          'Do this: pick a launch date within seven days for the thing you have been preparing, and tell one person about it.',
+      actionHi:
+          'यह करें: जिस चीज़ की आप तैयारी कर रहे हैं उसके लिए सात दिन के भीतर की एक तारीख़ तय कीजिए और किसी एक व्यक्ति को बता दीजिए।',
+    ),
+    AngelNumber(
+      number: '1010',
+      keyDigits: [1, 0],
+      titleEn: 'Awakening and Growth',
+      titleHi: 'जागृति और बढ़त',
+      meaningEn:
+          '1010 repeats the pair 1 and 0, so the idea of beginning and divine support is doubled. It is read as a number of awakening: you are growing, and the growth is being noticed by a higher guidance.',
+      meaningHi:
+          '1010 में 1 और 0 की जोड़ी दोहराई गई है, इसलिए शुरुआत और दिव्य सहारे का भाव दुगुना है। इसे जागृति का अंक माना जाता है: आप बढ़ रहे हैं और इस बढ़त पर ऊपर की मार्गदर्शक शक्ति की नज़र है।',
+      messageEn:
+          'Trust your inner voice. If a new interest or a new thought keeps returning to you, treat it seriously. Keep your attention on what you want, not on what you fear.',
+      messageHi:
+          'अपनी अंदर की आवाज़ पर भरोसा कीजिए। कोई नई रुचि या नया विचार बार-बार लौट रहा हो तो उसे गंभीरता से लीजिए। ध्यान उस पर रखिए जो आप चाहते हैं, उस पर नहीं जिससे डरते हैं।',
+      loveEn:
+          'In love, it speaks of growing as a person so that the relationship can grow too. Be honest about who you are becoming, and let the other person grow beside you.',
+      loveHi:
+          'प्रेम में यह एक इंसान के रूप में बढ़ने की बात करता है ताकि रिश्ता भी बढ़ सके। जो आप बन रहे हैं उसके बारे में सच्चे रहिए और दूसरे को भी अपने साथ बढ़ने दीजिए।',
+      careerEn:
+          'At work, it suggests learning something new that your heart is already curious about. A small course, a book or a practice can open a larger door than you expect.',
+      careerHi:
+          'काम में यह कुछ नया सीखने का सुझाव देता है जिसके बारे में आपका मन पहले से उत्सुक है। छोटा कोर्स, किताब या अभ्यास उम्मीद से बड़ा दरवाज़ा खोल सकता है।',
+      actionEn:
+          'Do this: spend twenty minutes today on the thing you are most curious about, with no phone beside you.',
+      actionHi:
+          'यह करें: आज बीस मिनट उस चीज़ को दीजिए जिसके बारे में आप सबसे ज़्यादा उत्सुक हैं, फ़ोन को दूर रखकर।',
+    ),
+    AngelNumber(
+      number: '1221',
+      keyDigits: [1, 2],
+      titleEn: 'Mirror of Balance',
+      titleHi: 'संतुलन का दर्पण',
+      meaningEn:
+          '1221 reads the same forwards and backwards, like a mirror. The 1 on the outside and the 2 inside are seen as "self" holding "partnership". It appears when you need to find balance between your own needs and the needs of others.',
+      meaningHi:
+          '1221 आगे से भी वही और पीछे से भी वही पढ़ा जाता है, जैसे दर्पण। बाहर का 1 और भीतर का 2 "स्वयं" द्वारा "साझेदारी" को थामे हुए माने जाते हैं। यह तब दिखता है जब आपको अपनी ज़रूरतों और दूसरों की ज़रूरतों में संतुलन चाहिए।',
+      messageEn:
+          'Look at how you treat others and how you treat yourself, and see if they match. What you give out comes back in some form. Do not sacrifice yourself, and do not be selfish - find the middle.',
+      messageHi:
+          'देखिए कि आप दूसरों से कैसा व्यवहार करते हैं और ख़ुद से कैसा, और क्या दोनों मेल खाते हैं। आप जो देते हैं वह किसी न किसी रूप में लौटता है। ख़ुद को क़ुर्बान मत कीजिए और स्वार्थी भी मत बनिए - बीच का रास्ता खोजिए।',
+      loveEn:
+          'In love, it asks for equal give and take. If one person is doing all the work, speak about it gently. A calm talk now can prevent a long silence later.',
+      loveHi:
+          'प्रेम में यह बराबर लेन-देन माँगता है। अगर सारा काम एक ही व्यक्ति कर रहा है तो नरमी से कह दीजिए। अभी की शांत बातचीत आगे की लंबी चुप्पी रोक सकती है।',
+      careerEn:
+          'At work, it supports partnership and fair deals. Check that your workload, credit and pay are balanced. Good partners will welcome a clear and respectful discussion.',
+      careerHi:
+          'काम में यह साझेदारी और न्यायपूर्ण सौदों का साथ देता है। देखिए कि काम का बोझ, श्रेय और भुगतान संतुलित हैं या नहीं। अच्छे साझेदार साफ़ और आदरपूर्ण बातचीत का स्वागत करते हैं।',
+      actionEn:
+          'Do this: write two lists - what you give and what you receive in one important relationship - and see if they are close.',
+      actionHi:
+          'यह करें: किसी एक अहम रिश्ते में आप क्या देते हैं और क्या पाते हैं, दो सूचियाँ बनाइए और देखिए कि दोनों के क़रीब हैं या नहीं।',
+    ),
+    AngelNumber(
+      number: '1234',
+      keyDigits: [1, 2, 3, 4],
+      titleEn: 'The Staircase of Progress',
+      titleHi: 'प्रगति की सीढ़ी',
+      meaningEn:
+          '1234 climbs one stair at a time. It combines new beginning (1), patience (2), expression (3) and solid work (4). It is read as a promise that if you keep to the order, the result will be steady.',
+      meaningHi:
+          '1234 एक-एक सीढ़ी चढ़ता है। इसमें नई शुरुआत (1), धैर्य (2), अभिव्यक्ति (3) और ठोस मेहनत (4) जुड़ी हैं। इसे वादा माना जाता है कि अगर आप क्रम पर टिके रहे तो नतीजा स्थिर होगा।',
+      messageEn:
+          'There is no shortcut here, and you do not need one. Keep a routine, keep records and keep improving a little every week. Others may rush and fall, but your steady climb will take you further.',
+      messageHi:
+          'यहाँ कोई शॉर्टकट नहीं है और आपको उसकी ज़रूरत भी नहीं। एक दिनचर्या रखिए, हिसाब रखिए और हर हफ़्ते थोड़ा सुधरते रहिए। दूसरे भागकर गिर सकते हैं, पर आपकी स्थिर चढ़ाई आपको ज़्यादा दूर ले जाएगी।',
+      loveEn:
+          'In love, it suggests a relationship built stage by stage - friendship, trust, care and then commitment. Do not skip a stage because of pressure. A slow start can become a very firm bond.',
+      loveHi:
+          'प्रेम में यह चरण-दर-चरण बने रिश्ते का सुझाव देता है - दोस्ती, भरोसा, परवाह और फिर प्रतिबद्धता। दबाव में कोई चरण मत छोड़िए। धीमी शुरुआत बहुत मज़बूत बंधन बन सकती है।',
+      careerEn:
+          'At work, it is a good number for planning, studying for an exam, learning a trade and building a business on a clear base. Write your plan in four stages and tick them off.',
+      careerHi:
+          'काम में यह योजना बनाने, परीक्षा की पढ़ाई, कोई हुनर सीखने और साफ़ नींव पर कारोबार खड़ा करने के लिए अच्छा अंक है। अपनी योजना चार चरणों में लिखिए और एक-एक पर निशान लगाते जाइए।',
+      actionEn:
+          'Do this: divide your main goal into four stages, write a date next to each and keep the paper where you can see it.',
+      actionHi:
+          'यह करें: अपने मुख्य लक्ष्य को चार चरणों में बाँटिए, हर एक के आगे तारीख़ लिखिए और काग़ज़ ऐसी जगह रखिए जहाँ रोज़ दिखे।',
+    ),
+    AngelNumber(
+      number: '1313',
+      keyDigits: [1, 3],
+      titleEn: 'Bright Thoughts, Open Voice',
+      titleHi: 'उजले विचार, खुली आवाज़',
+      meaningEn:
+          '1313 joins the 1 (your own thought and will) with the 3 (expression, creativity and joy). It is read as an invitation to say what you think and to create something from it. It often comes when ideas are stuck inside you.',
+      meaningHi:
+          '1313 में 1 (आपका अपना विचार और इच्छा) और 3 (अभिव्यक्ति, रचनात्मकता और ख़ुशी) जुड़े हैं। इसे अपनी बात कहने और उससे कुछ रचने का न्योता माना जाता है। यह अक्सर तब आता है जब विचार आपके भीतर अटके हों।',
+      messageEn:
+          'Stay positive in your words and in your self-talk. Do not hide your ideas out of fear of what people will say. Express yourself through speaking, writing, drawing, singing or cooking - any form that feels like you.',
+      messageHi:
+          'अपने शब्दों में और ख़ुद से बातचीत में सकारात्मक रहिए। लोग क्या कहेंगे इस डर से अपने विचार मत छिपाइए। बोलकर, लिखकर, चित्र बनाकर, गाकर या खाना पकाकर - जिस रूप में आप ख़ुद जैसे लगें, उसी में ख़ुद को व्यक्त कीजिए।',
+      loveEn:
+          'In love, it asks you to speak openly and with warmth. Share compliments, jokes and small joys. A happy and light atmosphere can heal many old tensions.',
+      loveHi:
+          'प्रेम में यह खुलकर और गर्मजोशी से बोलने को कहता है। तारीफ़ें, हँसी-मज़ाक और छोटी ख़ुशियाँ बाँटिए। हँसता-हल्का माहौल कई पुरानी तनातनी ठीक कर सकता है।',
+      careerEn:
+          'At work, it favours talking, teaching, presenting, writing, designing and selling. Put your idea in front of people. Even a small audience will give you useful feedback.',
+      careerHi:
+          'काम में यह बोलने, पढ़ाने, प्रस्तुति देने, लिखने, डिज़ाइन करने और बेचने के पक्ष में है। अपना विचार लोगों के सामने रखिए। छोटे श्रोता भी काम की प्रतिक्रिया देंगे।',
+      actionEn:
+          'Do this: share one idea you have been keeping to yourself with one trusted person or on one small post today.',
+      actionHi:
+          'यह करें: जो विचार आप अपने तक रखे हुए थे उसे आज किसी एक भरोसेमंद व्यक्ति को या एक छोटी पोस्ट में बता दीजिए।',
+    ),
+    AngelNumber(
+      number: '1717',
+      keyDigits: [1, 7],
+      titleEn: 'Inner Wisdom Leads',
+      titleHi: 'भीतर की समझ आगे चले',
+      meaningEn:
+          '1717 joins the 1 (leadership, a new path) with the 7 (inner wisdom, study and spiritual depth). It is read as a sign that you are on a thoughtful path and that your quiet understanding should guide you more than noise from outside.',
+      meaningHi:
+          '1717 में 1 (नेतृत्व, नया रास्ता) और 7 (भीतर की समझ, अध्ययन और आध्यात्मिक गहराई) जुड़े हैं। इसे संकेत माना जाता है कि आप सोच-समझकर चल रहे हैं और बाहर के शोर से ज़्यादा आपकी शांत समझ आपका मार्गदर्शन करे।',
+      messageEn:
+          'Take time alone to think. Read, pray, walk or meditate, and then decide. Your decisions will be sharper after quiet. Do not follow the crowd only because it is loud.',
+      messageHi:
+          'अकेले सोचने का समय निकालिए। पढ़िए, प्रार्थना कीजिए, टहलिए या ध्यान कीजिए, फिर फ़ैसला कीजिए। शांति के बाद आपके फ़ैसले ज़्यादा तीखे होंगे। भीड़ के पीछे सिर्फ़ इसलिए मत चलिए कि वह शोर कर रही है।',
+      loveEn:
+          'In love, it asks for depth rather than show. Spend quiet time together and listen. If you need space to understand your own feelings, say so kindly instead of disappearing.',
+      loveHi:
+          'प्रेम में यह दिखावे से ज़्यादा गहराई माँगता है। साथ में शांत समय बिताइए और सुनिए। अगर अपनी भावनाएँ समझने के लिए जगह चाहिए तो ग़ायब होने के बजाय प्यार से कह दीजिए।',
+      careerEn:
+          'At work, it supports research, study, planning, advice-giving and careful analysis. Check the facts before you lead. Your well-prepared view will earn respect.',
+      careerHi:
+          'काम में यह शोध, पढ़ाई, योजना, सलाह देने और सावधानी से विश्लेषण का साथ देता है। नेतृत्व से पहले तथ्य जाँच लीजिए। आपकी अच्छी तरह तैयार राय को सम्मान मिलेगा।',
+      actionEn:
+          'Do this: take thirty minutes of silence today - no phone, no music - and write down any thought that comes.',
+      actionHi:
+          'यह करें: आज तीस मिनट मौन रखिए - न फ़ोन, न संगीत - और जो भी विचार आए उसे लिख लीजिए।',
+    ),
+    AngelNumber(
+      number: '1818',
+      keyDigits: [1, 8],
+      titleEn: 'Leading Towards Abundance',
+      titleHi: 'समृद्धि की ओर अगुवाई',
+      meaningEn:
+          '1818 joins the 1 (initiative) with the 8 (money, power and the fruit of karma). It is read as a sign that your effort can turn into real results when you lead with honesty. It often appears around money decisions and career choices.',
+      meaningHi:
+          '1818 में 1 (पहल) और 8 (धन, शक्ति और कर्म का फल) जुड़े हैं। इसे संकेत माना जाता है कि ईमानदारी से अगुवाई करने पर आपकी मेहनत सच्चे नतीजे में बदल सकती है। यह अक्सर पैसे के फ़ैसलों और करियर के चुनावों के आसपास दिखता है।',
+      messageEn:
+          'Take responsibility for your money and your work. Plan, save and invest with a clear head. The number supports fair earning; it warns against greed and shortcuts.',
+      messageHi:
+          'अपने पैसे और अपने काम की ज़िम्मेदारी लीजिए। साफ़ दिमाग़ से योजना बनाइए, बचाइए और निवेश कीजिए। यह अंक ईमानदार कमाई का साथ देता है; लालच और शॉर्टकट से सावधान करता है।',
+      loveEn:
+          'In love, it reminds you that love also needs responsibility: time, effort and fair sharing of money matters. Talk openly about expenses and plans to avoid quarrels.',
+      loveHi:
+          'प्रेम में यह याद दिलाता है कि प्रेम को ज़िम्मेदारी भी चाहिए: समय, मेहनत और पैसे की बातों का ईमानदार बँटवारा। झगड़ों से बचने के लिए ख़र्च और योजनाओं पर खुलकर बात कीजिए।',
+      careerEn:
+          'At work, it is a good sign for business, management, promotion and leadership roles. Set a clear target and keep the books honest. Rewards follow steady, ethical effort.',
+      careerHi:
+          'काम में यह कारोबार, प्रबंधन, तरक्की और नेतृत्व की भूमिकाओं के लिए अच्छा संकेत है। साफ़ लक्ष्य तय कीजिए और हिसाब ईमानदार रखिए। स्थिर और नैतिक मेहनत का फल मिलता है।',
+      actionEn:
+          'Do this: write your income, spending and one money goal for the next three months on one page.',
+      actionHi:
+          'यह करें: अपनी आमदनी, ख़र्च और अगले तीन महीने का एक पैसे का लक्ष्य एक पन्ने पर लिख लीजिए।',
+    ),
+    AngelNumber(
+      number: '2020',
+      keyDigits: [2, 0],
+      titleEn: 'Patient Trust in Timing',
+      titleHi: 'सही समय पर धैर्य का भरोसा',
+      meaningEn:
+          '2020 joins the 2 (patience, partnership) with the 0 (the divine source, a full circle). It is read as a number of quiet trust: things are working behind the scenes even if you cannot see them yet.',
+      meaningHi:
+          '2020 में 2 (धैर्य, साझेदारी) और 0 (दिव्य स्रोत, पूरा चक्र) जुड़े हैं। इसे शांत भरोसे का अंक माना जाता है: चीज़ें पर्दे के पीछे काम कर रही हैं भले आपको अभी दिख न रही हों।',
+      messageEn:
+          'Wait without worry. Do your part and then let time do its part. Keep your heart gentle, avoid forcing results and avoid comparing your speed with others.',
+      messageHi:
+          'बिना चिंता के इंतज़ार कीजिए। अपना हिस्सा कीजिए और बाक़ी समय पर छोड़ दीजिए। दिल को नरम रखिए, नतीजे ज़बरदस्ती मत खींचिए और अपनी रफ़्तार की दूसरों से तुलना मत कीजिए।',
+      loveEn:
+          'In love, it supports patience, forgiveness and quiet support. If a relationship is going through a slow phase, stay kind and consistent. If you are waiting for someone, use the time to become peaceful and whole.',
+      loveHi:
+          'प्रेम में यह धैर्य, क्षमा और शांत सहारे का साथ देता है। अगर रिश्ता धीमे दौर में है तो नरम और लगातार बने रहिए। अगर आप किसी का इंतज़ार कर रहे हैं तो इस समय का इस्तेमाल शांत और पूरे होने में कीजिए।',
+      careerEn:
+          'At work, it suggests cooperation, listening and not rushing a decision. A partner or a mentor may help. Sign nothing in a hurry; give each offer one more night of thought.',
+      careerHi:
+          'काम में यह सहयोग, सुनने और फ़ैसले में जल्दबाज़ी न करने का सुझाव देता है। कोई साझेदार या मार्गदर्शक मदद कर सकता है। जल्दी में कुछ मत हस्ताक्षर कीजिए; हर प्रस्ताव को एक रात और सोच लीजिए।',
+      actionEn:
+          'Do this: choose one worry you cannot fix today, write "I will look at this again in seven days" and let it rest.',
+      actionHi:
+          'यह करें: कोई एक चिंता चुनिए जो आज सुलझ नहीं सकती, लिखिए "मैं इसे सात दिन बाद फिर देखूँगा/देखूँगी" और उसे आराम करने दीजिए।',
+    ),
   ];
+
+  // ---------- Longer explanations made from the digits ----------
+  /// "Digit by digit": what each digit in the number stands for.
+  static String digitByDigit(AngelNumber a, bool hi) {
+    final seen = <int>[];
+    for (final c in a.number.split('')) {
+      final d = int.parse(c);
+      if (!seen.contains(d)) seen.add(d);
+    }
+    final parts = <String>[];
+    for (final d in seen) {
+      final n = a.number.split('').where((c) => c == '$d').length;
+      final times = n > 1 ? (hi ? ' ($n बार)' : ' ($n times)') : '';
+      parts.add(hi
+          ? '$d$times: ${digitMeaning(d, true)}'
+          : '$d$times: ${digitMeaning(d, false)}');
+    }
+    final head = hi
+        ? 'इस नंबर के हर अंक का अपना अर्थ है। '
+        : 'Every digit in this number carries its own meaning. ';
+    final tail = seen.length < a.number.length
+        ? (hi
+            ? ' जो अंक दोहराया गया है उसका असर बढ़ा हुआ माना जाता है।'
+            : ' A digit that repeats is believed to speak louder.')
+        : '';
+    return head + parts.join(hi ? '; ' : '; ') + '.' + tail;
+  }
+
+  /// "How to read it": a simple way to notice the number in daily life.
+  static String howToRead(AngelNumber a, bool hi) {
+    return hi
+        ? 'जब ${a.number} दिखे तो ध्यान दीजिए कि उस समय आप कहाँ थे, क्या सोच रहे थे और किसके साथ थे। '
+            'नंबर उस पल का आईना है। समय और विचार एक डायरी में लिख लीजिए; कुछ हफ़्तों में आपको अपना एक पैटर्न दिखने लगेगा। '
+            'एक बार दिख जाना संयोग भी हो सकता है, लेकिन जब वही नंबर बार-बार उन्हीं विचारों के साथ आए तब उसे गंभीरता से पढ़िए।'
+        : 'When ${a.number} appears, notice where you were, what you were thinking and who you were with. '
+            'The number is a mirror for that moment. Write the time and the thought in a diary; after a few weeks you will see your own pattern. '
+            'Seeing it once may be chance, but when the same number keeps coming with the same thoughts, read it seriously.';
+  }
+
+  /// An honest word, so nobody takes it as a promise.
+  static String fairWord(bool hi) => hi
+      ? 'एंजल नंबर एक मान्यता और ख़ुद को समझने का साधन हैं। ये किसी घटना की पक्की भविष्यवाणी या वैज्ञानिक प्रमाण नहीं हैं। इन्हें प्रेरणा की तरह लीजिए, और बड़े फ़ैसले अपनी समझ, तथ्यों और ज़रूरत हो तो जानकार लोगों की सलाह से कीजिए।'
+      : 'Angel numbers are a belief and a tool for understanding yourself. They are not a sure prediction of any event and not scientific proof. Take them as inspiration, and make big decisions with your own judgement, the facts and, where needed, expert advice.';
 
   static AngelNumber? find(String number) {
     for (final a in all) {

@@ -236,6 +236,9 @@ class ReportPages {
   static const PBi angelMessage = PBi('Message', 'संदेश');
   static const PBi angelLove = PBi('Love', 'प्रेम');
   static const PBi angelCareer = PBi('Work', 'काम');
+  static const PBi angelDigits = PBi('Digit by digit', 'अंक-अंक का अर्थ');
+  static const PBi angelHow = PBi('How to read it', 'इसे कैसे पढ़ें');
+  static const PBi angelFair = PBi('A fair word', 'एक ईमानदार बात');
   static const PBi angelStep = PBi('Small step', 'छोटा कदम');
   static const PBi angelYourBirth = PBi('Angel numbers and your date of birth', 'एंजल नंबर और आपकी जन्मतिथि');
   static const PBi angelAll = PBi('All angel numbers explained', 'सभी एंजल नंबर विस्तार से');

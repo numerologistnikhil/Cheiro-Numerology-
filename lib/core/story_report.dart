@@ -1757,6 +1757,8 @@ class StoryReport {
           MapEntry(ReportPages.angelMessage.t(h), a.message(h)),
           MapEntry(ReportPages.angelLove.t(h), a.love(h)),
           MapEntry(ReportPages.angelCareer.t(h), a.career(h)),
+          MapEntry(ReportPages.angelDigits.t(h), AngelNumbers.digitByDigit(a, h)),
+          MapEntry(ReportPages.angelHow.t(h), AngelNumbers.howToRead(a, h)),
           MapEntry(ReportPages.angelStep.t(h), a.action(h)),
         ]));
       }

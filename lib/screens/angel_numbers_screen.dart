@@ -100,7 +100,10 @@ class _AngelNumbersScreenState extends State<AngelNumbersScreen> {
           _field(ReportPages.angelMessage.t(hi), a.message(hi)),
           _field(ReportPages.angelLove.t(hi), a.love(hi)),
           _field(ReportPages.angelCareer.t(hi), a.career(hi)),
+          _field(ReportPages.angelDigits.t(hi), AngelNumbers.digitByDigit(a, hi)),
+          _field(ReportPages.angelHow.t(hi), AngelNumbers.howToRead(a, hi)),
           _field(ReportPages.angelStep.t(hi), a.action(hi)),
+          _field(ReportPages.angelFair.t(hi), AngelNumbers.fairWord(hi)),
         ],
       ),
     );

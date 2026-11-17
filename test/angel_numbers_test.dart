@@ -19,7 +19,7 @@ void main() {
   });
 
   test('all angel numbers have full text in both languages', () {
-    expect(AngelNumbers.all.length, 12);
+    expect(AngelNumbers.all.length, 22);
     for (final a in AngelNumbers.all) {
       for (final hi in [false, true]) {
         expect(a.title(hi).isNotEmpty, true);
@@ -30,6 +30,15 @@ void main() {
         expect(a.action(hi).length > 20, true);
       }
     }
+  });
+
+  test('digit by digit and how to read', () {
+    final a = AngelNumbers.find('1234')!;
+    expect(AngelNumbers.digitByDigit(a, false).contains('4:'), true);
+    expect(AngelNumbers.howToRead(a, true).contains('1234'), true);
+    expect(AngelNumbers.fairWord(false).isNotEmpty, true);
+    final ids = AngelNumbers.all.map((e) => e.number).toSet();
+    expect(ids.length, AngelNumbers.all.length);
   });
 
   test('DOB links: 666 and 999 are strong for this DOB', () {

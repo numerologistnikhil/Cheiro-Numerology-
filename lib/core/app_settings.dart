@@ -30,11 +30,27 @@ class AppSettings extends ChangeNotifier {
 
   bool get hindi => _hindi;
 
+  static const String _kSound = 'app_sound';
+  bool _sound = true;
+
+  /// Tap sounds ON (default) or OFF.
+  bool get sound => _sound;
+
+  Future<void> setSound(bool v) async {
+    if (v == _sound) return;
+    _sound = v;
+    notifyListeners();
+    final p = await SharedPreferences.getInstance();
+    await p.setBool(_kSound, v);
+  }
+
   Future<void> load() async {
     final p = await SharedPreferences.getInstance();
     final v = p.getBool(_kHindi) ?? false;
-    if (v != _hindi) {
+    final snd = p.getBool(_kSound) ?? true;
+    if (v != _hindi || snd != _sound) {
       _hindi = v;
+      _sound = snd;
       notifyListeners();
     }
   }
