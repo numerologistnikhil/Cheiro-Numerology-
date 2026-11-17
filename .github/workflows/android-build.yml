@@ -26,7 +26,7 @@ jobs:
         run: |
           rm -rf android/app/src/main/kotlin
           mkdir -p android/app/src/main/kotlin/com/ankdhara/numerology
-          printf 'package com.ankdhara.numerology\n\nimport io.flutter.embedding.android.FlutterActivity\n\nclass MainActivity : FlutterActivity()\n' > android/app/src/main/kotlin/com/ankdhara/numerology/MainActivity.kt
+          printf 'package com.ankdhara.numerology\n\nimport io.flutter.embedding.android.FlutterFragmentActivity\n\nclass MainActivity : FlutterFragmentActivity()\n' > android/app/src/main/kotlin/com/ankdhara/numerology/MainActivity.kt
           sed -i -E 's/(namespace[[:space:]]*=?[[:space:]]*)"[^"]*"/\1"com.ankdhara.numerology"/; s/(applicationId[[:space:]]*=?[[:space:]]*)"[^"]*"/\1"com.ankdhara.numerology"/' android/app/build.gradle*
           grep -n 'namespace\|applicationId' android/app/build.gradle*
 
@@ -44,6 +44,8 @@ jobs:
       - name: Set app name and launcher icon
         run: |
           sed -i 's/android:label="[^"]*"/android:label="Ank Dhara"/' android/app/src/main/AndroidManifest.xml
+          grep -q 'USE_BIOMETRIC' android/app/src/main/AndroidManifest.xml || sed -i '0,/<application/s//<uses-permission android:name="android.permission.USE_BIOMETRIC"\/>\n    <application/' android/app/src/main/AndroidManifest.xml
+          grep -n 'USE_BIOMETRIC' android/app/src/main/AndroidManifest.xml
           dart run flutter_launcher_icons
 
       - name: Static analysis (fails on errors only)

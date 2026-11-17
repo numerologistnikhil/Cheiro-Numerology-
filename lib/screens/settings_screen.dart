@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import '../core/app_settings.dart';
+import '../core/app_lock.dart';
 import '../core/app_sound.dart';
 import '../core/app_style.dart';
 import '../core/pricing.dart';
@@ -133,6 +134,40 @@ class SettingsScreen extends StatelessWidget {
                 s.setSound(v);
                 if (v) AppSound.tap();
               },
+            ),
+          ),
+          _title(s.t(const L('PRIVACY', 'गोपनीयता'))),
+          _box(
+            AnimatedBuilder(
+              animation: AppLock.instance,
+              builder: (context, _) => SwitchListTile(
+                activeColor: _gold,
+                title: Text(
+                  s.t(const L('App lock', 'ऐप लॉक')),
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                subtitle: Text(s.t(const L(
+                  'Open the app with your phone fingerprint, face or PIN. '
+                      'Good for keeping client details private.',
+                  'ऐप फ़ोन के फ़िंगरप्रिंट, चेहरे या PIN से खुलेगा। '
+                      'क्लाइंट की जानकारी निजी रखने के लिए अच्छा है।',
+                ))),
+                value: AppLock.instance.enabled,
+                onChanged: (v) async {
+                  final ok = await AppLock.instance.setEnabled(
+                    v,
+                    s.t(const L('Confirm it is you', 'पुष्टि कीजिए कि यह आप हैं')),
+                  );
+                  if (!ok && context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(s.t(const L(
+                        'Could not change. Set a screen lock (PIN, pattern or fingerprint) in your phone settings first.',
+                        'बदला नहीं जा सका। पहले फ़ोन की सेटिंग में स्क्रीन लॉक (PIN, पैटर्न या फ़िंगरप्रिंट) लगाइए।',
+                      ))),
+                    ));
+                  }
+                },
+              ),
             ),
           ),
           _title(s.t(const L('NUMEROLOGY STYLE', 'अंकशास्त्र की पद्धति'))),
