@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/app.dart';
+import '../core/cheiro_source.dart';
 import '../core/knowledge_pack.dart';
 import '../core/numerology_engine.dart';
 
@@ -130,6 +131,10 @@ class AnalysisCard extends StatelessWidget {
 
     if (entry != null) {
       body.add(section(Icons.auto_stories_outlined, 'Overview', clean(entry.summary)));
+      final cn = CheiroSource.note(r.total);
+      if (cn != null) {
+        body.add(section(Icons.menu_book_outlined, "Cheiro's own view", cn.en));
+      }
       body.add(section(Icons.bolt, 'Strengths', entry.strengths));
       body.add(section(Icons.warning_amber_rounded, 'Cautions', entry.cautions));
       body.add(section(Icons.favorite_border, 'Relationships', entry.relationships));

@@ -29,6 +29,7 @@ import 'pricing.dart';
 import 'profession_guide.dart';
 import 'pythagorean.dart';
 import 'year_month_blend.dart';
+import 'cheiro_source.dart';
 import 'signature_image.dart' show SignatureStore;
 import 'signature_reading.dart';
 import 'report_border.dart';
@@ -755,6 +756,8 @@ class StoryReport {
       if (e != null) {
         out.add(await _h1(ReportText.compoundTitle.t(h)));
         out.add(await _box(e.title, e.summary));
+        final cn = CheiroSource.note(r.total);
+        if (cn != null) out.add(await _p(cn.t(h)));
         out.add(await _facts([
           MapEntry('Strengths', e.strengths),
           MapEntry('Be careful', e.cautions),
