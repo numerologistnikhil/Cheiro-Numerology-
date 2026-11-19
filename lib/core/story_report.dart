@@ -913,8 +913,7 @@ class StoryReport {
       cells.add(await _cell(h ? 'मोबाइल' : 'Mobile', mobileResult.root, '${mobileResult.total}'));
     }
     out.add(pw.Wrap(spacing: 6, runSpacing: 6, children: cells));
-    out.add(pw.SizedBox(height: 10));
-
+    out.add(pw.NewPage());
     out.add(await _h1(ReportPages.includesTitle.t(h)));
     final items = <String>[
       h ? 'आपके मुख्य अंक और उनका मतलब' : 'Your core numbers and what they mean',
@@ -942,6 +941,14 @@ class StoryReport {
         ],
       ],
       h ? 'सरल उपाय' : 'Simple remedies',
+      if (lite < 2) ...[
+        h ? 'सेहत और सावधानियाँ' : 'Health and precautions',
+        if (AppStyle.instance.showWestern)
+          h ? 'पश्चिमी (पाइथागोरियन) चार्ट' : 'Western (Pythagorean) chart',
+        h ? 'करियर और कारोबार की गाइड (उदाहरणों के साथ)' : 'Career and business guide (with examples)',
+        h ? 'रत्न गाइड (तस्वीरों के साथ)' : 'Gemstone guide (with pictures)',
+        h ? 'रुद्राक्ष गाइड (तस्वीरों के साथ)' : 'Rudraksha guide (with pictures)',
+      ],
       if (opts.includeAngelNumbers)
         h ? 'एंजल नंबर और आपकी जन्मतिथि' : 'Angel numbers and your date of birth',
       h ? 'कार्य योजना' : 'Action plan',
@@ -971,7 +978,7 @@ class StoryReport {
         child: pw.Row(
           crossAxisAlignment: pw.CrossAxisAlignment.center,
           children: [
-            pw.Image(pw.MemoryImage(png), width: pic, height: pic),
+            pw.Image(await PdfPictures.provider(png), width: pic, height: pic),
             pw.SizedBox(width: 14),
             pw.Expanded(
               child: pw.Column(
@@ -998,7 +1005,7 @@ class StoryReport {
         width: 84,
         child: pw.Column(
           children: [
-            pw.Image(pw.MemoryImage(it.key), width: 46, height: 46),
+            pw.Image(await PdfPictures.provider(it.key), width: 46, height: 46),
             pw.SizedBox(height: 3),
             await _text(it.value, size: 9, center: true, width: 80),
           ],
@@ -1625,16 +1632,33 @@ class StoryReport {
     }
 
 
+    var youngNoted = false;
     for (var y = first; y <= last; y++) {
       final py = NumerologyTools.personalYear(dob, y);
       final ys = ReportText.years[py] ?? ReportText.years[1]!;
       final ar = ReportText.yearAreas[py] ?? ReportText.yearAreas[1]!;
       final ex = YearDetails.extra[py] ?? YearDetails.extra[1]!;
       if (y % 5 == 0) await Future<void>.delayed(const Duration(milliseconds: 1));
+      final young = (y - dob.year) < 16;
+      if (young && !youngNoted) {
+        youngNoted = true;
+        w.add(await _p(h
+            ? 'इस उम्र में नौकरी, पैसे और प्रेम की बातें नहीं रखी गई हैं। इसकी जगह परिवार, सेहत और सीखने पर ध्यान है। महीनों की कहानियाँ आम तौर पर लिखी गई हैं, इन्हें घर के माहौल का मूड समझकर पढ़िए।'
+            : 'At this age, work, money and love lines are left out. The focus is on family, health and learning instead. The month stories are written in a general way, so read them as the mood of the home around the child.'));
+      }
       w.add(await _box('$y  -  ${ys.title.t(h)}', ys.story.t(h)));
       // With many years, later years use a shorter set of lines.
       final compact = years > 10 && y >= first + 10;
-      if (compact) {
+      if (young) {
+        w.add(await _facts([
+          MapEntry(ReportPages.healthLabel.t(h), ex.health.t(h)),
+          MapEntry(ReportPages.familyLabel.t(h), ex.family.t(h)),
+          MapEntry(ReportPages.studyLabel.t(h), ex.study.t(h)),
+          MapEntry(ReportPages.spiritLabel.t(h), ex.spirit.t(h)),
+          MapEntry(ReportText.doLabel.t(h), ys.doThis.t(h)),
+          MapEntry(ReportText.takeCareLabel.t(h), ys.avoid.t(h)),
+        ]));
+      } else if (compact) {
         w.add(await _facts([
           MapEntry(ReportText.careerTitle.t(h), ar.work.t(h)),
           MapEntry(ReportText.moneyTitle.t(h), ar.money.t(h)),
@@ -1676,10 +1700,10 @@ class StoryReport {
               md.story.t(h)));
           w.add(await _facts([
             MapEntry(YearMonthBlend.label.t(h), YearMonthBlend.line(py, pm).t(h)),
-            MapEntry(MonthDetails.workLabel.t(h), md.work.t(h)),
-            MapEntry(MonthDetails.loveLabel.t(h), md.love.t(h)),
+            if (!young) MapEntry(MonthDetails.workLabel.t(h), md.work.t(h)),
+            if (!young) MapEntry(MonthDetails.loveLabel.t(h), md.love.t(h)),
             MapEntry(MonthDetails.healthLabel.t(h), md.health.t(h)),
-            MapEntry(MonthDetails.tipLabel.t(h), md.tip.t(h)),
+            if (!young) MapEntry(MonthDetails.tipLabel.t(h), md.tip.t(h)),
           ]));
         }
       }

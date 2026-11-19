@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:pdf/widgets.dart' as pw;
 
 import '../screens/gem_widgets.dart' show GemPainter;
 import '../screens/rudraksha_screen.dart' show RudrakshaPainter;
@@ -70,6 +71,30 @@ class PdfPictures {
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
     return Uint8List.fromList(
         data!.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+  }
+
+  static final Expando<pw.ImageProvider> _providers = Expando<pw.ImageProvider>();
+
+  /// A picture for the PDF made from raw pixels, so the PDF library never has
+  /// to decode a PNG (that step mixed up some small pictures). Falls back to
+  /// the PNG itself if anything goes wrong.
+  static Future<pw.ImageProvider> provider(Uint8List png) async {
+    final hit = _providers[png];
+    if (hit != null) return hit;
+    pw.ImageProvider made;
+    try {
+      final codec = await ui.instantiateImageCodec(png);
+      final img = (await codec.getNextFrame()).image;
+      final data = await img.toByteData(format: ui.ImageByteFormat.rawStraightRgba);
+      if (data == null) throw StateError('no pixels');
+      final rgba = Uint8List.fromList(
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+      made = pw.RawImage(bytes: rgba, width: img.width, height: img.height);
+    } catch (_) {
+      made = pw.MemoryImage(png);
+    }
+    _providers[png] = made;
+    return made;
   }
 
   static final Map<String, Uint8List> _cache = <String, Uint8List>{};
