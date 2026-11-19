@@ -170,6 +170,25 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
           ),
+          _title(s.t(const L('REALITY CHECK', 'सच की जाँच'))),
+          _box(
+            Padding(
+              padding: const EdgeInsets.all(14),
+              child: Text(
+                s.t(const L(
+                  'Numerology gives a general mood for a year, not a promise of events. '
+                      'We tested the year numbers on 134 well-documented events from the lives of 56 famous people, '
+                      'and the matches were no better than chance. Use Ank Dhara as a gentle planning guide. '
+                      'To test it yourself, make a report for your past years with the age option and compare it with your memory.',
+                  'अंक शास्त्र किसी साल का आम मूड बताता है, घटनाओं का वादा नहीं। '
+                      'हमने 56 मशहूर लोगों की 134 पक्के रिकॉर्ड वाली घटनाओं पर साल के अंकों को परखा, '
+                      'और मेल संयोग से बेहतर नहीं निकला। अंक धारा को हल्की योजना-गाइड की तरह इस्तेमाल कीजिए। '
+                      'ख़ुद जाँचने के लिए उम्र वाले विकल्प से अपने बीते सालों की रिपोर्ट बनाइए और अपनी याद से मिलाइए।',
+                )),
+                style: const TextStyle(fontSize: 13, height: 1.45),
+              ),
+            ),
+          ),
           _title(s.t(const L('NUMEROLOGY STYLE', 'अंकशास्त्र की पद्धति'))),
           _box(
             AnimatedBuilder(

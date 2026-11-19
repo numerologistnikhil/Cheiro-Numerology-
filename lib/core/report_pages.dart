@@ -80,6 +80,13 @@ class ReportPages {
       ),
     ),
     Sec(
+      PBi('How far to trust the year-by-year part', 'साल-दर-साल वाले हिस्से पर कितना भरोसा करें'),
+      PBi(
+        'The year, month and day numbers show a general mood of a period, such as a time to begin, to wait, to work or to finish. They do not tell which event will happen. We tested the year numbers on 134 well-documented events from the lives of 56 famous people, and the matches were no better than chance. So please use this part as a gentle planning guide, not as a forecast. A good way to check it is to read your own past years (use the age option) and see how much of it matches your memory.',
+        'साल, महीने और दिन के अंक किसी समय का आम मूड बताते हैं, जैसे शुरू करने का समय, रुकने का, मेहनत का या समेटने का। ये यह नहीं बताते कि कौन सी घटना होगी। हमने 56 मशहूर लोगों के जीवन की 134 पक्के रिकॉर्ड वाली घटनाओं पर साल के अंकों को परखा, और मेल संयोग से बेहतर नहीं निकला। इसलिए इस हिस्से को हल्की योजना-गाइड की तरह पढ़िए, भविष्यवाणी की तरह नहीं। जाँचने का अच्छा तरीक़ा है अपने बीते साल पढ़ना (उम्र वाला विकल्प चुनिए) और देखना कि आपकी याद से कितना मिलता है।',
+      ),
+    ),
+    Sec(
       PBi('Your details must be correct', 'आपकी जानकारी सही होनी चाहिए'),
       PBi(
         'Every number in this report is calculated from the spelling of the name, the date of birth and the mobile number you entered. If even one letter or digit is wrong, the numbers and the messages can change. Please check the details on the personal details page before you rely on the report.',
