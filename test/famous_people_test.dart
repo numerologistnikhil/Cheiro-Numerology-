@@ -22,6 +22,14 @@ void main() {
 }
 
 void lifeEventTests() {
+  test('every birth name belongs to a listed person', () {
+    final names = FamousPeople.people.map((x) => x.name).toSet();
+    for (final k in FamousPeople.birthNames.keys) {
+      expect(names.contains(k), isTrue, reason: k);
+      expect(NumerologyEngine.name(FamousPeople.birthNames[k]!).total > 0, isTrue);
+    }
+  });
+
   group('life events', () {
     test('every person with events exists and the years make sense', () {
       for (final entry in FamousPeople.lifeEvents.entries) {

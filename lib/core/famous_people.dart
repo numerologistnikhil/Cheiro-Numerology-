@@ -32,6 +32,20 @@ class FamousPeople {
     'Mahatma Gandhi': 'Mohandas Karamchand Gandhi',
     'Swami Vivekananda': 'Narendranath Datta',
     'A. P. J. Abdul Kalam': 'Avul Pakir Jainulabdeen Abdul Kalam',
+    'Freddie Mercury': 'Farrokh Bulsara',
+    'Mother Teresa': 'Anjeze Gonxhe Bojaxhiu',
+    'Pele': 'Edson Arantes do Nascimento',
+    'Muhammad Ali': 'Cassius Marcellus Clay',
+    'Marilyn Monroe': 'Norma Jeane Mortenson',
+    'Mark Twain': 'Samuel Langhorne Clemens',
+    'Dalai Lama': 'Lhamo Thondup',
+    'Paramahansa Yogananda': 'Mukunda Lal Ghosh',
+    'Sri Aurobindo': 'Aurobindo Ghose',
+    'Ramana Maharshi': 'Venkataraman Iyer',
+    'Ramakrishna Paramahansa': 'Gadadhar Chattopadhyay',
+    'Rajinikanth': 'Shivaji Rao Gaekwad',
+    'Walt Disney': 'Walter Elias Disney',
+    'Charlie Chaplin': 'Charles Spencer Chaplin',
   };
 
   /// Only events whose year is well documented.

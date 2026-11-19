@@ -813,40 +813,152 @@ class StoryReport {
     );
   }
 
-  Future<pw.Widget> _coverBody(String name, DateTime dob, Uint8List? logo) async {
+  /// A thin gold line - small diamond - thin gold line.
+  pw.Widget _ornament({double width = 230}) {
+    final c = PdfColor.fromInt(_goldI);
+    return pw.SizedBox(
+      width: width,
+      child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.center,
+        children: [
+          pw.Expanded(child: pw.Container(height: 0.8, color: c)),
+          pw.SizedBox(width: 8),
+          pw.Transform.rotateBox(
+            angle: 0.7853981634,
+            child: pw.Container(width: 6, height: 6, color: c),
+          ),
+          pw.SizedBox(width: 8),
+          pw.Expanded(child: pw.Container(height: 0.8, color: c)),
+        ],
+      ),
+    );
+  }
+
+  /// A round gold medallion with a number inside and a small label under it.
+  Future<pw.Widget> _medallion(String label, int n) async {
+    final c = PdfColor.fromInt(_goldI);
+    return pw.Container(
+      width: 104,
+      child: pw.Column(
+        children: [
+          pw.Container(
+            width: 62,
+            height: 62,
+            decoration: pw.BoxDecoration(
+              shape: pw.BoxShape.circle,
+              color: PdfColor.fromInt(opts.palette.tint),
+              border: pw.Border.all(color: c, width: 1.6),
+            ),
+            child: pw.Center(
+              child: pw.Container(
+                width: 52,
+                height: 52,
+                decoration: pw.BoxDecoration(
+                  shape: pw.BoxShape.circle,
+                  border: pw.Border.all(color: c, width: 0.5),
+                ),
+                child: pw.Center(
+                  child: pw.Text(
+                    '$n',
+                    style: pw.TextStyle(
+                      fontSize: 26,
+                      fontWeight: pw.FontWeight.bold,
+                      color: c,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 6),
+          await _text(label, size: 10.5, bold: true, center: true, width: 100),
+        ],
+      ),
+    );
+  }
+
+  Future<pw.Widget> _coverBody(
+    String name,
+    DateTime dob,
+    Uint8List? logo, {
+    required int psychic,
+    required int destiny,
+    int nameRoot = 0,
+  }) async {
     final h = hindi;
     final now = DateTime.now();
+    final gold = PdfColor.fromInt(_goldI);
     final kids = <pw.Widget>[];
-    if (logo != null) {
-      kids.add(pw.Image(pw.MemoryImage(logo), height: 190));
-      kids.add(pw.SizedBox(height: 28));
-    }
-    kids.add(await _text(ReportPages.coverKicker.t(h),
-        size: 11.5, bold: true, color: _goldI, center: true));
-    if (sample) {
-      kids.add(pw.SizedBox(height: 4));
-      kids.add(await _text(h ? 'फ्री सैंपल रिपोर्ट' : 'FREE SAMPLE REPORT',
-          size: 11, bold: true, center: true));
-    }
+    kids.add(await _text(
+      h ? ReportPages.coverKicker.hi : _spaced(ReportPages.coverKicker.en),
+      size: 10.5,
+      bold: true,
+      color: _goldI,
+      center: true,
+      width: 440,
+    ));
     kids.add(pw.SizedBox(height: 10));
+    kids.add(_ornament());
+    if (logo != null) {
+      kids.add(pw.SizedBox(height: 18));
+      kids.add(pw.Image(pw.MemoryImage(logo), height: 170));
+    }
+    kids.add(pw.SizedBox(height: 18));
     kids.add(await _text(ReportPages.coverTitle.t(h),
-        size: 28, bold: true, color: _goldI, center: true, width: 440));
-    kids.add(pw.SizedBox(height: 14));
+        size: 30, bold: true, color: _goldI, center: true, width: 440));
+    if (sample) {
+      kids.add(pw.SizedBox(height: 10));
+      kids.add(pw.Container(
+        padding: const pw.EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        decoration: pw.BoxDecoration(
+          borderRadius: pw.BorderRadius.circular(12),
+          border: pw.Border.all(color: gold, width: 0.8),
+        ),
+        child: await _text(h ? 'फ्री सैंपल रिपोर्ट' : 'FREE SAMPLE REPORT',
+            size: 9.5, bold: true, color: _goldI, center: true, width: 200),
+      ));
+    }
+    kids.add(pw.SizedBox(height: 18));
+    kids.add(_ornament(width: 150));
+    kids.add(pw.SizedBox(height: 18));
+    kids.add(await _text(ReportPages.preparedFor.t(h), size: 11.5, center: true));
+    kids.add(pw.SizedBox(height: 8));
     kids.add(pw.Container(
-        width: 110, height: 2, color: PdfColor.fromInt(_goldI)));
-    kids.add(pw.SizedBox(height: 28));
-    kids.add(await _text(ReportPages.preparedFor.t(h), size: 12, center: true));
-    kids.add(pw.SizedBox(height: 6));
-    kids.add(await _text(name, size: 26, bold: true, center: true));
+      width: 360,
+      padding: const pw.EdgeInsets.symmetric(vertical: 10),
+      decoration: pw.BoxDecoration(
+        border: pw.Border(
+          top: pw.BorderSide(color: gold, width: 0.8),
+          bottom: pw.BorderSide(color: gold, width: 0.8),
+        ),
+      ),
+      child: pw.Center(
+        child: await _text(name,
+            size: 25, bold: true, center: true, width: 340),
+      ),
+    ));
     kids.add(pw.SizedBox(height: 12));
     kids.add(await _text('${ReportText.bornOn.t(h)}: ${_date(dob)}',
-        size: 13, center: true));
-    kids.add(pw.SizedBox(height: 3));
-    kids.add(await _text('${ReportText.preparedOn.t(h)}: ${_date(now)}',
-        size: 13, center: true));
-    kids.add(pw.SizedBox(height: 44));
+        size: 12, center: true));
+    kids.add(pw.SizedBox(height: 22));
+    kids.add(pw.Row(
+      mainAxisAlignment: pw.MainAxisAlignment.center,
+      children: [
+        await _medallion(h ? 'मूलांक' : 'Mulank', psychic),
+        pw.SizedBox(width: 14),
+        await _medallion(h ? 'भाग्यांक' : 'Bhagyank', destiny),
+        if (nameRoot > 0) ...[
+          pw.SizedBox(width: 14),
+          await _medallion(h ? 'नाम अंक' : 'Name', nameRoot),
+        ],
+      ],
+    ));
+    kids.add(pw.SizedBox(height: 24));
     kids.add(await _text(ReportPages.coverTagline.t(h),
-        size: 12, center: true, width: 400));
+        size: 11.5, center: true, width: 400));
+    kids.add(pw.SizedBox(height: 8));
+    kids.add(await _text('${ReportText.preparedOn.t(h)}: ${_date(now)}',
+        size: 10, center: true));
     return pw.Center(
       child: pw.Column(
         mainAxisSize: pw.MainAxisSize.min,
@@ -855,6 +967,12 @@ class StoryReport {
       ),
     );
   }
+
+  /// "ABC DEF" -> "A B C   D E F": a wide, elegant look for small headings.
+  String _spaced(String s) => s
+      .split(' ')
+      .map((w) => w.split('').join(' '))
+      .join('   ');
 
   Future<List<pw.Widget>> _customerWidgets({
     required String name,
@@ -913,7 +1031,8 @@ class StoryReport {
       cells.add(await _cell(h ? 'मोबाइल' : 'Mobile', mobileResult.root, '${mobileResult.total}'));
     }
     out.add(pw.Wrap(spacing: 6, runSpacing: 6, children: cells));
-    out.add(pw.NewPage());
+    out.add(pw.SizedBox(height: 10));
+
     out.add(await _h1(ReportPages.includesTitle.t(h)));
     final items = <String>[
       h ? 'आपके मुख्य अंक और उनका मतलब' : 'Your core numbers and what they mean',
@@ -941,14 +1060,6 @@ class StoryReport {
         ],
       ],
       h ? 'सरल उपाय' : 'Simple remedies',
-      if (lite < 2) ...[
-        h ? 'सेहत और सावधानियाँ' : 'Health and precautions',
-        if (AppStyle.instance.showWestern)
-          h ? 'पश्चिमी (पाइथागोरियन) चार्ट' : 'Western (Pythagorean) chart',
-        h ? 'करियर और कारोबार की गाइड (उदाहरणों के साथ)' : 'Career and business guide (with examples)',
-        h ? 'रत्न गाइड (तस्वीरों के साथ)' : 'Gemstone guide (with pictures)',
-        h ? 'रुद्राक्ष गाइड (तस्वीरों के साथ)' : 'Rudraksha guide (with pictures)',
-      ],
       if (opts.includeAngelNumbers)
         h ? 'एंजल नंबर और आपकी जन्मतिथि' : 'Angel numbers and your date of birth',
       h ? 'कार्य योजना' : 'Action plan',
@@ -978,7 +1089,7 @@ class StoryReport {
         child: pw.Row(
           crossAxisAlignment: pw.CrossAxisAlignment.center,
           children: [
-            pw.Image(await PdfPictures.provider(png), width: pic, height: pic),
+            pw.Image(pw.MemoryImage(png), width: pic, height: pic),
             pw.SizedBox(width: 14),
             pw.Expanded(
               child: pw.Column(
@@ -1005,7 +1116,7 @@ class StoryReport {
         width: 84,
         child: pw.Column(
           children: [
-            pw.Image(await PdfPictures.provider(it.key), width: 46, height: 46),
+            pw.Image(pw.MemoryImage(it.key), width: 46, height: 46),
             pw.SizedBox(height: 3),
             await _text(it.value, size: 9, center: true, width: 80),
           ],
@@ -1440,7 +1551,8 @@ class StoryReport {
     final doc = pw.Document();
 
     // 1. Cover page
-    final cover = await _coverBody(name, dob, logo);
+    final cover = await _coverBody(name, dob, logo,
+        psychic: psychic, destiny: destiny, nameRoot: nameResult.total > 0 ? nameResult.root : 0);
     doc.addPage(pw.Page(pageTheme: theme, build: (_) => cover));
 
     // 2. Customer details page
@@ -1632,33 +1744,16 @@ class StoryReport {
     }
 
 
-    var youngNoted = false;
     for (var y = first; y <= last; y++) {
       final py = NumerologyTools.personalYear(dob, y);
       final ys = ReportText.years[py] ?? ReportText.years[1]!;
       final ar = ReportText.yearAreas[py] ?? ReportText.yearAreas[1]!;
       final ex = YearDetails.extra[py] ?? YearDetails.extra[1]!;
       if (y % 5 == 0) await Future<void>.delayed(const Duration(milliseconds: 1));
-      final young = (y - dob.year) < 16;
-      if (young && !youngNoted) {
-        youngNoted = true;
-        w.add(await _p(h
-            ? 'इस उम्र में नौकरी, पैसे और प्रेम की बातें नहीं रखी गई हैं। इसकी जगह परिवार, सेहत और सीखने पर ध्यान है। महीनों की कहानियाँ आम तौर पर लिखी गई हैं, इन्हें घर के माहौल का मूड समझकर पढ़िए।'
-            : 'At this age, work, money and love lines are left out. The focus is on family, health and learning instead. The month stories are written in a general way, so read them as the mood of the home around the child.'));
-      }
       w.add(await _box('$y  -  ${ys.title.t(h)}', ys.story.t(h)));
       // With many years, later years use a shorter set of lines.
       final compact = years > 10 && y >= first + 10;
-      if (young) {
-        w.add(await _facts([
-          MapEntry(ReportPages.healthLabel.t(h), ex.health.t(h)),
-          MapEntry(ReportPages.familyLabel.t(h), ex.family.t(h)),
-          MapEntry(ReportPages.studyLabel.t(h), ex.study.t(h)),
-          MapEntry(ReportPages.spiritLabel.t(h), ex.spirit.t(h)),
-          MapEntry(ReportText.doLabel.t(h), ys.doThis.t(h)),
-          MapEntry(ReportText.takeCareLabel.t(h), ys.avoid.t(h)),
-        ]));
-      } else if (compact) {
+      if (compact) {
         w.add(await _facts([
           MapEntry(ReportText.careerTitle.t(h), ar.work.t(h)),
           MapEntry(ReportText.moneyTitle.t(h), ar.money.t(h)),
@@ -1700,10 +1795,10 @@ class StoryReport {
               md.story.t(h)));
           w.add(await _facts([
             MapEntry(YearMonthBlend.label.t(h), YearMonthBlend.line(py, pm).t(h)),
-            if (!young) MapEntry(MonthDetails.workLabel.t(h), md.work.t(h)),
-            if (!young) MapEntry(MonthDetails.loveLabel.t(h), md.love.t(h)),
+            MapEntry(MonthDetails.workLabel.t(h), md.work.t(h)),
+            MapEntry(MonthDetails.loveLabel.t(h), md.love.t(h)),
             MapEntry(MonthDetails.healthLabel.t(h), md.health.t(h)),
-            if (!young) MapEntry(MonthDetails.tipLabel.t(h), md.tip.t(h)),
+            MapEntry(MonthDetails.tipLabel.t(h), md.tip.t(h)),
           ]));
         }
       }
