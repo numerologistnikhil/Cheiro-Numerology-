@@ -1729,8 +1729,15 @@ class StoryReport {
       final word = ReportText.years[py]?.title.t(h) ?? '';
       glance.add(await _cell('$y', py, word));
     }
-    w.add(pw.Wrap(spacing: 6, runSpacing: 6, children: glance));
-    w.add(pw.SizedBox(height: 10));
+    // Small groups, so a long range of years (like age 0 to 49) can flow
+    // over several pages instead of being one block taller than a page.
+    for (var i = 0; i < glance.length; i += 12) {
+      final end = i + 12 < glance.length ? i + 12 : glance.length;
+      w.add(pw.Wrap(
+          spacing: 6, runSpacing: 6, children: glance.sublist(i, end)));
+      w.add(pw.SizedBox(height: 6));
+    }
+    w.add(pw.SizedBox(height: 4));
 
     // Months of this year (quick view), when this year is in the range
     if (!byAge || (now.year >= first && now.year <= last)) {
@@ -1820,6 +1827,26 @@ class StoryReport {
         MapEntry(ReportText.habitLabel.t(h), hab.habit.t(h)),
         MapEntry(ReportText.daanLabel.t(h), hab.daan.t(h)),
         MapEntry(ReportText.avoidLabel.t(h), hab.avoid.t(h)),
+      ]));
+    }
+
+    // Cheiro's own table for the Mulank
+    final ct = CheiroTable.byRoot[psychic];
+    if (ct != null) {
+      w.add(await _h1(h ? 'कीरो की अपनी तालिका' : "Cheiro's own table for your Mulank"));
+      w.add(await _p(h
+          ? 'यह तालिका कीरो की किताब "Book of Numbers" से हमारे अपने शब्दों में ली गई है। तारीख़ें अनुमानित हैं। स्वास्थ्य वाली बातें पुरानी मान्यता हैं, चिकित्सा सलाह नहीं।'
+          : 'This table is taken from Cheiro\'s own "Book of Numbers" and put in our words. Dates are approximate. The health notes are an old belief, not medical advice.'));
+      w.add(await _facts([
+        MapEntry(h ? 'ग्रह' : 'Planet', ct.planet.t(h)),
+        MapEntry(h ? 'जन्म की तारीख़ें' : 'Birth dates', ct.birthDays),
+        MapEntry(h ? 'सबसे असरदार समय' : 'Strongest periods', ct.periods.t(h)),
+        MapEntry(h ? 'शुभ दिन' : 'Lucky days', ct.days.t(h)),
+        MapEntry(h ? 'रंग' : 'Colours', ct.colours.t(h)),
+        MapEntry(h ? 'रत्न (कीरो के अनुसार)' : "Stones (Cheiro's list)", ct.stones.t(h)),
+        MapEntry(h ? 'मेल खाने वाले अंक' : 'Numbers that suit you', ct.friends.t(h)),
+        MapEntry(h ? 'ध्यान रखने की जगहें' : 'Body areas to watch', ct.body.t(h)),
+        MapEntry(h ? 'ज़्यादा ध्यान के महीने' : 'Months for extra care', ct.guardMonths.t(h)),
       ]));
     }
 
