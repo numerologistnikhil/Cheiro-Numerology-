@@ -31,17 +31,32 @@ void main() {
       expect(NumerologyTools.relation(3, 3), Relation.friend);
     });
 
-    test('1 and 8 are challenging in both directions', () {
-      expect(NumerologyTools.relation(1, 8), Relation.enemy);
-      expect(NumerologyTools.relation(8, 1), Relation.enemy);
+    test('2 and 8 are challenging in both directions (Cheiro)', () {
+      expect(NumerologyTools.relation(2, 8), Relation.enemy);
+      expect(NumerologyTools.relation(8, 2), Relation.enemy);
+      expect(NumerologyTools.relation(8, 9), Relation.enemy);
     });
 
-    test('4 and 8 are friendly', () {
-      expect(NumerologyTools.relation(4, 8), Relation.friend);
+    test('4 and 8 are a challenging pair (Cheiro)', () {
+      expect(NumerologyTools.relation(4, 8), Relation.enemy);
     });
 
-    test('unlisted pairs are neutral', () {
-      expect(NumerologyTools.relation(6, 9), Relation.neutral);
+    test('3, 6 and 9 are sympathetic; 1, 2, 4, 7 belong together', () {
+      expect(NumerologyTools.relation(6, 9), Relation.friend);
+      expect(NumerologyTools.relation(3, 6), Relation.friend);
+      expect(NumerologyTools.relation(1, 4), Relation.friend);
+      expect(NumerologyTools.relation(2, 7), Relation.friend);
+    });
+
+    test('5 gets on with every number', () {
+      for (var n = 1; n <= 9; n++) {
+        expect(NumerologyTools.relation(5, n), Relation.friend, reason: '$n');
+      }
+    });
+
+    test('pairs the book is silent about are neutral', () {
+      expect(NumerologyTools.relation(1, 8), Relation.neutral);
+      expect(NumerologyTools.relation(2, 3), Relation.neutral);
     });
 
     test('relation is symmetric for all pairs', () {
@@ -76,9 +91,9 @@ void main() {
 
   group('business', () {
     test('score combines psychic and destiny relations', () {
-      expect(NumerologyTools.businessScore(1, 1, 8), 2);
+      expect(NumerologyTools.businessScore(1, 1, 8), 3);
       expect(NumerologyTools.businessScore(1, 1, 1), 4);
-      expect(NumerologyTools.businessScore(1, 8, 8), 0);
+      expect(NumerologyTools.businessScore(2, 8, 8), 0);
     });
   });
 

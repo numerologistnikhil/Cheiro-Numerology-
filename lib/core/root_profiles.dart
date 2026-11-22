@@ -106,7 +106,7 @@ class RootProfiles {
       number: 2,
       title: L("The Peacemaker", "शांतिदूत"),
       planet: L("Moon", "चंद्रमा"),
-      luckyDays: L("Monday, Sunday", "सोमवार, रविवार"),
+      luckyDays: L("Monday, Sunday, Friday", "सोमवार, रविवार, शुक्रवार"),
       colours: L("White, cream, light green, silver", "सफ़ेद, क्रीम, हल्का हरा, चाँदी जैसा"),
       gemstone: L("Pearl (traditional)", "मोती (पारंपरिक)"),
       overview: L(
@@ -282,7 +282,7 @@ class RootProfiles {
       number: 6,
       title: L("The Nurturer", "पालनकर्ता"),
       planet: L("Venus", "शुक्र"),
-      luckyDays: L("Friday, Wednesday", "शुक्रवार, बुधवार"),
+      luckyDays: L("Friday, Tuesday, Thursday", "शुक्रवार, मंगलवार, गुरुवार"),
       colours: L("White, pink, light blue, pastel shades", "सफ़ेद, गुलाबी, हल्का नीला, पेस्टल रंग"),
       gemstone: L("Diamond or white sapphire (traditional)", "हीरा या सफ़ेद पुखराज (पारंपरिक)"),
       overview: L(
@@ -370,7 +370,7 @@ class RootProfiles {
       number: 8,
       title: L("The Achiever", "कर्मयोगी"),
       planet: L("Saturn", "शनि"),
-      luckyDays: L("Saturday, Wednesday, Friday", "शनिवार, बुधवार, शुक्रवार"),
+      luckyDays: L("Saturday, Sunday, Monday", "शनिवार, रविवार, सोमवार"),
       colours: L("Dark blue, black, deep grey", "गहरा नीला, काला, गहरा स्लेटी"),
       gemstone: L("Blue sapphire (traditional, use with great care)", "नीलम (पारंपरिक, बहुत सावधानी से)"),
       overview: L(
@@ -414,7 +414,7 @@ class RootProfiles {
       number: 9,
       title: L("The Humanitarian", "परोपकारी योद्धा"),
       planet: L("Mars", "मंगल"),
-      luckyDays: L("Tuesday, Thursday, Sunday", "मंगलवार, गुरुवार, रविवार"),
+      luckyDays: L("Tuesday, Thursday, Friday", "मंगलवार, गुरुवार, शुक्रवार"),
       colours: L("Red, maroon, coral", "लाल, मैरून, मूँगिया"),
       gemstone: L("Red coral (traditional)", "मूँगा (पारंपरिक)"),
       overview: L(

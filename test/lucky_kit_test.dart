@@ -10,17 +10,17 @@ void main() {
   });
 
   test('house number verdicts follow the friend and enemy table', () {
-    // 9 is neutral with 6 (1 point) and the same as 9 (2 points): good.
+    // 9 is a friend of 6 (2 points) and the same as 9 (2 points): good.
     final good = LuckyKit.house('9', 6, 9)!;
     expect(good.root, 9);
-    expect(good.score, 3);
+    expect(good.score, 4);
     expect(good.verdict, HouseVerdict.good);
-    // 3 is challenging with 6 (0 points) and friendly with 9 (2): mixed.
-    final mixed = LuckyKit.house('12', 6, 9)!;
-    expect(mixed.root, 3);
+    // 7 is neutral with 6 and neutral with 9 (1 + 1): mixed.
+    final mixed = LuckyKit.house('7', 6, 9)!;
+    expect(mixed.root, 7);
     expect(mixed.verdict, HouseVerdict.mixed);
-    // 3 is challenging with 6 and with 6: needs care.
-    final careful = LuckyKit.house('3', 6, 6)!;
+    // 8 is neutral with 6 (1) and challenging with 9 (0): needs care.
+    final careful = LuckyKit.house('8', 6, 9)!;
     expect(careful.verdict, HouseVerdict.careful);
   });
 
@@ -35,7 +35,7 @@ void main() {
     expect(picks.length, 6);
     expect(picks.map((e) => e.number).toSet().length, 6);
     final avoid = LuckyKit.avoidRoots(6, 9);
-    expect(avoid, [3, 4, 8]);
+    expect(avoid, [8]);
     for (final p in picks) {
       expect(avoid.contains(p.root), isFalse);
       expect(p.number >= 1 && p.number <= 99, isTrue);
@@ -47,6 +47,6 @@ void main() {
     for (var i = 1; i <= 9; i++) {
       expect(LuckyKitText.home[i], isNotNull);
     }
-    expect(NumerologyTools.relation(3, 6), Relation.enemy);
+    expect(NumerologyTools.relation(2, 8), Relation.enemy);
   });
 }

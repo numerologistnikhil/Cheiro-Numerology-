@@ -102,13 +102,21 @@ class NumerologyTools {
 
   // ------------------------------------------------------------ relations
 
+  // Friend and challenge pairs follow Cheiro's own "Book of Numbers".
+  // Friends: 1, 2, 4 and 7 belong together; 3, 6 and 9 are sympathetic;
+  // 9 gets on with 1, 3, 5 and 6; 5 gets on with almost every number.
+  // Challenges: 2 with 8 ("not a happy combination"), 8 with 9
+  // ("antagonistic"), and 4 with 8 (they attract each other but Cheiro calls
+  // the pair unlucky in worldly matters). Where the book is silent, the
+  // pair is neutral.
   static const Set<String> _friendPairs = {
-    '1-2', '1-3', '1-5', '1-7', '1-9', '2-3', '2-5', '2-7', '3-9',
-    '4-8', '5-6', '5-7', '6-8',
+    '1-2', '1-4', '1-7', '2-4', '2-7', '4-7',
+    '3-6', '3-9', '6-9', '1-9', '5-9',
+    '1-5', '2-5', '3-5', '4-5', '5-6', '5-7', '5-8',
   };
 
   static const Set<String> _enemyPairs = {
-    '1-8', '2-4', '2-8', '3-5', '3-6', '4-9', '8-9',
+    '2-8', '8-9', '4-8',
   };
 
   static Relation relation(int a, int b) {

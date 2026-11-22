@@ -29,8 +29,8 @@ void main() {
   });
 
   test('mood follows friend and enemy relations', () {
-    // 8 against Mulank 1 and Bhagyank 8 is mixed or same number; 8 vs 1 is opposed
-    expect(CheiroTiming.mood(8, 1, 1), TimingMood.careful);
+    // 8 against Mulank 2 and Bhagyank 2 is opposed on both sides
+    expect(CheiroTiming.mood(8, 2, 2), TimingMood.careful);
     expect(CheiroTiming.mood(3, 1, 9), TimingMood.favourable);
   });
 
