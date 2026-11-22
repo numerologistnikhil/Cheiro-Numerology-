@@ -68,42 +68,60 @@ class SignatureAnalyzer {
     final bw = maxX - minX + 1;
     final bh = maxY - minY + 1;
 
-    // ---- slant: the shear that makes the strokes most upright
-    final xs = <int>[];
-    final ys = <int>[];
-    final step = math.max(1, count ~/ 20000);
-    var k = 0;
-    for (var y = minY; y <= maxY; y++) {
-      for (var x = minX; x <= maxX; x++) {
-        if (ink[y * w + x] != 0) {
-          if (k++ % step == 0) {
-            xs.add(x - minX);
-            ys.add(y - minY);
+    // ---- slant: direction of the near-upright strokes. Every ink pixel gets
+    // a local stroke direction from the ink around it; only strokes within 65
+    // degrees of upright count (long flourishes and loops would otherwise
+    // pull the result), and the weighted middle value is taken.
+    double slantOf() {
+      int at(int x, int y) {
+        if (x < 0 || y < 0 || x >= w || y >= h) return 0;
+        return ink[y * w + x] != 0 ? 1 : 0;
+      }
+
+      final leans = <double>[];
+      final weights = <double>[];
+      final stepPx = math.max(1, count ~/ 30000);
+      var seen = 0;
+      for (var y = minY; y <= maxY; y++) {
+        for (var x = minX; x <= maxX; x++) {
+          if (ink[y * w + x] == 0) continue;
+          if (seen++ % stepPx != 0) continue;
+          var gx = 0, gy = 0;
+          for (var j = -1; j <= 1; j++) {
+            for (var i = -1; i <= 1; i++) {
+              gx += at(x + i + 2, y + j) - at(x + i - 2, y + j);
+              gy += at(x + i, y + j + 2) - at(x + i, y + j - 2);
+            }
           }
+          if (gx == 0 && gy == 0) continue;
+          var tx = -gy.toDouble();
+          var ty = gx.toDouble();
+          if (ty > 0) {
+            tx = -tx;
+            ty = -ty;
+          }
+          final lean = math.atan2(tx, -ty) * 180 / math.pi;
+          if (lean.abs() >= 65) continue;
+          leans.add(lean);
+          weights.add(math.sqrt(tx * tx + ty * ty));
         }
       }
+      if (leans.isEmpty) return 0;
+      final order = List<int>.generate(leans.length, (i) => i)
+        ..sort((a, b) => leans[a].compareTo(leans[b]));
+      var total = 0.0;
+      for (final wgt in weights) {
+        total += wgt;
+      }
+      var run = 0.0;
+      for (final i in order) {
+        run += weights[i];
+        if (run >= total / 2) return leans[i];
+      }
+      return leans[order.last];
     }
-    final cy = bh / 2.0;
-    var bestS = 0.0;
-    var bestScore = -1.0;
-    for (var si = -30; si <= 30; si++) {
-      final s = si * 0.04;
-      final off = (bh * 1.3).ceil() + 2;
-      final bins = List<int>.filled(bw + 2 * off + 2, 0);
-      for (var i = 0; i < xs.length; i++) {
-        final xp = (xs[i] + s * (ys[i] - cy)).round() + off;
-        if (xp >= 0 && xp < bins.length) bins[xp]++;
-      }
-      var score = 0.0;
-      for (final b in bins) {
-        score += b.toDouble() * b;
-      }
-      if (score > bestScore) {
-        bestScore = score;
-        bestS = s;
-      }
-    }
-    final slant = math.atan(bestS) * 180 / math.pi;
+
+    final slant = slantOf();
 
     // ---- baseline: centre of ink in five vertical bands
     final bandX = <double>[];

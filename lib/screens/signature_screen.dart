@@ -12,6 +12,7 @@ import '../core/signature_image.dart';
 import '../core/signature_reading.dart';
 import '../core/story_report.dart';
 import '../core/user_profile.dart';
+import 'signature_pad.dart';
 import 'ui_kit.dart';
 
 class SignatureScreen extends StatefulWidget {
@@ -29,6 +30,7 @@ class _SignatureScreenState extends State<SignatureScreen> {
   Legibility _leg = Legibility.clear;
   SignatureReading? _reading;
   String? _error;
+  bool _drawn = false;
   bool _busy = false;
   bool _reportBusy = false;
   bool _include = SignatureStore.include;
@@ -56,12 +58,27 @@ class _SignatureScreenState extends State<SignatureScreen> {
       setState(() {
         _photo = bytes;
         _prepared = prep;
+        _drawn = false;
         _reading = null;
         _error = prep == null ? s.t(SignatureReading.bad) : null;
       });
     } catch (_) {
       if (mounted) setState(() => _error = s.t(SignatureReading.bad));
     }
+  }
+
+  Future<void> _draw(AppSettings s) async {
+    final bytes = await Navigator.push<Uint8List>(
+        context, MaterialPageRoute(builder: (_) => const SignaturePadScreen()));
+    if (bytes == null || !mounted) return;
+    final prep = SignatureImage.prepare(bytes);
+    setState(() {
+      _photo = bytes;
+      _prepared = prep;
+      _drawn = true;
+      _reading = null;
+      _error = prep == null ? s.t(SignatureReading.bad) : null;
+    });
   }
 
   Future<void> _analyse(AppSettings s) async {
@@ -72,7 +89,23 @@ class _SignatureScreenState extends State<SignatureScreen> {
       _error = null;
     });
     await Future<void>.delayed(const Duration(milliseconds: 50));
-    final m = SignatureAnalyzer.analyze(p.ink, p.width, p.height);
+    final m0 = SignatureAnalyzer.analyze(p.ink, p.width, p.height);
+    // A finger draws one even line width, so pen pressure cannot be read from
+    // a drawn signature. Its thickness is set to a neutral value.
+    final m = (m0 == null || !_drawn)
+        ? m0
+        : SignatureMetrics(
+            slantDeg: m0.slantDeg,
+            baselineDeg: m0.baselineDeg,
+            aspect: m0.aspect,
+            density: m0.density,
+            thickness: 0.05,
+            pieces: m0.pieces,
+            underline: m0.underline,
+            endDot: m0.endDot,
+            bigInitial: m0.bigInitial,
+            endRise: m0.endRise,
+          );
     if (m == null) {
       setState(() {
         _busy = false;
@@ -219,6 +252,25 @@ class _SignatureScreenState extends State<SignatureScreen> {
           label: Text(s.t(_photo == null ? SignatureReading.pick : SignatureReading.change)),
         ),
       ),
+      const SizedBox(height: 8),
+      SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: () => _draw(s),
+          icon: const Icon(Icons.draw_outlined),
+          label: Text(s.hindi ? 'फ़ोन की स्क्रीन पर हस्ताक्षर कीजिए' : 'Sign on the phone screen'),
+        ),
+      ),
+      if (_drawn)
+        Padding(
+          padding: const EdgeInsets.only(top: 6),
+          child: Text(
+            s.hindi
+                ? 'स्क्रीन पर लकीर हमेशा एक जैसी मोटी बनती है, इसलिए इस हस्ताक्षर में कलम के दबाव को नहीं पढ़ा गया।'
+                : 'A finger draws one even line width, so pen pressure is not read for a drawn signature.',
+            style: const TextStyle(fontSize: 12.5, height: 1.4),
+          ),
+        ),
     ];
     if (_photo != null) {
       kids.add(const SizedBox(height: 10));
