@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../core/app.dart';
 import '../core/app_settings.dart';
 import '../core/user_profile.dart';
+import '../core/voice_parser.dart';
 import 'ui_kit.dart';
+import 'voice_screen.dart';
 
 int _root9(int n) {
   var v = n;
@@ -88,6 +90,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.pop(context);
   }
 
+  Future<void> _voice(bool hi) async {
+    final r = await Navigator.push<VoiceDetails>(
+        context, MaterialPageRoute(builder: (_) => const VoiceScreen()));
+    if (r == null || !mounted) return;
+    setState(() {
+      if (r.name.isNotEmpty) _name.text = r.name;
+      if (r.mobile.isNotEmpty) _mobile.text = r.mobile;
+      if (r.dob != null) _dob = r.dob;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(hi
+          ? 'जानकारी भर गई। जाँचकर "सेव कीजिए" दबाइए।'
+          : 'Details filled in. Check them and tap Save.'),
+    ));
+  }
+
   Future<void> _newPerson(bool hi) async {
     await UserProfile.instance.clear();
     if (!mounted) return;
@@ -116,6 +134,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ? 'यहाँ जातक (जिसके अंक देखने हैं) की जानकारी एक ही बार भरिए। फिर हर सुविधा और रिपोर्ट में यही जानकारी अपने आप आ जाएगी। नए व्यक्ति के लिए "नया व्यक्ति" दबाइए।'
             : 'Enter the details of the person whose numbers you are reading just once here. Every feature and the report will then start with these details. For a new person, tap "New person".'),
         const SizedBox(height: 14),
+        OutlinedButton.icon(
+          onPressed: _ready ? () => _voice(hi) : null,
+          icon: const Icon(Icons.mic),
+          label: Text(hi ? 'बोलकर जानकारी भरिए' : 'Fill by speaking'),
+        ),
+        const SizedBox(height: 12),
         TextField(
           controller: _name,
           textCapitalization: TextCapitalization.words,
