@@ -30,6 +30,7 @@ import 'western_screen.dart';
 import 'health_screen.dart';
 import 'famous_screen.dart';
 import 'cheiro_timing_screen.dart';
+import 'voice_assistant_screen.dart';
 import 'signature_screen.dart';
 import 'report_builder_screen.dart';
 import 'settings_screen.dart';
@@ -150,6 +151,8 @@ const _steps = <_Step>[
           L('Repeating numbers', 'दोहराए अंक'), Icons.stars_outlined),
       _F('ask', L('Ask', 'पूछिए'),
           L('Ask about numbers', 'अंकों पर सवाल'), Icons.chat_bubble_outline),
+      _F('talk', L('Talk', 'बोलिए'),
+          L('Ask by voice', 'बोलकर पूछिए'), Icons.mic_none),
     ],
   ),
 ];
@@ -242,6 +245,9 @@ class _PremiumHomeState extends State<PremiumHome> {
         break;
       case 'ask':
         _go(const AiNumerologistScreen());
+        break;
+      case 'talk':
+        _go(const VoiceAssistantScreen());
         break;
       case 'angel':
         _go(const AngelNumbersScreen());
