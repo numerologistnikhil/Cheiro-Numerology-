@@ -73,9 +73,9 @@ void main() {
   });
 
   group('compatibility', () {
-    test('same birth date scores 6 of 8 and is strong harmony', () {
+    test('same birth date scores 8 of 8 (6 and 9 are friends in Cheiro) and is strong harmony', () {
       final r = NumerologyTools.compatibility(dob, dob);
-      expect(r.score, 6);
+      expect(r.score, 8);
       expect(r.maxScore, 8);
       expect(r.label, 'Strong harmony');
       expect(r.lines.length, 4);
