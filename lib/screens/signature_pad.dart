@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-import '../core/app.dart';
+import '../core/app_settings.dart';
 
 /// A white page to sign on with a finger or a stylus. When the person taps
 /// "Use this signature", the drawing is returned as PNG bytes, ready for the

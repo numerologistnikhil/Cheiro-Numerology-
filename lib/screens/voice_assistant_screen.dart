@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
-import '../core/app.dart';
+import '../core/app_settings.dart';
 import '../core/user_profile.dart';
 import '../core/voice_answers.dart';
 import 'ui_kit.dart';
