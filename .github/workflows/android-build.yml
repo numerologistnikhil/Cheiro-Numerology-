@@ -53,7 +53,13 @@ jobs:
           dart run flutter_launcher_icons
 
       - name: Static analysis (fails on errors only)
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+        run: |
+          flutter analyze --no-fatal-infos --no-fatal-warnings > analyze.txt 2>&1 || true
+          tail -n 3 analyze.txt
+          if grep -q " error • " analyze.txt; then
+            grep " error • " analyze.txt | while IFS= read -r line; do echo "::error::$line"; done
+            exit 1
+          fi
 
       - name: Unit tests
         run: flutter test
