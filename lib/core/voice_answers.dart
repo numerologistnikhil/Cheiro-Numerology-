@@ -122,7 +122,7 @@ class VoiceAnswers {
         parts.where((s) => s.isNotEmpty).join(' ');
 
     switch (topic) {
-      case VoiceTopic.luckyNumber:
+      case VoiceTopic.luckyNumber: {
         final picks = LuckyKit.luckyNumbers(m, b, count: 4)
             .map((x) => '${x.number}')
             .join(', ');
@@ -136,7 +136,8 @@ class VoiceAnswers {
               : 'Your Mulank is $m and your Bhagyank is $b. Your lucky numbers are: $picks.'
                   '${avoid.isEmpty ? '' : ' Be a little careful with numbers that reduce to: $avoid.'}',
         );
-      case VoiceTopic.thisYear:
+      }
+      case VoiceTopic.thisYear: {
         final y = CheiroTiming.year(dob, now.year, m, b);
         return VoiceAnswer(
           topic,
@@ -150,7 +151,8 @@ class VoiceAnswers {
             t(CheiroTiming.closing),
           ]),
         );
-      case VoiceTopic.thisMonth:
+      }
+      case VoiceTopic.thisMonth: {
         final x = CheiroTiming.month(dob, now.year, now.month, m, b);
         return VoiceAnswer(
           topic,
@@ -163,7 +165,8 @@ class VoiceAnswers {
             t(CheiroTiming.moodLine[x.mood]!),
           ]),
         );
-      case VoiceTopic.precaution:
+      }
+      case VoiceTopic.precaution: {
         final y = CheiroTiming.year(dob, now.year, m, b);
         final avoid = LuckyKit.avoidRoots(m, b).join(', ');
         return VoiceAnswer(
@@ -179,6 +182,7 @@ class VoiceAnswers {
                   : 'For big decisions, avoid dates and numbers that reduce to: $avoid.',
           ]),
         );
+      }
       case VoiceTopic.colour:
         return VoiceAnswer(topic, hindi ? 'शुभ रंग' : 'Lucky colours',
             p == null ? '' : '${t(p.colours)}.');
