@@ -45,14 +45,12 @@ import 'year_details.dart';
 
 /// One picture of text (used for Hindi text and for the footer lines).
 class _Img {
-  final Uint8List png;
-  final double w;
-  final double h;
-  _Img(this.png, this.w, this.h);
-
   /// One image object per picture: the PDF library then stores the picture
   /// only once, even when the same text is used on many pages.
-  late final pw.MemoryImage mem = pw.MemoryImage(png);
+  final pw.ImageProvider mem;
+  final double w;
+  final double h;
+  _Img(this.mem, this.w, this.h);
 }
 
 /// Story style report in simple language. English or Hindi.
@@ -254,12 +252,24 @@ class StoryReport {
     tp.paint(canvas, ui.Offset.zero);
     final pic = rec.endRecording();
     final img = await pic.toImage(w, h);
-    final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    // Copy the bytes: the PDF reads them later, and the engine may reuse
-    // the original memory by then (this made some pictures look broken).
-    final png = Uint8List.fromList(
-        data!.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
-    final made = _Img(png, w / scale, h / scale);
+    // Raw pixels go straight into the PDF. The PDF library then never has to
+    // decode a PNG (that step mixed up the Hindi text pictures). The bytes
+    // are copied because the engine may reuse its own memory.
+    final data = await img.toByteData(format: ui.ImageByteFormat.rawStraightRgba);
+    pw.ImageProvider prov;
+    if (data != null) {
+      final rgba = Uint8List.fromList(
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+      prov = pw.RawImage(bytes: rgba, width: w, height: h);
+    } else {
+      final pngData = await img.toByteData(format: ui.ImageByteFormat.png);
+      prov = pw.MemoryImage(Uint8List.fromList(pngData!.buffer
+          .asUint8List(pngData.offsetInBytes, pngData.lengthInBytes)));
+    }
+    // Give the picture memory back at once; hundreds of them pile up otherwise.
+    img.dispose();
+    pic.dispose();
+    final made = _Img(prov, w / scale, h / scale);
     _imgCache[key] = made;
     return made;
   }
