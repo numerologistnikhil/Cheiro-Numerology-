@@ -37,6 +37,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
   String? _error;
   Uint8List? _pdf;
   String _pdfFor = '';
+  String? _savedAt;
 
   @override
   void initState() {
@@ -209,6 +210,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
       if (mounted) {
         setState(() {
           _pdf = bytes;
+          _savedAt = null;
           _pdfFor = name;
           _error = note;
         });
@@ -224,6 +226,31 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
 
   void _snack(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _save() async {
+    final bytes = _pdf;
+    if (bytes == null) return;
+    try {
+      final where = await ReportShare.saveToPhone(bytes, _pdfFor);
+      if (where == null) {
+        _snack('Save cancelled.');
+        return;
+      }
+      if (mounted) setState(() => _savedAt = where);
+    } catch (e) {
+      _snack('Could not save. Please use Share PDF instead.');
+    }
+  }
+
+  /// A readable place for the saved file (the phone may give a long link).
+  String get _savedText {
+    final w = _savedAt ?? '';
+    final name = ReportShare.fileNameFor(_pdfFor);
+    final lower = w.toLowerCase();
+    if (lower.contains('download')) return 'Downloads folder, file: $name';
+    if (w.startsWith('/')) return w;
+    return 'The folder you chose, file: $name';
   }
 
   Future<void> _print() async {
@@ -373,7 +400,9 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
                 : const Icon(Icons.picture_as_pdf_outlined),
             label: Text(_busy
                 ? (_opts.span > 10
-                    ? 'Preparing, long reports take 1-2 minutes...'
+                    ? (_opts.hindi
+                        ? 'Preparing Hindi report, 2-3 minutes. Keep the app open...'
+                        : 'Preparing, long reports take 1-2 minutes...')
                     : 'Preparing...')
                 : 'Create PDF Report'),
           ),
@@ -384,9 +413,23 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
+              onPressed: _save,
+              icon: const Icon(Icons.save_alt),
+              label: const Text('Save PDF on phone'),
+            ),
+          ),
+          if (_savedAt != null) ...[
+            const SizedBox(height: 10),
+            Note('Saved. Find it in: $_savedText. Open the Files app on your '
+                'phone, then Downloads, to see it.'),
+          ],
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
               onPressed: _print,
-              icon: const Icon(Icons.download_outlined),
-              label: const Text('Download / Print'),
+              icon: const Icon(Icons.print_outlined),
+              label: const Text('Print'),
             ),
           ),
           const SizedBox(height: 10),

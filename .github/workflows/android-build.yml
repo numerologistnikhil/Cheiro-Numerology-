@@ -29,6 +29,8 @@ jobs:
           printf 'package com.ankdhara.numerology\n\nimport io.flutter.embedding.android.FlutterFragmentActivity\n\nclass MainActivity : FlutterFragmentActivity()\n' > android/app/src/main/kotlin/com/ankdhara/numerology/MainActivity.kt
           sed -i -E 's/(namespace[[:space:]]*=?[[:space:]]*)"[^"]*"/\1"com.ankdhara.numerology"/; s/(applicationId[[:space:]]*=?[[:space:]]*)"[^"]*"/\1"com.ankdhara.numerology"/' android/app/build.gradle*
           grep -n 'namespace\|applicationId' android/app/build.gradle*
+          sed -i -E 's/minSdkVersion[[:space:]]+flutter\.minSdkVersion/minSdkVersion 24/; s/minSdk[[:space:]]*=[[:space:]]*flutter\.minSdkVersion/minSdk = 24/' android/app/build.gradle*
+          grep -n 'minSdk' android/app/build.gradle* || true
 
       - name: Use fixed signing key
         run: |

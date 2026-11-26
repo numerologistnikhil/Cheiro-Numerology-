@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
@@ -13,6 +14,26 @@ class ReportShare {
   /// Opens the print screen. "Save as PDF" there = download.
   static Future<void> printPdf(Uint8List bytes) async {
     await Printing.layoutPdf(onLayout: (_) async => bytes);
+  }
+
+  /// File name used when the report is saved on the phone.
+  static String fileNameFor(String customerName) {
+    final safe = customerName
+        .replaceAll(RegExp(r'[^A-Za-z0-9]+'), '_')
+        .replaceAll(RegExp(r'^_+|_+$'), '');
+    return 'Ankdhara_${safe.isEmpty ? 'Report' : safe}.pdf';
+  }
+
+  /// Opens the phone's own "Save" screen (Downloads is the usual place) and
+  /// returns where the file went, or null if the person cancelled.
+  static Future<String?> saveToPhone(Uint8List bytes, String customerName) {
+    return FlutterFileDialog.saveFile(
+      params: SaveFileDialogParams(
+        data: bytes,
+        fileName: fileNameFor(customerName),
+        mimeTypesFilter: const ['application/pdf'],
+      ),
+    );
   }
 
   /// Opens the Android share sheet with the PDF attached.

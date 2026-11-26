@@ -212,7 +212,7 @@ class StoryReport {
     if (++_drawn % 12 == 0) {
       await Future<void>.delayed(const Duration(milliseconds: 1));
     }
-    const scale = 3.0;
+    const scale = 2.0;
     final tp = TextPainter(
       text: TextSpan(
         text: s,
