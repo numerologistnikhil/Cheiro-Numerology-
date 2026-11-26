@@ -84,7 +84,7 @@ class SettingsScreen extends StatelessWidget {
                       contentPadding: EdgeInsets.zero,
                       dense: true,
                       leading: Icon(
-                        lang.hindi == s.hindi
+                        lang.code == s.code
                             ? Icons.radio_button_checked
                             : Icons.radio_button_off,
                         color: _gold,
@@ -94,12 +94,12 @@ class SettingsScreen extends StatelessWidget {
                       subtitle: lang.native == lang.english
                           ? null
                           : Text(lang.english),
-                      onTap: () => s.setHindi(lang.hindi),
+                      onTap: () => s.setLanguage(lang.code),
                     ),
                   const SizedBox(height: 4),
                   Text(
-                    s.t(const L('More languages will be added soon.',
-                        'और भाषाएँ जल्द जोड़ी जाएँगी।')),
+                    s.t(const L('The home screen and menus are in your language. Long texts and the PDF report are in English and Hindi for now.',
+                        'होम स्क्रीन और मेनू आपकी भाषा में हैं। लंबे पाठ और PDF रिपोर्ट अभी अंग्रेज़ी और हिन्दी में हैं।')),
                     style: const TextStyle(
                         fontSize: 12.5, fontStyle: FontStyle.italic),
                   ),

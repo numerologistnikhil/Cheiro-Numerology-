@@ -59,9 +59,9 @@ class SetupScreen extends StatelessWidget {
                     for (final lang in AppLanguages.all)
                       ChoiceChip(
                         label: Text(lang.native),
-                        selected: lang.hindi == s.hindi,
+                        selected: lang.code == s.code,
                         selectedColor: const Color(0xFFF3DFA2),
-                        onSelected: (_) => s.setHindi(lang.hindi),
+                        onSelected: (_) => s.setLanguage(lang.code),
                       ),
                   ],
                 ),

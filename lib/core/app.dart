@@ -71,8 +71,16 @@ class CheiroApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Ank Dhara',
         debugShowCheckedModeBanner: false,
-        builder: (context, child) =>
-            AppThemeLayer(child: TapSound(child: LockGate(child: child))),
+        builder: (context, child) => ListenableBuilder(
+          listenable: AppSettings.instance,
+          builder: (context, _) => Directionality(
+            textDirection: AppSettings.instance.rtl
+                ? TextDirection.rtl
+                : TextDirection.ltr,
+            child:
+                AppThemeLayer(child: TapSound(child: LockGate(child: child))),
+          ),
+        ),
         theme: base.copyWith(
           textTheme: text,
           scaffoldBackgroundColor: AnkdharaColors.pearl,
