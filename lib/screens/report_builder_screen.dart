@@ -169,6 +169,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
         logo = null;
       }
       Future<Uint8List> make(int lite) async {
+        const limits = [240, 150, 120, 0];
         final doc = await StoryReport.build(
           name: name,
           dob: dob,
@@ -180,6 +181,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
           sample: access == ReportAccess.freeFirst && Pricing.freeReportIsSample,
           chosenName: UserProfile.instance.chosenName,
           lite: lite,
+          limitSeconds: limits[lite],
         );
         return doc.save();
       }
@@ -196,8 +198,11 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
         try {
           bytes = await make(level);
           if (level > 0) {
-            note = 'Safe mode level $level was used because of an error. '
-                'Details: ${shortMsg(firstError ?? '')}';
+            final slow = (firstError ?? '').toString().contains('TimeoutException');
+            note = slow
+                ? 'The full report was taking too long on this phone, so a shorter report (10 years) was made. Try fewer years for the full version.'
+                : 'Safe mode level $level was used because of an error. '
+                    'Details: ${shortMsg(firstError ?? '')}';
           }
         } catch (e) {
           firstError ??= e;
@@ -372,7 +377,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
                 child: OutlinedButton.icon(
                   onPressed: _busy ? null : _openOptions,
                   icon: const Icon(Icons.tune),
-                  label: const Text('Language, border, colours, footer'),
+                  label: const Text('Language, colours, footer'),
                 ),
               ),
             ],
@@ -399,14 +404,17 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
                   )
                 : const Icon(Icons.picture_as_pdf_outlined),
             label: Text(_busy
-                ? (_opts.span > 10
-                    ? (_opts.hindi
-                        ? 'Preparing Hindi report, 2-3 minutes. Keep the app open...'
-                        : 'Preparing, long reports take 1-2 minutes...')
-                    : 'Preparing...')
+                ? 'Preparing...'
                 : 'Create PDF Report'),
           ),
         ),
+        if (_busy)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Note(_opts.hindi
+                ? 'Hindi report is being made. This can take 2-4 minutes. Please keep the app open. If it is too slow, a shorter report is made automatically.'
+                : 'Your report is being made. Long reports can take 1-2 minutes. Please keep the app open.'),
+          ),
         if (_pdf != null) ...[
           const SizedBox(height: 22),
           SectionLabel('Report ready: $_pdfFor'),

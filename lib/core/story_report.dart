@@ -1,3 +1,4 @@
+import 'dart:async' show TimeoutException;
 import 'month_details.dart';
 import 'name_suggester.dart';
 import 'name_texts.dart';
@@ -84,6 +85,10 @@ class StoryReport {
   /// 2 = also no summary page, 3 = also no Lo Shu section.
   int lite = 0;
 
+  /// Stops the report with a TimeoutException when drawing takes longer
+  /// than this (0 = no limit), so the app can fall back to a lighter report.
+  DateTime? _deadline;
+
   /// Headings; each one is kept on the same page as the widget after it.
   final Set<pw.Widget> _heads = <pw.Widget>{};
 
@@ -108,6 +113,7 @@ class StoryReport {
     bool sample = false,
     String chosenName = '',
     int lite = 0,
+    int limitSeconds = 0,
     String house = '',
     String vehicle = '',
     List<MapEntry<int, String>> lifeEvents = const [],
@@ -118,12 +124,16 @@ class StoryReport {
     if (sample && n > Pricing.sampleYears) n = Pricing.sampleYears;
     if (n < 1) n = 1;
     if (n > 50) n = 50;
+    if (lite > 0 && n > 10) n = 10;
     return (StoryReport._(base.copyWith(years: n), sample)
           ..chosenName = chosenName
           ..house = house
           ..vehicle = vehicle
           ..lifeEvents = lifeEvents
-          ..lite = lite)
+          ..lite = lite
+          .._deadline = limitSeconds > 0
+              ? DateTime.now().add(Duration(seconds: limitSeconds))
+              : null)
         ._build(name, dob, mobile, logo);
   }
 
@@ -208,6 +218,10 @@ class StoryReport {
     final key = '$size|$bold|$color|$width|$center|$s';
     final hit = _imgCache[key];
     if (hit != null) return hit;
+    final dl = _deadline;
+    if (dl != null && DateTime.now().isAfter(dl)) {
+      throw TimeoutException('The report took too long on this phone');
+    }
     // Let the screen breathe now and then so the app never looks frozen.
     if (++_drawn % 12 == 0) {
       await Future<void>.delayed(const Duration(milliseconds: 1));
