@@ -66,6 +66,7 @@ class PdfPictures {
     final px = (size * scale).round();
     final rec = ui.PictureRecorder();
     final canvas = Canvas(rec);
+    canvas.drawColor(const Color(0x00000000), BlendMode.src);
     p.paint(canvas, Size(px.toDouble(), px.toDouble()));
     final img = await rec.endRecording().toImage(px, px);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
@@ -116,6 +117,7 @@ class PdfPictures {
       final dst = Rect.fromLTWH(0, 0, px.toDouble(), px.toDouble());
       final rec = ui.PictureRecorder();
       final canvas = Canvas(rec);
+      canvas.drawColor(const Color(0x00000000), BlendMode.src);
       canvas.save();
       canvas.clipPath(Path()..addOval(dst));
       canvas.drawImageRect(img, src, dst, Paint()..filterQuality = FilterQuality.high);

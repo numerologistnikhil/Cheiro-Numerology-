@@ -248,7 +248,11 @@ class StoryReport {
     if (w < 1) w = 1;
     if (h < 1) h = 1;
     final rec = ui.PictureRecorder();
-    final canvas = ui.Canvas(rec);
+    final canvas = ui.Canvas(
+        rec, ui.Rect.fromLTWH(0, 0, w.toDouble(), h.toDouble()));
+    // Start from fully clear pixels. Without this, the phone's graphics memory
+    // can hand back pieces of earlier pictures (seen as mixed-up Hindi text).
+    canvas.drawColor(const ui.Color(0x00000000), ui.BlendMode.src);
     tp.paint(canvas, ui.Offset.zero);
     final pic = rec.endRecording();
     final img = await pic.toImage(w, h);
@@ -829,6 +833,7 @@ class StoryReport {
       final img = frame.image;
       final rec = ui.PictureRecorder();
       final canvas = ui.Canvas(rec);
+      canvas.drawColor(const ui.Color(0x00000000), ui.BlendMode.src);
       final paint = ui.Paint()
         ..colorFilter = ui.ColorFilter.matrix(<double>[
           0.299, 0.587, 0.114, 0, 0, //
