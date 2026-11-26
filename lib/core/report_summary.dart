@@ -12,6 +12,10 @@ class ReportSummary {
     'Lo Shu grid made from your date of birth. A number you have is shown in its box (twice or more if it repeats). A dash means that number is missing.',
     'आपकी जन्म तिथि से बनी लो शू ग्रिड। जो अंक आपके पास है वह अपने खाने में दिखता है (दोहराने पर दो या ज़्यादा बार)। डैश का मतलब है कि वह अंक नहीं है।',
   );
+  static const PBi topTitle = PBi('Your 3 most important things', 'आपके लिए 3 सबसे ज़रूरी बातें');
+  static const PBi topStrength = PBi('1. Your biggest strength', '1. आपकी सबसे बड़ी ताक़त');
+  static const PBi topWatch = PBi('2. Watch out for this', '2. इसका ध्यान रखें');
+  static const PBi topDo = PBi('3. Do this first', '3. सबसे पहले यह करें');
   static const PBi luckyNumbers = PBi('Lucky numbers', 'शुभ अंक');
   static const PBi luckyColours = PBi('Lucky colours', 'शुभ रंग');
   static const PBi luckyDays = PBi('Lucky days', 'शुभ दिन');

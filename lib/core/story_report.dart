@@ -25,6 +25,7 @@ import 'numerology_engine.dart';
 // uses the one from name_suggester.dart.
 import 'numerology_tools.dart' hide NameSuggestion;
 import 'pdf_pictures.dart';
+import 'voice_answers.dart' show VoiceAnswers;
 import 'pricing.dart';
 import 'profession_guide.dart';
 import 'pythagorean.dart';
@@ -548,6 +549,21 @@ class StoryReport {
     out.add(await _text(ReportSummary.gridCaption.t(h),
         size: 9.5, center: true, width: 440));
     out.add(pw.SizedBox(height: 12));
+
+    if (pp != null) {
+      out.add(await _text(ReportSummary.topTitle.t(h),
+          size: 13, bold: true, color: _goldI, width: _boxWidth));
+      out.add(pw.SizedBox(height: 4));
+      out.add(await _box(ReportSummary.topStrength.t(h),
+          VoiceAnswers.firstSentences(pp.strengths.t(h), 1),
+          size: 10.5, pad: 8, gap: 5));
+      out.add(await _box(ReportSummary.topWatch.t(h),
+          VoiceAnswers.firstSentences(pp.challenges.t(h), 1),
+          size: 10.5, pad: 8, gap: 5));
+      out.add(await _box(ReportSummary.topDo.t(h),
+          VoiceAnswers.firstSentences(pp.advice.t(h), 1),
+          size: 10.5, pad: 8, gap: 8));
+    }
 
     final lucky = <int>{psychic, destiny}.toList()..sort();
     final ns = NameScore.of(name);
