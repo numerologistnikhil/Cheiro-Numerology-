@@ -1051,7 +1051,7 @@ class StoryReport {
     out.add(await _p(ReportPages.customerIntro.t(h)));
 
     final rows = <MapEntry<String, String>>[
-      MapEntry(ReportPages.labelName.t(h), name),
+      MapEntry(ReportPages.labelName.t(h), name.trim().isEmpty ? ReportPages.notGiven.t(h) : name.trim()),
       MapEntry(ReportPages.labelDob.t(h), _date(dob)),
       MapEntry(ReportPages.labelDay.t(h),
           (h ? ReportPages.weekHi : ReportPages.weekEn)[dob.weekday - 1]),
