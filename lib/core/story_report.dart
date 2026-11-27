@@ -50,6 +50,9 @@ class _Img {
   final pw.ImageProvider mem;
   final double w;
   final double h;
+
+  /// The pixels, kept only by the self test.
+  Uint8List? raw;
   _Img(this.mem, this.w, this.h);
 }
 
@@ -212,9 +215,10 @@ class StoryReport {
     int? color,
     double width = _fullWidth,
     bool center = false,
+    bool keep = false,
   }) async {
     final key = '$size|$bold|$color|$width|$center|$s';
-    final hit = _imgCache[key];
+    final hit = keep ? null : _imgCache[key];
     if (hit != null) return hit;
     final dl = _deadline;
     if (dl != null && DateTime.now().isAfter(dl)) {
@@ -268,9 +272,11 @@ class StoryReport {
     // are copied because the engine may reuse its own memory.
     final data = await img.toByteData(format: ui.ImageByteFormat.rawStraightRgba);
     pw.ImageProvider prov;
+    Uint8List? kept;
     if (data != null) {
       final rgba = Uint8List.fromList(
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+      kept = rgba;
       prov = pw.RawImage(bytes: rgba, width: w, height: h);
     } else {
       final pngData = await img.toByteData(format: ui.ImageByteFormat.png);
@@ -281,8 +287,62 @@ class StoryReport {
     img.dispose();
     pic.dispose();
     final made = _Img(prov, w / scale, h / scale);
-    _imgCache[key] = made;
+    if (keep) {
+      made.raw = kept;
+    } else {
+      _imgCache[key] = made;
+    }
     return made;
+  }
+
+  /// Self test: draws sample Hindi texts three times in different orders and
+  /// returns the texts whose pixels came out different. Empty = all fine.
+  static Future<List<String>> pictureCheck() async {
+    final r = StoryReport._(const ReportOptions(hindi: true), false);
+    const texts = <String>[
+      'पूरा नाम',
+      'जन्म तिथि',
+      'जन्म का वार',
+      'मोबाइल नंबर',
+      'दिया नहीं गया',
+      '6 अप्रैल 1988',
+      'बुधवार',
+      'मूलांक',
+      'भाग्यांक',
+      'Nikhil Gulati',
+      '98679464949',
+      '-',
+    ];
+    final seen = <String, List<int>>{};
+    final bad = <String>{};
+    final orders = <List<int>>[
+      List<int>.generate(texts.length, (i) => i),
+      List<int>.generate(texts.length, (i) => texts.length - 1 - i),
+      List<int>.generate(texts.length, (i) => (i * 5) % texts.length),
+    ];
+    for (final order in orders) {
+      for (final i in order) {
+        final t = texts[i];
+        final img = await r._renderImage(t,
+            bold: i.isEven, size: 11.5, width: 120, keep: true);
+        final raw = img.raw;
+        if (raw == null) {
+          bad.add('$t (no pixels)');
+          continue;
+        }
+        var sum = raw.length;
+        for (var k = 0; k < raw.length; k += 7) {
+          sum = (sum * 31 + raw[k]) & 0x7fffffff;
+        }
+        final prev = seen[t];
+        if (prev == null) {
+          seen[t] = <int>[sum];
+        } else if (prev.first != sum) {
+          bad.add(t);
+        }
+      }
+    }
+    return bad.toList();
   }
 
   Future<pw.Widget> _text(

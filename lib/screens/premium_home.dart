@@ -35,6 +35,7 @@ import 'signature_screen.dart';
 import 'today_mood_card.dart';
 import 'report_builder_screen.dart';
 import 'settings_screen.dart';
+import 'self_test_screen.dart';
 
 /// Ank Dhara home. Four numbered steps, one language at a time
 /// (English or Hindi, chosen in the three-dot menu).
@@ -272,6 +273,9 @@ class _PremiumHomeState extends State<PremiumHome> {
       case 'settings':
         _go(const SettingsScreen());
         break;
+      case 'selftest':
+        _go(const SelfTestScreen());
+        break;
     }
   }
 
@@ -435,6 +439,13 @@ class _PremiumHomeState extends State<PremiumHome> {
           child: ListTile(
             leading: Icon(Icons.workspace_premium_outlined),
             title: Text('Ank Dhara Pro'),
+          ),
+        ),
+        const PopupMenuItem(
+          value: 'selftest',
+          child: ListTile(
+            leading: Icon(Icons.fact_check_outlined),
+            title: Text('Test'),
           ),
         ),
         PopupMenuItem(
