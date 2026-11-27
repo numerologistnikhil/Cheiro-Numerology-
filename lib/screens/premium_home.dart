@@ -32,6 +32,7 @@ import 'famous_screen.dart';
 import 'cheiro_timing_screen.dart';
 import 'voice_assistant_screen.dart';
 import 'signature_screen.dart';
+import 'today_mood_card.dart';
 import 'report_builder_screen.dart';
 import 'settings_screen.dart';
 
@@ -297,6 +298,7 @@ class _PremiumHomeState extends State<PremiumHome> {
                 padding: const EdgeInsets.only(bottom: 28),
                 children: [
                   const ProfileStrip(),
+                  const TodayMoodCard(),
                   _hero(s),
                   for (var i = 0; i < _steps.length; i++) _stepBlock(s, i),
                   _inviteStrip(s),
