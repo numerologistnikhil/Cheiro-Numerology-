@@ -251,41 +251,22 @@ class StoryReport {
     var h = tp.height.ceil();
     if (w < 1) w = 1;
     if (h < 1) h = 1;
-    final rec = ui.PictureRecorder();
-    final canvas = ui.Canvas(
-        rec, ui.Rect.fromLTWH(0, 0, w.toDouble(), h.toDouble()));
-    // Start from fully clear pixels. Without this, the phone's graphics memory
-    // can hand back pieces of earlier pictures (seen as mixed-up Hindi text).
-    // A fully clear fill is skipped by the graphics engine, so the fill has a
-    // tiny bit of colour (1 out of 255, invisible) to force every pixel to be
-    // written before the text is drawn.
-    canvas.drawRect(
-        ui.Rect.fromLTWH(0, 0, w.toDouble(), h.toDouble()),
-        ui.Paint()
-          ..blendMode = ui.BlendMode.src
-          ..color = const ui.Color(0x01FFFFFF));
-    tp.paint(canvas, ui.Offset.zero);
-    final pic = rec.endRecording();
-    final img = await pic.toImage(w, h);
-    // Raw pixels go straight into the PDF. The PDF library then never has to
-    // decode a PNG (that step mixed up the Hindi text pictures). The bytes
-    // are copied because the engine may reuse its own memory.
-    final data = await img.toByteData(format: ui.ImageByteFormat.rawStraightRgba);
-    pw.ImageProvider prov;
-    Uint8List? kept;
-    if (data != null) {
-      final rgba = Uint8List.fromList(
-          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
-      kept = rgba;
-      prov = pw.RawImage(bytes: rgba, width: w, height: h);
-    } else {
-      final pngData = await img.toByteData(format: ui.ImageByteFormat.png);
-      prov = pw.MemoryImage(Uint8List.fromList(pngData!.buffer
-          .asUint8List(pngData.offsetInBytes, pngData.lengthInBytes)));
+    // The phone's graphics memory sometimes hands back pieces of other
+    // pictures, mostly for small pictures. So the text is drawn on a large
+    // canvas and cut out on the CPU, and it is drawn again until two draws
+    // give exactly the same pixels.
+    Uint8List? rgba = await _drawOnce(tp, w, h);
+    for (var tries = 0; tries < 4; tries++) {
+      final again = await _drawOnce(tp, w, h);
+      if (rgba != null && again != null && _samePixels(rgba, again)) {
+        rgba = again;
+        break;
+      }
+      rgba = again ?? rgba;
     }
-    // Give the picture memory back at once; hundreds of them pile up otherwise.
-    img.dispose();
-    pic.dispose();
+    final pw.ImageProvider prov = pw.RawImage(
+        bytes: rgba ?? Uint8List(w * h * 4), width: w, height: h);
+    final Uint8List? kept = rgba;
     final made = _Img(prov, w / scale, h / scale);
     if (keep) {
       made.raw = kept;
@@ -293,6 +274,45 @@ class StoryReport {
       _imgCache[key] = made;
     }
     return made;
+  }
+
+  static bool _samePixels(Uint8List a, Uint8List b) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  /// Draws the text once and returns the w x h pixels (RGBA), or null.
+  static Future<Uint8List?> _drawOnce(TextPainter tp, int w, int h) async {
+    final cw = w < 640 ? 640 : w;
+    final ch = h < 220 ? 220 : h;
+    final rec = ui.PictureRecorder();
+    final canvas =
+        ui.Canvas(rec, ui.Rect.fromLTWH(0, 0, cw.toDouble(), ch.toDouble()));
+    // A fully clear fill is skipped by the graphics engine, so the fill has a
+    // tiny bit of colour (1 out of 255, invisible) to force every pixel to be
+    // written before the text is drawn.
+    canvas.drawRect(
+        ui.Rect.fromLTWH(0, 0, cw.toDouble(), ch.toDouble()),
+        ui.Paint()
+          ..blendMode = ui.BlendMode.src
+          ..color = const ui.Color(0x01FFFFFF));
+    tp.paint(canvas, ui.Offset.zero);
+    final pic = rec.endRecording();
+    final img = await pic.toImage(cw, ch);
+    final data =
+        await img.toByteData(format: ui.ImageByteFormat.rawStraightRgba);
+    img.dispose();
+    pic.dispose();
+    if (data == null) return null;
+    final all = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    final out = Uint8List(w * h * 4);
+    for (var y = 0; y < h; y++) {
+      out.setRange(y * w * 4, (y + 1) * w * 4, all, y * cw * 4);
+    }
+    return out;
   }
 
   /// Self test: draws sample Hindi texts three times in different orders and
