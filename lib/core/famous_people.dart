@@ -108,7 +108,6 @@ class FamousPeople {
       LifeEvent(1963, L('Assassinated in November.', 'नवंबर में हत्या हुई।')),
     ],
     'Malala Yousafzai': [
-      LifeEvent(2012, L('Shot by the Taliban on her school bus; survives.', 'स्कूल बस में तालिबान ने गोली मारी; वे बच गईं।')),
       LifeEvent(2014, L('Youngest Nobel Peace Prize winner.', 'नोबेल शांति पुरस्कार की सबसे युवा विजेता।')),
     ],
     'Mother Teresa': [
@@ -354,9 +353,9 @@ class FamousPeople {
   static const L title = L('Famous People', 'मशहूर हस्तियाँ');
   static const L intro = L(
     'See how the numbers look for well-known people and open a free sample report with one tap. '
-    'It shows how your own report will read. These are interpretations for learning and curiosity, not claims about the person, and not an endorsement.',
+    'It shows how your own report will read. These are interpretations for learning and curiosity, not claims about the person. They are not an endorsement, and the app has no connection with any of these people. Only public birth dates and well-known public facts are used.',
     'मशहूर लोगों के अंक कैसे दिखते हैं देखिए और एक टैप में मुफ़्त सैंपल रिपोर्ट खोलिए। '
-    'इससे पता चलेगा कि आपकी अपनी रिपोर्ट कैसी होगी। ये सीखने और जिज्ञासा के लिए व्याख्याएँ हैं, उस व्यक्ति के बारे में दावे नहीं, और न कोई समर्थन।');
+    'इससे पता चलेगा कि आपकी अपनी रिपोर्ट कैसी होगी। ये सीखने और जिज्ञासा के लिए व्याख्याएँ हैं, उस व्यक्ति के बारे में दावे नहीं। यह कोई समर्थन नहीं है और ऐप का इन लोगों से कोई संबंध नहीं है। केवल सार्वजनिक जन्मतिथि और जानी-मानी सार्वजनिक बातें इस्तेमाल हुई हैं।');
   static const L search = L('Search a name', 'नाम खोजिए');
   static const L all = L('All', 'सभी');
   static const L born = L('Born', 'जन्म');

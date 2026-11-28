@@ -252,10 +252,10 @@ class LearnContent {
     LearnLesson('business', 3,
       L('Starting a business: date, name and logo', 'बिज़नेस शुरू करना: तारीख, नाम और लोगो'),
       L('Three numbers should agree with the owner.', 'तीन अंक मालिक से मेल खाने चाहिए।'),
-      L('Numerologists such as Sanjay B. Jumani teach that a business works best when the launch date number, the business name total and the logo colour or number all agree with the owner\'s Mulank and Bhagyank. '
+      L('Many numerologists teach that a business works best when the launch date number, the business name total and the logo colour or number all agree with the owner\'s Mulank and Bhagyank. '
         'Use Date Selection to find friendly dates, then keep the name total friendly and avoid heavy totals. '
         'Treat this as tradition, not a guarantee. A good product, cash flow and customer service matter far more.',
-        'संजय बी. जुमानी जैसे अंकशास्त्री सिखाते हैं कि बिज़नेस तब बेहतर चलता है जब शुरू करने की तारीख का अंक, बिज़नेस के नाम का जोड़ और लोगो का रंग या अंक मालिक के मूलांक और भाग्यांक से मेल खाएँ। '
+        'कई अंकशास्त्री सिखाते हैं कि बिज़नेस तब बेहतर चलता है जब शुरू करने की तारीख का अंक, बिज़नेस के नाम का जोड़ और लोगो का रंग या अंक मालिक के मूलांक और भाग्यांक से मेल खाएँ। '
         'अनुकूल तारीख के लिए तिथि चयन इस्तेमाल करें, फिर नाम का जोड़ भी अनुकूल रखें और भारी जोड़ से बचें। '
         'इसे परंपरा मानें, गारंटी नहीं। अच्छा प्रोडक्ट, कैश फ़्लो और ग्राहक सेवा कहीं ज़्यादा मायने रखते हैं।'),
       L('Pick a business purpose in Date Selection and open one date to read why it is lucky.', 'तिथि चयन में बिज़नेस चुनिए और एक तारीख खोलकर पढ़िए कि वह शुभ क्यों है।')),

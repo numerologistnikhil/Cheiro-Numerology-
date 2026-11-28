@@ -79,13 +79,13 @@ class DateReasons {
 
   static const L launchTitle = L('Launching a business: name, date and logo', 'बिज़नेस शुरू करना: नाम, तारीख और लोगो');
   static const L launchBody = L(
-    'Numerologists such as Sanjay B. Jumani teach that a new business works best when three numbers agree with the owner: '
+    'Many numerologists teach that a new business works best when three numbers agree with the owner: '
     '(1) the launch date number, (2) the total of the business name, and (3) the main colour and number used in the logo. '
     'The usual method: pick a launch date whose day number and full-date number are friendly to your Mulank and Bhagyank, '
     'keep the business name total friendly to the same numbers (and not a heavy total such as 35 or 44), and use the colours '
     'of your friendly planet in the logo. This is a traditional belief, not proven science. Business success still depends '
     'on product, money, timing and hard work, so treat these numbers as one extra input.',
-    'संजय बी. जुमानी जैसे अंकशास्त्री सिखाते हैं कि नया बिज़नेस तब बेहतर चलता है जब तीन अंक मालिक से मेल खाएँ: '
+    'कई अंकशास्त्री सिखाते हैं कि नया बिज़नेस तब बेहतर चलता है जब तीन अंक मालिक से मेल खाएँ: '
     '(1) शुरू करने की तारीख का अंक, (2) बिज़नेस के नाम का जोड़, और (3) लोगो का मुख्य रंग व अंक। '
     'आम तरीका: ऐसी तारीख चुनें जिसका दिन-अंक और पूरी-तिथि का अंक आपके मूलांक और भाग्यांक के मित्र हों, '
     'बिज़नेस के नाम का जोड़ भी उन्हीं के अनुकूल रखें (35 या 44 जैसा भारी जोड़ न हो), और लोगो में अपने मित्र ग्रह के रंग रखें। '
